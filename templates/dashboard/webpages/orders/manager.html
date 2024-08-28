@@ -1,0 +1,320 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+<!-- Sweet Alert css-->
+<link href="{% static 'dashboard/assets/libs/sweetalert2/sweetalert2.min.css' %}" rel="stylesheet" type="text/css"/>
+<!--Swiper slider css-->
+<link href="{% static 'dashboard/assets/libs/swiper/swiper-bundle.min.css' %}" rel="stylesheet" type="text/css"/>
+    <style>
+        .badge-blue {
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 4px;
+            padding: 3px 8px;
+        }
+        #alert-box-top-right {
+        position: absolute;
+        top: 5%;
+        right: 5%;
+        transform: translate(5%, -5%);
+    }
+    .border-red {
+        border: 1px solid #ff0000;
+    }
+    
+    </style>
+{% endblock css %}
+
+{% block style %}
+    <style>
+        /* Add your custom styles here */
+    </style>
+{% endblock style %}
+
+{% block content %} <div class="page-content">
+    <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Order Manager</h4>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="/" class="text-primary">Admin</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'dashbard-orders' %}" class="text-primary">Order</a></li>
+                            <li class="breadcrumb-item active">Manage</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+
+        <div class="row">
+            <div class="col">
+                <div class="h-100">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex align-items-lg-center flex-lg-row flex-column">
+                                <div class="flex-grow-1"></div>
+                                <div class="mt-3 mt-lg-0"></div>
+                            </div><!-- end card header -->
+                        </div><!--end col-->
+                    </div>
+
+                    <div class="pt-4 pb-3">
+                        <!-- Contents start -->
+                        <div class="m-1">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center ms-auto">
+                                        <a href="{% url 'dashboard-order-create-order' %}" class="btn btn-success btn-label waves-effect waves-light">
+                                            <i class="mdi mdi-plus-thick label-icon align-middle fs-16 me-2"></i> Create Order
+                                        </a>
+                                    </div>
+                                </div>                                
+                                    <div class="card-body">
+                                        <div style="display: flex; flex-wrap: nowrap; align-content: center; justify-content: space-between; align-items: center;">
+                                            <div style="display: flex; flex-direction: row; flex-wrap: nowrap; align-content: center; justify-content: flex-start; align-items: center;">
+                                            <label for="paginator_count" class="text-nowrap m-0 p-0 pe-1">Items:</label>
+                                            <select id="paginator_count" class="form-select form-select-sm">
+                                                <option value="25" {% if request.GET.paginator_count == "25" %} selected {% endif %}>25</option>
+                                                <option value="50" {% if request.GET.paginator_count == "50" %} selected {% endif %}>50</option>
+                                                <option value="100" {% if request.GET.paginator_count == "100" or not request.GET.paginator_count %} selected {% endif %}>100</option>
+                                            </select>
+        
+                                            {% if request.user.is_superuser %}
+        
+                                            &emsp;
+        
+        
+                                            <label for="payment_select" class="text-nowrap m-0 p-0 pe-1">Payment:</label>
+                                            <select id="payment_select" class="form-select form-select-sm" style="width: auto;">
+                                                <option value="all" {% if request.GET.payment == "all" or not request.GET.payment %} selected {% endif %}>All</option>
+                                                <option value="1" {% if request.GET.payment == "1" %} selected {% endif %}>COD</option>
+                                                <option value="2" {% if request.GET.payment == "2" %} selected {% endif %}>CREDIT</option>
+                                                <option value="3" {% if request.GET.payment == "3" %} selected {% endif %}>COUPON</option>
+                                            </select>
+        
+                                            {% endif %}
+        
+                                            &emsp;
+        
+        
+                                            
+                                            &emsp;
+                                            <label for="fromdate" class="text-nowrap m-0 p-0">From:</label>
+                                            <input id="fromdate" type="date" class="form-control form-control-sm me-1 w-auto" style="min-width: 120px;" value="{{ request.GET.fromdate }}">
+        
+                                            <label for="todate" class="text-nowrap m-0 p-0">To:</label>
+                                            <input id="todate" type="date" class="form-control form-control-sm me-1 w-auto" style="min-width: 120px;" value="{{ request.GET.todate }}">
+        
+                                            <button id="date-submit-btn" class="btn btn-sm btn-soft-success">Submit</button>
+        
+        
+                                        </div>
+                                        <div style="display: flex; flex-direction: row; flex-wrap: nowrap; align-content: center; justify-content: flex-end; align-items: center;">
+                                            <label for="DataTableID_search" class="text-nowrap m-0 p-0 pe-1">Search:</label>
+                                            <input type="search" id="DataTableID_search" class="form-control form-control-sm" aria-labelledby="DataTableID_search" value="{{request.GET.search}}">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <table id="userdata" class="table table-sm w-100">
+                                        <thead class="bg-light">
+                                            <tr class="text-uppercase">
+                                                <th>#</th>
+                                                <th>User</th>
+                                                <th style="min-width: 150px;">Address</th>
+                                                <th>Payment Mode</th>
+                                                <th>Status</th>
+                                                <th>total</th>
+                                                <th>Paid Amount</th>
+                                                <th>Delivered Jar</th>
+                                                <th>Return Jar</th>
+                                                <th>Trip</th>
+                                                <th>Delivered</th>
+                                               
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                    <!-- <div class="row p-2 ps-0 m-2 me-0 d-flex align-items-center justify-content-between">
+										<div class="col-md-6 p-0 m-0">{{ count_info }}</div>
+										<div class="col-md-6 py-0 m-0">
+											{% include "dashboard/includes/order_pagination.html" %}
+										</div>
+									</div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Contents end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+    
+
+        {% include "dashboard/includes/modals/delete.html" with title1="Customer" title2="Customer" %}
+        
+        <!-- Update Modal -->
+        
+    </div>
+    <!-- container-fluid -->
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'dashboard/assets/libs/sweetalert2/sweetalert2.min.js' %}"></script>
+<script src="{% static 'dashboard/assets/libs/apexcharts/apexcharts.min.js' %}"></script>
+<script src="{% static 'dashboard/assets/js/pages/modal.init.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"
+        integrity="sha256-VBLiveTKyUZMEzJd6z2mhfxIqz3ZATCuVMawPZGzIfA=" crossorigin="anonymous"></script>
+{% endblock js %}
+
+{% block script %}
+<script>
+    $(document).ready(function () {
+        $('#userdata').DataTable({
+        "processing": true,
+        'paging':true,
+        "serverSide": true,
+        "ordering": true,
+        "searching":true,
+
+        "ajax": {
+            "url": "{% url 'dashboard-orders-list' %}",
+            "type": "GET",
+            "data": function (d) {
+                d.startDate = dateParams.fromdateParam;
+                d.endDate = dateParams.todateParam;
+                d.paginator_count = dateParams.paginator_countParam;
+                d.type = dateParams.typeParam;
+                d.search = $('#DataTableID_search').val(); 
+                
+            }
+        },
+        "columns": [
+            { "data": "id" },
+            { "data": "user" },
+            { "data": "address" },
+            { "data": "payment_mode" },
+            { "data": "status" },
+            { "data": "total" },
+            { "data": "paid_amount" },
+            { "data": "jar_count" },
+            { "data": "Return_jar_count" },
+            { "data": "trip" },
+            { "data": "delivered" },
+           
+            { "data": "action" },
+        ],
+        "lengthMenu": [
+            [25, 50, 100],
+            [25, 50, 100]
+        ],
+        "pageLength": 25,
+        "responsive": true,
+        "scrollX": true,
+        "scrollY": "50vh",
+        "scrollCollapse": true,
+        "language": {
+            "searchPlaceholder": "Search Ordfdders",
+            "lengthMenu": "Show _MENU_",
+            "zeroRecords": `<span class="text-danger">No data found</span>`,
+            "info": "Showing page _PAGE_ of _PAGES_ (Total records: _TOTAL_)",
+            "infoEmpty": "No records available",
+            "infoFiltered": "(filtered from _MAX_ total records)",
+            "infoTotal": "Total records: _TOTAL_",
+            "paginate": {
+                "first": `<i class="mdi mdi-arrow-left"></i>`,
+                "previous": `<i class="mdi mdi-arrow-left"></i>`,
+                "last": `<i class="mdi mdi-arrow-right"></i>`,
+                "next": `<i class="mdi mdi-arrow-right"></i>`,
+            }
+        },
+        
+    });
+
+    // $("#userdata_wrapper > div:nth-child(3)").hide();
+    $("#userdata_filter > label").hide();
+    $("#userdata_length > label").hide();
+    // $("#userdata_paginate").hide();
+});
+    var urlParams = new URLSearchParams(window.location.search);
+
+    function setDefaultDates() {
+        var today = new Date();
+        var startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); 
+
+        function formatDate(date) {
+            var year = date.getFullYear();
+            var month = String(date.getMonth() + 1).padStart(2, '0');
+            var day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        var pageParam = urlParams.get("page") || 1;
+        var typeParam = urlParams.get("type") || "all";
+        var paginator_countParam = urlParams.get("paginator_count") || 25;
+        var searchParam = urlParams.get("search") || "";
+        var fromdateParam = urlParams.get("fromdate") || formatDate(startOfMonth);
+        var todateParam = urlParams.get("todate") || formatDate(today);
+
+        console.log("fromdate:", fromdateParam);
+        console.log("todate:", todateParam);
+
+        var new_url = `{% url 'dashbard-orders' %}?page=${pageParam}&type=${typeParam}&paginator_count=${paginator_countParam}&search=${searchParam}&fromdate=${fromdateParam}&todate=${todateParam}`;
+
+        return {
+            fromdateParam: fromdateParam,
+            todateParam: todateParam,
+            paginator_countParam: paginator_countParam,
+            typeParam: typeParam
+        };
+    }
+
+    var dateParams = setDefaultDates();
+$('#DataTableID_search').on('keyup', function () {
+        $('#userdata').DataTable().ajax.reload();
+    });
+
+$("#date-submit-btn").on('click', function() {
+    function getParameterByName(name, url) {
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+            var fromdateValue = $("#fromdate").val();
+            var todateValue = $("#todate").val();
+            var paymentType = $("#payment_select").val();
+            console.log(fromdateValue,todateValue)
+
+            var currentPageURL = window.location.href;
+
+            var pageParam = getParameterByName('page', currentPageURL) || 1;
+            var typeParam = getParameterByName('type', currentPageURL) || 'all';
+            var paginator_countParam = getParameterByName('paginator_count', currentPageURL) || 25;
+
+            var url = `{% url 'dashbard-orders' %}?page=${pageParam}&type=${paymentType}&paginator_count=${paginator_countParam}&search=&fromdate=${fromdateValue}&todate=${todateValue}`;
+
+            window.location.href = url;
+        });
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('.noty-tost').click();
+    });
+</script>
+{% endblock script %}

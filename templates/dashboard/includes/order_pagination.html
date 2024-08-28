@@ -1,0 +1,84 @@
+<nav class="pagination float-end row overflow-scroll">
+	<ul class="pagination-list div pagination justify-content-center m-0 p-0">
+		{% if page_obj.has_previous %}
+			<li class="page-item">
+				<a href="?page=1&type={{ request.GET.type }}&search={{ request.GET.search }}&paginator_count={{ request.GET.paginator_count }}&region={{request.GET.region}}&fromdate={{ request.GET.fromdate }}&todate={{ request.GET.todate }}&isexpected={{ request.GET.isexpected }}&vendor_id={{ request.GET.vendor_id }}" class="page-link" data-bs-toggle="tooltip" data-bs-title="First">
+					<span class="icon">
+						<i class="mdi mdi-arrow-left-thick"></i>
+					</span>
+				</a>
+			</li>
+			<li class="page-item">
+				<a href="?page={{ page_obj.previous_page_number }}&type={{ request.GET.type }}&search={{ request.GET.search }}&paginator_count={{ request.GET.paginator_count }}&region={{request.GET.region}}&fromdate={{ request.GET.fromdate }}&todate={{ request.GET.todate }}&isexpected={{ request.GET.isexpected }}&vendor_id={{ request.GET.vendor_id }}" class="page-link" data-bs-toggle="tooltip" data-bs-title="Previous">
+					<span class="icon">
+						<i class="mdi mdi-arrow-left"></i>
+					</span>
+				</a>
+			</li>
+		{% else %}
+			<li class="page-item disabled">
+				<a href="#" class="page-link" data-bs-toggle="tooltip" data-bs-title="First">
+					<span class="icon">
+						<i class="mdi mdi-arrow-left-thick"></i>
+					</span>
+				</a>
+			</li>
+			<li class="page-item disabled">
+				<a href="#" class="page-link" data-bs-toggle="tooltip" data-bs-title="Previous">
+					<span class="icon">
+						<i class="mdi mdi-arrow-left"></i>
+					</span>
+				</a>
+			</li>
+		{% endif %}
+
+		{% for num in page_obj.paginator.page_range %}
+			{% if page_obj.number == num %}
+				<li class="page-item active">
+					<a href="#" class="page-link">
+						{{ num }}
+					</a>
+				</li>
+			{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+				<li class="page-item">
+					<a href="?page={{ num }}&type={{ request.GET.type }}&search={{ request.GET.search }}&paginator_count={{ request.GET.paginator_count }}&region={{request.GET.region}}&fromdate={{ request.GET.fromdate }}&todate={{ request.GET.todate }}&isexpected={{ request.GET.isexpected }}&vendor_id={{ request.GET.vendor_id }}" class="page-link">
+						{{ num }}
+					</a>
+				</li>
+			{% endif %}
+		{% endfor %}
+
+		{% if page_obj.has_next %}
+			<li class="page-item">
+				<a href="?page={{ page_obj.next_page_number }}&type={{ request.GET.type }}&search={{ request.GET.search }}&paginator_count={{ request.GET.paginator_count }}&region={{request.GET.region}}&fromdate={{ request.GET.fromdate }}&todate={{ request.GET.todate }}&isexpected={{ request.GET.isexpected }}&vendor_id={{ request.GET.vendor_id }}" class="page-link" data-bs-toggle="tooltip" data-bs-title="Next">
+					<span class="icon">
+						<i class="mdi mdi-arrow-right"></i>
+					</span>
+				</a>
+			</li>
+			<li class="page-item">
+				<a href="?page={{ page_obj.paginator.num_pages }}&type={{ request.GET.type }}&search={{ request.GET.search }}&paginator_count={{ request.GET.paginator_count }}&region={{request.GET.region}}&fromdate={{ request.GET.fromdate }}&todate={{ request.GET.todate }}&isexpected={{ request.GET.isexpected }}&vendor_id={{ request.GET.vendor_id }}" class="page-link" data-bs-toggle="tooltip" data-bs-title="Last">
+					<span class="icon">
+						<i class="mdi mdi-arrow-right-thick"></i>
+					</span>
+				</a>
+			</li>
+		{% else %}
+			<li class="page-item disabled">
+				<a href="#" class="page-link" data-bs-toggle="tooltip" data-bs-title="Next">
+					<span class="icon">
+						<i class="mdi mdi-arrow-right"></i>
+					</span>
+				</a>
+			</li>
+			<li class="page-item disabled">
+				<a href="#" class="page-link" data-bs-toggle="tooltip" data-bs-title="Last">
+					<span class="icon">
+						<i class="mdi mdi-arrow-right-thick"></i>
+					</span>
+				</a>
+			</li>
+		{% endif %}
+	</ul>
+</nav>
+

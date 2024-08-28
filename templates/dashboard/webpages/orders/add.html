@@ -1,0 +1,375 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block css %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+    <!-- Sweet Alert css-->
+    <link href="{% static 'dashboard/assets/libs/sweetalert2/sweetalert2.min.css' %}" rel="stylesheet" type="text/css"/>
+    <!--Swiper slider css-->
+    <link href="{% static 'dashboard/assets/libs/swiper/swiper-bundle.min.css' %}" rel="stylesheet" type="text/css"/>
+{% endblock css %}
+
+{% block style %}
+    <style>
+        .form-group {
+            margin-top: 1rem;
+        }
+		.alert-custom {
+            color: red;
+            text-align: center;
+        }
+		#alert-box-top-right {
+        position: absolute;
+        top: 5%;
+        right: 5%;
+        transform: translate(5%, -5%);
+    }
+    .border-red {
+        border: 1px solid #ff0000;
+    }
+	
+    
+    </style>
+{% endblock style %}
+
+{% block content %}
+    <div class="page-content">
+        <div class="container-fluid">
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0">Order Manager</h4>
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="/" class="text-primary">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="{% url 'dashbard-orders' %}" class="text-primary">Order</a></li>
+                                <li class="breadcrumb-item active">Add</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end page title -->
+
+			
+
+            <div class="row">
+                <div class="col">
+                    <div class="h-100">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-flex align-items-lg-center flex-lg-row flex-column">
+                                    <div class="flex-grow-1">
+                                    </div>
+                                    <div class="mt-3 mt-lg-0"></div>
+                                </div><!-- end card header -->
+                            </div>
+                            <!--end col-->
+                        </div>
+
+                        <div class="pt-4 pb-3">
+                            {# ------------------------------------Contents start------------------------------------ #}
+                            <div class="m-1">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title">Add Order</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form method="POST" enctype="multipart/form-data" action="{% url 'dashboard-order-create-order' %}">
+											{% csrf_token %}
+											<div class="row">
+												<div class="col-md-6">
+													<!-- Trip -->
+													<div class="form-group">
+														<label for="trip">Trip</label>
+														<select id="trip" name="trip" class="form-control custom-select-with-arrow" data-choices>
+															<option value="">Select Trip</option>
+															{% for trip in trips %}
+																<option value="{{ trip.id }}">{{ trip.id }}--{{ trip.vehicle }}--{{ trip.route.route_name }}</option>
+															{% endfor %}
+														</select>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<!-- Customers -->
+													<div class="form-group">
+														<label for="customer">Customer</label>
+														<select id="customer" name="customer" class="form-control custom-select-with-arrow" data-choices>
+															<option value="">Select customer</option>
+															{% for customer in customers %}
+																<option value="{{ customer.id }}">{{ customer.name }}</option>
+															{% endfor %}
+														</select>
+													</div>
+											</div>
+											<div class="row">
+													<div class="col-md-6">
+														<!-- Product -->
+														<div class="form-group">
+															<label for="product">Product</label>
+															<select id="product" name="product" class="form-control custom-select-with-arrow" data-choices>
+																<option value="">Select Product</option>
+																{% for product in products %}
+																	<option value="{{ product.id }}">{{ product }}</option>
+																{% endfor %}
+															</select>
+														</div>
+													</div>
+												<div class="col-md-6">
+													<!-- Coupon Codes -->
+													<div class="form-group">
+														<label for="coupon_codes">Coupon Codes</label>
+														<select id="coupon_codes" name="coupon_codes" class="form-control" data-choices data-choices-removeItem multiple>
+															<option value="">Select Coupons</option>
+															{% for coupon in coupons %}
+																<option id="coupon_codes" value="{{ coupon.id }}">{{ coupon.code }}</option>
+															{% endfor %}
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-md-3">
+													<!-- Purchase Type -->
+													<div class="form-group">
+														<label for="purchase_type">Purchase Type</label>
+														<select id="purchase_type" name="purchase_type" class="form-control custom-select-with-arrow" data-choices required>
+															<option value="">Select purchase type</option>
+															<option value="0">Buy</option>
+															<option value="1">Refill</option>
+														</select>
+													</div>
+												</div>
+												<div class="col-md-3">
+													<!-- Jar Count -->
+													<div class="form-group">
+														<label for="jar_count">Jar Count</label>
+														<input type="number" id="jar_count" name="jar_count" class="form-control" placeholder="Enter jar count" required>
+													</div>
+												</div>
+												<div class="col-md-3">
+													<!-- Return Jar Count -->
+													<div class="form-group">
+														<label for="return_jar">Return Jar Count</label>
+														<input type="number" id="return_jar" name="return_jar" class="form-control" placeholder="Enter return jar count" required>
+													</div>
+												</div>
+												<div class="col-md-3">
+													<!-- Return balance_jars Count -->
+													<div class="form-group">
+														<label for="return_jar">Balance Jar Count</label>
+														<input type="number" id="balance_jars" name="balance_jars" class="form-control" placeholder="Enter balance jar count" required>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-md-4">
+													<!-- Jar Count -->
+													<div class="form-group">
+														<label for="deposit_amount">Deposit Amount</label>
+														<input type="number" id="deposit_amount" name="deposit_amount" class="form-control" placeholder="Enter deposit amount" required>
+													</div>
+												</div>
+												<div class="col-md-4">
+													<!-- Purchase Type -->
+													<div class="form-group">
+														<label for="purchase_type">Payment Mode</label>
+														<select id="payment_mode" name="payment_mode" class="form-control custom-select-with-arrow" data-choices>
+															<option value="">Select payment mode</option>
+															<option value="1">COD</option>
+															<option value="2">CREDIT</option>
+															<option value="3">COUPON</option>
+														</select>
+													</div>
+												</div>
+												<div class="col-md-4">
+													<!-- Jar Count -->
+													<div class="form-group">
+														<label for="jar_count">Collected Amount</label>
+														<input type="number" id="collected_amount" name="collected_amount" class="form-control" placeholder="Enter collected amount" required>
+													</div>
+												</div>
+												
+											</div>
+											{% if messages %}
+												<div class="row">
+													<div class="col-12">
+														{% for message in messages %}
+															<div class="alert alert-custom">
+																{{ message }}
+															</div>
+														{% endfor %}
+													</div>
+												</div>
+											{% endif %}
+											<div class="form-group">
+												<button type="submit" class="btn btn-primary mt-2">Submit</button>
+											</div>
+										</form>
+                                    </div>
+                                </div>
+                            </div><!-- end row -->
+                            {# -------------------------------------Contents end------------------------------------- #}
+                        </div>
+                        <!--end row-->
+                    </div> <!-- end .h-100-->
+                </div> <!-- end col -->
+            </div>
+        </div>
+        <!-- container-fluid -->
+    </div>
+{% endblock content %}
+
+{% block js %}
+    <script src="{% static 'dashboard/assets/libs/sweetalert2/sweetalert2.min.js' %}"></script>
+    <script src="{% static 'dashboard/assets/libs/apexcharts/apexcharts.min.js' %}"></script>
+    <script src="{% static 'dashboard/assets/js/pages/modal.init.js' %}"></script>
+	<script>
+		const productSelect = document.getElementById('product');
+		const couponSelect = document.getElementById('coupon_codes');
+		const tripSelect = document.getElementById('trip');
+		const customerSelect = document.getElementById('customer');
+	
+		// Initialize Choices.js only if not already initialized
+		if (!productSelect.classList.contains('choices__input')) {
+			var productChoices = new Choices(productSelect);
+		}
+		if (!couponSelect.classList.contains('choices__input')) {
+			var couponChoices = new Choices(couponSelect, {
+				removeItemButton: true
+			});
+		}
+		if (!tripSelect.classList.contains('choices__input')) {
+			var tripChoices = new Choices(tripSelect);
+		}
+		if (!customerSelect.classList.contains('choices__input')) {
+			var customerChoices = new Choices(customerSelect, {
+				placeholderValue: 'Select a customer'
+			});
+		}
+	
+		productSelect.addEventListener('change', function() {
+			const productId = this.value;
+			fetch(`/orders/get-coupons/${productId}/`)
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					return response.json();
+				})
+				.then(data => {
+					console.log('Fetched coupons:', data);
+					couponChoices.clearStore();
+					couponChoices.setChoices(data.coupons.map(coupon => ({
+						value: coupon.id,
+						label: coupon.code
+					})));
+				})
+				.catch(error => {
+					console.error('Error fetching coupons:', error);
+				});
+		});
+	
+		customerSelect.addEventListener('change', function() {
+			const customerId = this.value;
+			console.log(customerId)
+			productChoices.clearStore();
+		
+			fetch(`/orders/get-products/${customerId}/`)
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					return response.json();
+				})
+				.then(data => {
+					console.log('Fetched products:', data);
+					productChoices.setChoices(data.products.map(product => ({
+						value: product.id,
+						label: `${product.name} (${product.selling_price})`
+					})));
+				})
+				.catch(error => {
+					console.error('Error fetching products:', error);
+				});
+		});
+	
+		tripSelect.addEventListener('change', function() {
+        const tripId = this.value;
+        fetch(`/orders/get-customers/${tripId}/`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Fetched customers:', data);
+                // Access the customers_data array from the data object
+                customerChoices.clearStore();
+                customerChoices.setChoices(data.customers_data.map(customer => ({
+                    value: customer.id,
+                    label: customer.name
+                })));
+            })
+            .catch(error => {
+                console.error('Error fetching customers:', error);
+            });
+    });
+	</script>
+	<script>
+		$(document).ready(function () {
+			$('.noty-tost').click();
+		});
+	</script>
+	
+{% endblock js %}
+{% block script %}
+{% endblock script %}
+
+
+
+<!-- productSelect.addEventListener('change', function() {
+	const productId = this.value;
+	fetch(`/orders/get-coupons/${productId}/`)
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			return response.json();
+		})
+		.then(data => {
+			console.log('Fetched coupons:', data);
+			if (couponChoices && couponChoices.removeLoadingState) {
+				couponChoices.removeLoadingState();
+			}
+			couponChoices.clearStore();
+			couponChoices.setChoices(data.coupons.map(coupon => ({
+				value: coupon.id,
+				label: coupon.code
+			})));
+		})
+		.catch(error => {
+			console.error('Error fetching coupons:', error);
+		});
+
+
+
+		tripSelect.addEventListener('change', function() {
+			const tripId = this.value;
+			fetch(`/orders/get-customers/${tripId}/`)
+				.then(response => response.json())
+				.then(data => {
+					customerSelect.innerHTML = '<option value="">Select a Customer</option>';
+					data.customers.forEach(customer => {
+						const option = document.createElement('option');
+						option.value = customer.id;
+						option.textContent = customer.name;
+						customerSelect.appendChild(option);
+					});
+				});
+	});
+}); -->

@@ -1,0 +1,352 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+    <!-- Sweet Alert css-->
+    <link href="{% static 'dashboard/assets/libs/sweetalert2/sweetalert2.min.css' %}" rel="stylesheet" type="text/css"/>
+    <!--Swiper slider css-->
+    <link href="{% static 'dashboard/assets/libs/swiper/swiper-bundle.min.css' %}" rel="stylesheet" type="text/css"/>
+{% endblock css %}
+
+{% block style %}
+    <style>
+        .form-group {
+            margin-top: 1rem;
+        }
+        #alert-box-top-right {
+        position: absolute;
+        top: 5%;
+        right: 5%;
+        transform: translate(5%, -5%);
+    }
+    .border-red {
+        border: 1px solid #ff0000;
+    }
+    
+    </style>
+{% endblock style %}
+
+{% block content %}
+<div class="page-content">
+    <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Course Manager</h4>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="/" class="text-primary">Admin</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'dashboard-course'%}" class="text-primary">Course</a></li>
+                            <li class="breadcrumb-item active">Manage</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+        <div class="row">
+            <div class="col">
+                <div class="h-100">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex align-items-lg-center flex-lg-row flex-column">
+                                <div class="flex-grow-1">
+                                </div>
+                                <div class="mt-3 mt-lg-0"></div>
+                            </div><!-- end card header -->
+                        </div>
+                        <!--end col-->
+                    </div>
+                    <div class="pt-4 pb-3">
+                        <div class="m-1">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-end align-items-center">
+                                    <button href="" class="btn btn-soft-success" data-bs-toggle="modal" data-bs-target="#addModal">
+                                        <i class="mdi mdi-plus-thick"></i> Add Course
+                                    </button>
+                                </div>
+                                <div class="card-body">
+
+                                    
+                                    <div class="w-50 mx-auto mb-5">
+                                        <form action="" method="GET">
+                                            <div class="input-group">
+                                                <input type="search" class="form-control" name="search" placeholder="Search Course" value="{{ request.GET.search }}">
+                                                <button class="btn btn-primary" type="submit">Search</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="row">
+                                        {% if courses %}
+                                        {% for course in courses %}
+                                            <div class="col-md-3">
+                                                <div class="card shadow-lg m-2">
+                                                    <img class="card-img-top" src="{{ course.image.url }}" style="height: 10rem; object-fit: contain;" alt="Course Image">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">
+                                                            <a href="{% url 'dashboard-course-subjects-list' course.id %}">
+                                                                {{ course.course_name }}
+                                                            </a>
+                                                            {% for batch in batches %}
+                                                           
+                                                        </h5>
+                                                        <h6>     {% if batch.course == course %}
+                                                                
+                                                            Expiry: {{ batch.batch_expiry }} ,Price: {{ batch.batch_price }}
+                                                        {% endif %}
+                                                    {% endfor %}</h5>
+                                                        
+                                                        
+                                                        <p class="card-text">{{ course.description }}</p>
+                                                       
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                <button class="w-100 btn btn-outline-primary btn-sm btn-update me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" data-id="{{ course.id }}">
+                                                                    <i class="mdi mdi-pencil"></i>
+                                                                </button>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <button class="w-100 btn btn-outline-danger btn-sm deleteConfirmModalClass" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" data-value="{{ course.id }}" data-name="{{ course.course_name }}">
+                                                                    <i class="mdi mdi-trash-can"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="col-12">
+                                            <div class="text-center text-danger">
+                                                <p>No courses found!</p>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- end row -->
+                    </div>
+                    <!--end row-->
+                </div> <!-- end .h-100-->
+            </div> <!-- end col -->
+        </div>
+
+        {% comment %} {% include 'dashboard/includes/modals/add.html' with title="Course" %} {% endcomment %}
+
+        {% comment %} {% include "dashboard/includes/modals/update.html" with title="Course" %} {% endcomment %}
+
+        {% comment %} {% include "dashboard/includes/modals/delete.html" with title1="a Course" title2="Course" %} {% endcomment %}
+
+        <!-- Add Modal -->
+        <div id="addModal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header border-bottom">
+                        <h5 class="modal-title" id="myModalLabel">Add {{ title }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body pt-0">
+                        <form role="form" method="post" id="addModalForm" enctype="multipart/form-data" action="{% url 'dashboard-course-add' %}">
+                            {% csrf_token %}
+                            <!-- Render fields in the desired order -->
+                            <div class="form-group">
+                                <label for="{{ form.course_name.id_for_label }}">Course Name</label>
+                                {{ form.course_name }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.course_fee.id_for_label }}">Course Fee</label>
+                                {{ form.course_fee }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.course_expire.id_for_label }}">Course Expire</label>
+                                {{ form.course_expire }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.image.id_for_label }}">Course Image</label>
+                                {{ form.image }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.description.id_for_label }}">Description</label>
+                                {{ form.description }}
+                            </div>
+                        </form>
+                        {% if form.errors %}
+                            <div class="alert alert-danger mt-3" role="alert">
+                                <strong>Error!</strong> Please correct the following errors:
+                                <ul>
+                                    {% for field, errors in form.errors.items %}
+                                        {% for error in errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="modal-footer border-top">
+                        <button type="submit" class="btn btn-success" form="addModalForm">Add</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+        <!-- delete Modal -->
+        <div id="deleteConfirmModal" class="modal zoomIn fade" data-bs-keyboard="false"
+            tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-body p-5 text-center">
+                        <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#405189,secondary:#f06548" style="width:90px;height:90px"></lord-icon>
+                        <div class="mt-4 text-center">
+                            <h4>You are about to delete this Course !!</h4>
+                            <p class="fs-15 mb-4">Are you sure to delete this Course?
+                                <br>
+                                <span class="text-muted">ps: there is no turning back!</span>
+                            </p>
+
+                            <div class="hstack gap-2 justify-content-center remove">
+                                <button class="btn btn-link link-success fw-medium text-decoration-none" data-bs-dismiss="modal">
+                                    <i class="ri-close-line me-1 align-middle"></i> Close
+                                </button>
+                                <button type = 'submit' class="btn btn-danger" id="delete-record">Yes, Delete It</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div><!-- /.modal -->
+
+        <!-- Update Modal -->
+        <div id="updateModal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header border-bottom">
+                        <h5 class="modal-title" id="myModalLabel">Update Course</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body pt-0">
+                        <form role="form" method="post" enctype="multipart/form-data" action="" id="update-form">
+                            {% csrf_token %}
+                            <div id="update-form-box" class="hidden"></div>
+                            <div class="text-center hidden" id="update-loading"></div>
+                        </form>
+                    </div>
+                    <div class="modal-footer border-top">
+                        <button type="submit" class="btn btn-success" form="update-form">Update</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+    </div>
+    <!-- container-fluid -->
+</div>
+{% endblock content %}
+
+{% block js %}
+    <script src="{% static 'dashboard/assets/libs/sweetalert2/sweetalert2.min.js' %}"></script>
+    <script src="{% static 'dashboard/assets/libs/apexcharts/apexcharts.min.js' %}"></script>
+    <script src="{% static 'dashboard/assets/js/pages/modal.init.js' %}"></script>
+{% endblock js %}
+{% block script %}
+<script>
+    $(document).ready(function () {
+    
+        {% comment %} $('#addModalForm').submit(function (event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+    
+            {% comment %} $.ajax({
+                type: 'POST',
+                url: '{% url 'dashboard-course-add' %}',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    $('#addModal').modal('hide');
+                    window.location.reload();
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert('An error occurred while adding the Course. Please try again.');
+                }
+            });
+        });  {% endcomment %}
+    
+        $('.btn-update').click(function () {
+            var courseID = $(this).data('id');
+    
+            $.ajax({
+                type: 'GET',
+                url: '/course/update/' + courseID + '/',
+                beforeSend: function () {
+                    $('#update-loading').removeClass('hidden');
+                },
+                success: function (response) {
+                    $('#update-form-box').html(response);
+                    $('#update-form').attr('action', '/course/update/' + courseID + '/');
+                    $('#updateModal').modal('show');
+                },
+                error: function (error) {
+                    console.error(error);
+                    alert('Error occurred while fetching Course data.');
+                },
+                complete: function () {
+                    $('#update-loading').addClass('hidden');
+                }
+            });
+        });
+    
+        $('.btn-update').click(function () {
+            var courseID = $(this).data('id');
+            var updateUrl = '/course/update/' + courseID + '/';
+            
+            $('#update-form').attr('action', updateUrl);
+            
+            $.get(updateUrl, function(data) {
+                $('#update-form').html($(data).find('#update-form').html());
+                $('#updateModal').modal('show');
+            });
+        });
+    
+        $('.deleteConfirmModalClass').click(function () {
+            var courseID = $(this).data('value');
+            $('#delete-record').data('id', courseID);
+        });
+    
+        $('#delete-record').click(function () {
+            var courseID = $(this).data('id');
+    
+            $.ajax({
+                type: 'POST',
+                url: '/course/delete/' + courseID + '/',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                },
+                success: function (response) {
+                    $('#deleteConfirmModal').modal('hide');
+                    window.location.reload();
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert('An error occurred while deleting the Course. Please try again.');
+                }
+            });
+        });
+    });
+    
+</script>
+<script>
+    $(document).ready(function () {
+        $('.noty-tost').click();
+    });
+</script>
+
+{% endblock script %}

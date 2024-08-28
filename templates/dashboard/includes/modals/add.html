@@ -1,0 +1,35 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<!-- Add Modals -->
+<div id="addModal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title" id="myModalLabel">Add {{ title }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-0">
+                <form role="form" method="post" id="addModalForm"
+                      enctype="multipart/form-data" action="">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                </form>
+                {% if form.errors %}
+                    <div class="alert alert-danger mt-3" role="alert">
+                        <strong>Error!</strong> Please correct the following errors:
+                        <ul>
+                            {% for field, errors in form.errors.items %}
+                                {% for error in errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="modal-footer border-top">
+                <button type="submit" class="btn btn-success" form="addModalForm">Add</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -1,0 +1,314 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block css %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+    <!-- Sweet Alert css-->
+    <link href="{% static 'dashboard/assets/libs/sweetalert2/sweetalert2.min.css' %}" rel="stylesheet" type="text/css"/>
+    <!--Swiper slider css-->
+    <link href="{% static 'dashboard/assets/libs/swiper/swiper-bundle.min.css' %}" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock css %}
+
+{% block style %}
+    <style>
+        .form-group {
+            margin-top: 1rem;
+        }
+
+    #alert-box-top-right {
+        position: absolute;
+        top: 5%;
+        right: 5%;
+        transform: translate(5%, -5%);
+    }
+    .border-red {
+        border: 1px solid #ff0000;
+    }
+    @media (max-width: 576px) {
+        .modal-dialog {
+            max-width: 90%; /* Adjust based on your preference */
+            margin: 15px auto; /* Center the modal */
+        }
+    }    
+    .modal-content {
+        background-color: #f8f9fa; /* Lighter shade for the modal body */
+        border-radius: 10px; /* Rounded corners */
+        box-shadow: 0 4px 6px rgba(0,0,0,.1); /* Subtle shadow for depth */
+    }
+
+    .modal-header {
+        border-bottom: none; /* Remove the bottom border */
+    }
+
+    .btn-primary {
+        background-color: #007bff; /* Bootstrap primary blue */
+        border-color: #007bff; /* Border matches the background */
+    }
+
+    .btn-success {
+        background-color: #28a745; /* Bootstrap success green */
+        border-color: #28a745; /* Border matches the background */
+    }
+
+
+
+</style>
+{% endblock style %}
+
+
+{% block content %}
+    <div class="page-content">
+        <div class="container-fluid">
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0">Customer Manager</h4>
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="/" class="text-primary">Admin</a></li>
+                                <li class="breadcrumb-item"><a href="{% url 'dashboard-customer-manager' %}" class="text-primary">Customer</a></li>
+                                <li class="breadcrumb-item active">Manage</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end page title -->
+
+            <div class="row">
+                <div class="col">
+                    <div class="h-100">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-flex align-items-lg-center flex-lg-row flex-column">
+                                    <div class="flex-grow-1"></div>
+                                    <div class="mt-3 mt-lg-0"></div>
+                                </div><!-- end card header -->
+                            </div><!--end col-->
+                        </div>
+
+                        <div class="pt-4 pb-3">
+                            <!-- Contents start -->
+                            <div class="m-1">
+                                <div class="card">
+                                    <div class="card-header d-flex justify-content-end align-items-center">
+                                        <div class="col-auto me-2">
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#csvUploadModal" data-bs-toggle="tooltip" title="Import customers via CSV">
+                                                <i class="mdi mdi-upload"></i> Import Customers
+                                            </button>                                            
+                                        </div>
+                                        <div class="col-auto">
+                                            <a href="{% url 'dashboard-customer-add' %}" class="btn btn-success">
+                                                <i class="mdi mdi-plus-thick"></i> Add Customer
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <table id="CouponBookData" class="table table-sm w-100">
+                                            <thead class="bg-light">
+                                                <tr class="text-uppercase">
+                                                    <th class="align-middle">Id</th>
+                                                    <th class="align-middle">Name</th>
+                                                    <th class="align-middle">Phone</th>
+                                                    <th class="align-middle">Email</th>
+                                                    <th class="align-middle">Created</th>
+                                                    <th class="align-middle">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Contents end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+        
+
+            {% include "dashboard/includes/modals/delete.html" with title1="Customer" title2="Customer" %}
+            
+            <!-- CSV Upload Modal -->
+            <div class="modal fade" id="csvUploadModal" tabindex="-1" aria-labelledby="csvUploadModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="csvUploadModalLabel">Upload CSV File</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post" enctype="multipart/form-data" action= "{% url 'dashboard-customer-csv-import' %}" id="csvUploadForm">
+                                {% csrf_token %}
+                                {{ form|crispy }}
+                                <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <!-- container-fluid -->
+    </div>
+{% endblock content %}
+
+{% block js %}
+    <script src="{% static 'dashboard/assets/libs/sweetalert2/sweetalert2.min.js' %}"></script>
+    <script src="{% static 'dashboard/assets/libs/apexcharts/apexcharts.min.js' %}"></script>
+    <script src="{% static 'dashboard/assets/js/pages/modal.init.js' %}"></script>
+{% endblock js %}
+
+{% block script %}
+    <script>$('#addModalForm').attr("action", "{% url 'dashboard-customer-add' %}")</script>
+    <script>
+        $(document).ready(function() {
+            $('#CouponBookData').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "{% url 'dashboard-customer-list' %}",
+                    "type": "GET",
+                    "data": function (d) {
+                        d.search = {
+                            "value": $('input[type="search"]').val(),
+                            "regex": false
+                        };
+                        d.start = d.start;
+                        d.length = d.length;
+                    }
+                },
+                "columns": [
+                    {
+                        "data": "id",
+                        "render": function (data, type, full, meta) {
+                            return '<td class="align-middle">' + data + '</td>';
+                        }
+                    },
+                    {
+                        "data": "name",
+                        "render": function (data, type, full, meta) {
+                            return '<td class="align-middle">' + data + '</td>';
+                        }
+                    },
+                    {
+                        "data": "phone",
+                        "render": function (data, type, full, meta) {
+                            return '<td class="align-middle">' + data + '</td>';
+                        }
+                    },
+                    {
+                        "data": "email",
+                        "render": function (data, type, full, meta) {
+                            return '<td class="align-middle">' + data + '</td>';
+                        }
+                    },
+                    {
+                        "data": "created",
+                        "render": function (data, type, full, meta) {
+                            return '<td class="align-middle">' + data + '</td>';
+                        }
+                    },
+                    {
+                        "data": "id",
+                        "render": function (data, type, full, meta) {
+                            const subscriptionId = full.water_subscription_id;
+                            const customerId = full.id;
+                            return `
+                                <a href="/customer/update/${subscriptionId}/"><i class="mdi mdi-pencil"></i></a>
+                                <a href="/customer/view/${customerId}/"><i class="mdi mdi-eye"></i></a>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
+                                   class="text-danger d-inline-block deleteConfirmModalClass" data-id="${customerId}"
+                                   data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
+                                   title="Remove">
+                                   <i class="mdi mdi-delete fs-16"></i>
+                                </a>`;
+                        }
+                    }
+                ],
+                "lengthMenu": [
+                    [25, 50, 100],
+                    [25, 50, 100]
+                ],
+                "pageLength": 25,
+                "responsive": true,
+                "scrollX": true,
+                "scrollY": "50vh",
+                "scrollCollapse": true,
+                "ordering": true,
+                "language": {
+                    "searchPlaceholder": "Search Customer",
+                    "lengthMenu": "Show _MENU_",
+                    "zeroRecords": `<span class="text-danger">No data found</span>`,
+                    "info": "Showing page _PAGE_ of _PAGES_ (Total records: _TOTAL_)",
+                    "infoEmpty": "No records available",
+                    "infoFiltered": "(filtered from _MAX_ total records)",
+                    "infoTotal": "Total records: _TOTAL_",
+                    "paginate": {
+                        "first": `<i class="mdi mdi-arrow-left"></i>`,
+                        "previous": `<i class="mdi mdi-arrow-left"></i>`,
+                        "last": `<i class="mdi mdi-arrow-right"></i>`,
+                        "next": `<i class="mdi mdi-arrow-right"></i>`,
+                    }
+                }
+            });
+    
+            $(document).on('click', '.deleteConfirmModalClass', function () {
+                var customerId = $(this).data('id');
+                $('#delete-record').data('value', customerId);
+            });
+    
+            $('#delete-record').click(function () {
+                var customerId = $(this).data('value');
+                console.log("Deleting customer with ID: " + customerId);
+    
+                $.ajax({
+                    url: '/customer/delete/' + customerId + '/',
+                    type: 'POST',
+                    data: {
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                    },
+                    success: function (data) {
+                        console.log("Customer deleted successfully");
+                        window.location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error deleting customer:", error);
+                    }
+                });
+            });
+        });
+    </script>
+
+   
+    
+
+<script>
+    $('#csvUploadForm').submit(function(event) {
+        var fileInput = $('#id_file').val();
+        var vehicleInput = $('#id_vehicle').val();
+        
+        if (!fileInput || !vehicleInput) {
+            event.preventDefault(); // Prevent form submission
+            Swal.fire({
+                icon: 'error',
+                title: 'Form Incomplete',
+                text: 'Please fill out both the file and vehicle fields.',
+                timer: 5000,
+            });
+        }
+    });
+    $(document).ready(function () {
+        $('.noty-tost').click();
+    });
+</script>
+
+    
+{% endblock script %}
