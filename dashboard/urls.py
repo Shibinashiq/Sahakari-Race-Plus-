@@ -40,7 +40,7 @@ urlpatterns = [
 
 
     path("course/subject/add/<int:pk>/", course.course_subject_add, name="dashboard-course-subject-add"),
-    path("course/subject/update/<int:pk>/", course.course_subject_update, name="dashboard-course-subject-update"),
+    path("course/subject/update/<int:course_id>/<int:subject_id>/", course.course_subject_update, name="dashboard-course-subject-update"),
     path("course/subject/delete/<int:pk>/", course.course_subject_delete, name="dashboard-course-subject-delete"),
 
     # ==================================== Course ============================================= #

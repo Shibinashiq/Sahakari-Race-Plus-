@@ -174,6 +174,7 @@ def course_detail_subject(request, pk):
     
     response = {
         "draw": draw,
+        "course": course.id,
         "recordsTotal": total_records,
         "recordsFiltered": total_records,
         "data": data,
@@ -182,10 +183,9 @@ def course_detail_subject(request, pk):
     return JsonResponse(response)
 
 
-
 def course_subject_add(request, pk):
     try:
-        course = Course.objects.get(id=pk,is_deleted=False)
+        course = Course.objects.get(id=pk, is_deleted=False)
     except Course.DoesNotExist:
         messages.error(request, "Course not found.")
         return redirect('dashboard-course')
@@ -198,58 +198,49 @@ def course_subject_add(request, pk):
             subject.save()
             messages.success(request, "Subject added successfully!")
             return redirect('dashboard-course-subjects-list', pk=pk)
-        else:
-            context = {
-                "title": "Add Subject | Agua Dashboard",
-                "form": form,
-                "course": course,
-            }
-
-            return render(request, "dashboard/webpages/subject/manager.html", context)
     else:
         form = SubjectForm()
-        context = {
-            "title": "Add Subject | Agua Dashboard",
-            "form": form,
-            "course": course,
-        }
-        return render(request, "dashboard/webpages/subject/manager.html", context)
+
+    context = {
+        "form": form,
+        "course": course,
+    }
+    return render(request, "dashboard/webpages/subject/add.html",context)
 
 
 
-
-
-def course_subject_update(request, pk):
-    print(pk,"{{{{{{{{{{{}}}}}}}}}}}")
+def course_subject_update(request, course_id, subject_id):
     try:
-        course = Course.objects.filter(id=pk,is_deleted=False)
+        course = Course.objects.get(id=course_id, is_deleted=False)
     except Course.DoesNotExist:
         messages.error(request, "Course not found.")
         return redirect('dashboard-course')
+
     if request.method == 'POST':
-        form = SubjectForm(request.POST, request.FILES)
+        if subject_id:
+            subject = get_object_or_404(Subject, id=subject_id, course=course)
+            form = SubjectForm(request.POST, request.FILES, instance=subject)
+        else:
+            form = SubjectForm(request.POST, request.FILES)
         if form.is_valid():
             subject = form.save(commit=False)
-            subject.course = course  
+            subject.course = course
             subject.save()
-            messages.success(request, "Subject added successfully!")
-            return redirect('dashboard-course-subjects-list', pk=pk)
-        else:
-            context = {
-                "title": "Update Subject | Agua Dashboard",
-                "form": form,
-                "course": course,
-            }
-
-            return render(request, "dashboard/webpages/subject/manager.html", context)
+            messages.success(request, "Subject updated successfully!")
+            return redirect('dashboard-course-subjects-list', pk=course_id)
     else:
-        form = SubjectForm()
-        context = {
-            "title": "Update Subject | Agua Dashboard",
-            "form": form,
-            "course": course,
-        }
-        return render(request, "dashboard/webpages/subject/manager.html", context)
+        if subject_id:
+            subject = get_object_or_404(Subject, id=subject_id, course=course)
+            form = SubjectForm(instance=subject)
+        else:
+            form = SubjectForm()
+
+    context = {
+        "title": "Update Subject | Agua Dashboard",
+        "form": form,
+        "course": course,
+    }
+    return render(request, "dashboard/webpages/subject/update.html", context)
     
 
 
