@@ -130,8 +130,9 @@ class Subject(models.Model):
 
 class Chapter(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='chapters')
-    title = models.CharField(max_length=200)
+    chapter_name = models.CharField(max_length=200)
     image = models.ImageField(upload_to='chapter_images/', null=True, blank=True)
+    description = models.TextField()
     created = models.DateTimeField(default=timezone.now)
     is_deleted = models.BooleanField(default=False)
 
@@ -140,8 +141,9 @@ class Chapter(models.Model):
 
 class Lesson(models.Model):
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, related_name='lessons')
-    title = models.CharField(max_length=200)
+    lesson_name = models.CharField(max_length=200)
     image = models.ImageField(upload_to='lesson_images/', null=True, blank=True)
+    description = models.TextField()
     created = models.DateTimeField(default=timezone.now)
     is_deleted = models.BooleanField(default=False)
 

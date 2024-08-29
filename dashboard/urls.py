@@ -33,15 +33,22 @@ urlpatterns = [
     path("course/add/", course.add, name="dashboard-course-add"),
     path("course/update/<int:pk>/", course.update, name="dashboard-course-update"),
     path("course/delete/<int:pk>/", course.delete, name="dashboard-course-delete"),
+
+
     #subjects inside the course
     path("course/subject/list/<int:pk>/", course.course_subjects_list, name="dashboard-course-subjects-list"), #here list the subjects
-    path("course/detail/<int:pk>/", course.course_detail_subject, name="dashboard-course-detail"), #this endpoint fetch the subjects inside the course
-    
-
-
-    path("course/subject/add/<int:pk>/", course.course_subject_add, name="dashboard-course-subject-add"),
+    path("course/detail/<int:course_id>/", course.course_detail_subject, name="dashboard-course-detail"), #this endpoint fetch the subjects inside the course
+    path("course/subject/add/<int:course_id>/", course.course_subject_add, name="dashboard-course-subject-add"),
     path("course/subject/update/<int:course_id>/<int:subject_id>/", course.course_subject_update, name="dashboard-course-subject-update"),
     path("course/subject/delete/<int:pk>/", course.course_subject_delete, name="dashboard-course-subject-delete"),
+
+
+    #chapter inside the subject
+    path("subject/chapter/list/<int:pk>/", course.course_subject_chapters_list, name="subject-chapters-list"), #here list the chapters
+    path("subject/chapter/detail/<int:pk>/", course.subject_detail_chapter, name="subject-chapters-detail"),
+    path("subject/chapter/add/<int:pk>/", course.subject_chapter_add, name="dashboard-subject-chapter-add"),
+    path("subject/chapter/update/<int:subject_id>/<int:chapter_id>/", course.subject_chapter_update, name="dashboard-subject-chapter-update"),
+
 
     # ==================================== Course ============================================= #
 

@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render , get_object_or_404
 from dashboard.models import *
 from dashboard.forms.course import AddForm
 from dashboard.forms.subject import SubjectForm
-
+from dashboard.forms.chapter import ChapterForm
 from django.contrib import auth, messages
 from django.http import JsonResponse
 from django.core.paginator import Paginator
@@ -16,7 +16,6 @@ def manager(request):
         else:
             courses = Course.objects.filter(course_name__icontains=search, is_deleted=False).order_by('course_name')
         batches = Batch.objects.filter(course__in=courses, is_deleted=False)
-        print(batches)
 
         context = {
             "title": " Courses ",
@@ -121,15 +120,16 @@ def delete(request, pk):
 #subjects in course management
 
 def course_subjects_list(request,pk):
-     course = Course.objects.get(id=pk, is_deleted=False)
+     course = Course.objects.filter(id=pk, is_deleted=False)
      context = {
          "title": "Subjects",
-         "course": course,
+         "course": pk,
      }
+     print(pk)
      return render(request,'dashboard/webpages/subject/manager.html',context)
 
 
-def course_detail_subject(request, pk):
+def course_detail_subject(request, course_id):
     draw = int(request.GET.get("draw", 1))
     start = int(request.GET.get("start", 0))
     length = int(request.GET.get("length", 10))  
@@ -137,7 +137,8 @@ def course_detail_subject(request, pk):
     order_column = int(request.GET.get("order[0][column]", 0))
     order_dir = request.GET.get("order[0][dir]", "desc")
     
-    course = get_object_or_404(Course, id=pk)
+    course = Course.objects.filter(id=course_id, is_deleted=False).first()
+    # if not course
 
     order_columns = {
         0: 'id',
@@ -150,7 +151,7 @@ def course_detail_subject(request, pk):
     if order_dir == 'desc':
         order_field = '-' + order_field
     
-    subjects = Subject.objects.filter(course=course, is_deleted=False)
+    subjects = Subject.objects.filter(is_deleted=False,course=course)
     
     if search_value:
         subjects = subjects.filter(subject_name__icontains=search_value)
@@ -183,7 +184,7 @@ def course_detail_subject(request, pk):
     return JsonResponse(response)
 
 
-def course_subject_add(request, pk):
+def course_subject_add(request, course_id):
     try:
         course = Course.objects.get(id=pk, is_deleted=False)
     except Course.DoesNotExist:
@@ -254,3 +255,124 @@ def course_subject_delete(request, pk):
         messages.error(request, 'Subject not found or already deleted.')
 
     return redirect('dashboard-course')
+
+
+
+
+
+
+def course_subject_chapters_list(request, pk):
+    context = {
+        "title": "Chapters",
+        "subject": pk,
+    }
+
+    return render(request,'dashboard/webpages/chapter/manager.html',context)
+
+
+
+
+def subject_detail_chapter(request, pk):
+    draw = int(request.GET.get("draw", 1))
+    start = int(request.GET.get("start", 0))
+    length = int(request.GET.get("length", 10))  
+    search_value = request.GET.get("search[value]", "")
+    order_column = int(request.GET.get("order[0][column]", 0))
+    order_dir = request.GET.get("order[0][dir]", "desc")
+    
+    subject = get_object_or_404(Subject, id=pk)
+
+    order_columns = {
+        0: 'id',
+        1: 'subject_name',
+        2: 'description',
+        3: 'created',
+    }
+    
+    order_field = order_columns.get(order_column, 'id')
+    if order_dir == 'desc':
+        order_field = '-' + order_field
+    
+    chapter = Chapter.objects.filter(subject=subject, is_deleted=False)
+    
+    if search_value:
+        chapter = chapter.filter(chapter_name__icontains=search_value)
+    
+    total_records = chapter.count()
+
+    chapter = chapter.order_by(order_field)
+    paginator = Paginator(chapter, length)
+    page_number = (start // length) + 1
+    page_obj = paginator.get_page(page_number)
+
+    data = []
+    for chapter in page_obj:
+        data.append({
+            "id": subject.id,
+            "image": chapter.image.url if chapter.image else None,
+            "chapter_name": chapter.chapter_name,
+            "description": chapter.description,
+            "created": chapter.created.strftime('%Y-%m-%d %H:%M:%S')
+        })
+    
+    response = {
+        "draw": draw,
+        "subject": subject.id,
+        "recordsTotal": total_records,
+        "recordsFiltered": total_records,
+        "data": data,
+    }
+
+    return JsonResponse(response)
+
+
+
+
+def subject_chapter_add(request, pk):
+    try:
+        subject = Subject.objects.get(id=pk, is_deleted=False)
+    except Subject.DoesNotExist:
+        messages.error(request, "Subject not found.")
+        return redirect('dashboard-course')
+    
+
+    if request.method == 'POST':
+        form = ChapterForm(request.POST, request.FILES)
+        if form.is_valid():
+            chapter = form.save(commit=False)
+            chapter.subject = subject
+            chapter.save()
+            messages.success(request, "chapter added successfully!")
+            return redirect('subject-chapters-list', pk=pk)
+    else:
+        form = ChapterForm()
+
+    context = {
+        "form": form,
+        "subject": subject,
+    }
+    return render(request, "dashboard/webpages/chapter/add.html",context)
+
+
+
+def subject_chapter_update(request, chapter_id, subject_id):
+    subject = get_object_or_404(Subject, id=subject_id, is_deleted=False)
+    chapter = get_object_or_404(Chapter, id=chapter_id, subject=subject)
+
+    if request.method == 'POST':
+        form = ChapterForm(request.POST, request.FILES, instance=chapter)
+        if form.is_valid():
+            chapter = form.save(commit=False)
+            chapter.subject = subject
+            chapter.save()
+            messages.success(request, "Chapter updated successfully!")
+            return redirect('dashboard-course-subjects-list', pk=subject_id)
+    else:
+        form = ChapterForm(instance=chapter)
+
+    context = {
+        "title": "Update Chapter | Agua Dashboard",
+        "form": form,
+        "subject": subject,
+    }
+    return render(request, "dashboard/webpages/chapter/update.html", context)
