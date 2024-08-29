@@ -47,6 +47,7 @@
                         <i class="bx bxs-home"></i> <span data-key="t-dashboards">Home</span>
                     </a>
                 </li>
+                <li class="menu-title"><span data-key="t-menu">Content</span></li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{% url 'dashboard-course' %}" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
                         <i class="bx bxs-user-check"></i> <span data-key="t-dashboards">Course</span>
@@ -63,7 +64,12 @@
                      <span data-key="t-dashboards">Company</span> -->
                     </a>
                 </li>
-                
+                <li class="menu-title"><span data-key="t-menu">Customer Management</span></li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{% url 'dashboard-customer' %}" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
+                        <i class="bx bxs-user-check"></i> <span data-key="t-dashboards">Customer</span>
+                    </a>
+                </li>
             </ul>
         </div>
         

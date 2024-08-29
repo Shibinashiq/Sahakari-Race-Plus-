@@ -129,58 +129,58 @@ def course_subjects_list(request,pk):
 
 
 def course_detail_subject(request, course_id):
-    draw = int(request.GET.get("draw", 1))
-    start = int(request.GET.get("start", 0))
-    length = int(request.GET.get("length", 10))  
-    search_value = request.GET.get("search[value]", "")
-    order_column = int(request.GET.get("order[0][column]", 0))
-    order_dir = request.GET.get("order[0][dir]", "desc")
-    
-    course = Course.objects.filter(id=course_id, is_deleted=False).first()
-    # if not course
+        draw = int(request.GET.get("draw", 1))
+        start = int(request.GET.get("start", 0))
+        length = int(request.GET.get("length", 10))  
+        search_value = request.GET.get("search[value]", "")
+        order_column = int(request.GET.get("order[0][column]", 0))
+        order_dir = request.GET.get("order[0][dir]", "desc")
+        
+        course = Course.objects.filter(id=course_id, is_deleted=False).first()
+        # if not course
 
-    order_columns = {
-        0: 'id',
-        1: 'subject_name',
-        2: 'description',
-        3: 'created',
-    }
-    
-    order_field = order_columns.get(order_column, 'id')
-    if order_dir == 'desc':
-        order_field = '-' + order_field
-    
-    subjects = Subject.objects.filter(is_deleted=False,course=course)
-    
-    if search_value:
-        subjects = subjects.filter(subject_name__icontains=search_value)
-    
-    total_records = subjects.count()
+        order_columns = {
+            0: 'id',
+            1: 'subject_name',
+            2: 'description',
+            3: 'created',
+        }
+        
+        order_field = order_columns.get(order_column, 'id')
+        if order_dir == 'desc':
+            order_field = '-' + order_field
+        
+        subjects = Subject.objects.filter(is_deleted=False,course=course)
+        
+        if search_value:
+            subjects = subjects.filter(subject_name__icontains=search_value)
+        
+        total_records = subjects.count()
 
-    subjects = subjects.order_by(order_field)
-    paginator = Paginator(subjects, length)
-    page_number = (start // length) + 1
-    page_obj = paginator.get_page(page_number)
+        subjects = subjects.order_by(order_field)
+        paginator = Paginator(subjects, length)
+        page_number = (start // length) + 1
+        page_obj = paginator.get_page(page_number)
 
-    data = []
-    for subject in page_obj:
-        data.append({
-            "id": subject.id,
-            "image": subject.image.url if subject.image else None,
-            "subject_name": subject.subject_name,
-            "description": subject.description,
-            "created": subject.created.strftime('%Y-%m-%d %H:%M:%S')
-        })
-    
-    response = {
-        "draw": draw,
-        "course": course.id,
-        "recordsTotal": total_records,
-        "recordsFiltered": total_records,
-        "data": data,
-    }
+        data = []
+        for subject in page_obj:
+            data.append({
+                "id": subject.id,
+                "image": subject.image.url if subject.image else None,
+                "subject_name": subject.subject_name,
+                "description": subject.description,
+                "created": subject.created.strftime('%Y-%m-%d %H:%M:%S')
+            })
+        
+        response = {
+            "draw": draw,
+            "course": course.id,
+            "recordsTotal": total_records,
+            "recordsFiltered": total_records,
+            "data": data,
+        }
 
-    return JsonResponse(response)
+        return JsonResponse(response)
 
 
 def course_subject_add(request, course_id):

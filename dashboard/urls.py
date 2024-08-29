@@ -14,6 +14,7 @@ from dashboard.views import (
     course,
     home,
     subject,
+    customer,
    
 )
 
@@ -63,4 +64,11 @@ urlpatterns = [
     path("subject/add/", subject.add, name="dashboard-subject-add"),
     path("subject/update/<int:pk>/", subject.update, name="dashboard-subject-update"),
     path("subject/delete/<int:pk>/", subject.delete, name="dashboard-subject-delete"),
+
+
+
+    # ==================================== Course ============================================= #
+
+    path("subject/", customer.manager, name="dashboard-customer"),
+    
 ]
