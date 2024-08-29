@@ -3,6 +3,7 @@ from dashboard.models import *
 from dashboard.forms.course import AddForm
 from dashboard.forms.subject import SubjectForm
 from dashboard.forms.chapter import ChapterForm
+from dashboard.forms.lesson import LessonForm
 from django.contrib import auth, messages
 from django.http import JsonResponse
 from django.core.paginator import Paginator
@@ -120,12 +121,10 @@ def delete(request, pk):
 #subjects in course management
 
 def course_subjects_list(request,pk):
-     course = Course.objects.filter(id=pk, is_deleted=False)
      context = {
          "title": "Subjects",
          "course": pk,
      }
-     print(pk)
      return render(request,'dashboard/webpages/subject/manager.html',context)
 
 
@@ -186,7 +185,7 @@ def course_detail_subject(request, course_id):
 
 def course_subject_add(request, course_id):
     try:
-        course = Course.objects.get(id=pk, is_deleted=False)
+        course = Course.objects.get(id=course_id, is_deleted=False)
     except Course.DoesNotExist:
         messages.error(request, "Course not found.")
         return redirect('dashboard-course')
@@ -198,7 +197,7 @@ def course_subject_add(request, course_id):
             subject.course = course  
             subject.save()
             messages.success(request, "Subject added successfully!")
-            return redirect('dashboard-course-subjects-list', pk=pk)
+            return redirect('dashboard-course-subjects-list', pk=course_id)
     else:
         form = SubjectForm()
 
@@ -237,7 +236,7 @@ def course_subject_update(request, course_id, subject_id):
             form = SubjectForm()
 
     context = {
-        "title": "Update Subject | Agua Dashboard",
+        "title": "Update Subject ",
         "form": form,
         "course": course,
     }
@@ -261,10 +260,10 @@ def course_subject_delete(request, pk):
 
 
 
-def course_subject_chapters_list(request, pk):
+def course_subject_chapters_list(request, subject_id):
     context = {
         "title": "Chapters",
-        "subject": pk,
+        "subject": subject_id,
     }
 
     return render(request,'dashboard/webpages/chapter/manager.html',context)
@@ -308,7 +307,7 @@ def subject_detail_chapter(request, pk):
     data = []
     for chapter in page_obj:
         data.append({
-            "id": subject.id,
+            "id": chapter.id,
             "image": chapter.image.url if chapter.image else None,
             "chapter_name": chapter.chapter_name,
             "description": chapter.description,
@@ -343,7 +342,7 @@ def subject_chapter_add(request, pk):
             chapter.subject = subject
             chapter.save()
             messages.success(request, "chapter added successfully!")
-            return redirect('subject-chapters-list', pk=pk)
+            return redirect('subject-chapters-list', subject_id=pk)
     else:
         form = ChapterForm()
 
@@ -366,13 +365,263 @@ def subject_chapter_update(request, chapter_id, subject_id):
             chapter.subject = subject
             chapter.save()
             messages.success(request, "Chapter updated successfully!")
-            return redirect('dashboard-course-subjects-list', pk=subject_id)
+            
+            return redirect('subject-chapters-list', subject_id=subject_id)
     else:
         form = ChapterForm(instance=chapter)
 
     context = {
-        "title": "Update Chapter | Agua Dashboard",
+        "title": "Update Chapter",
         "form": form,
         "subject": subject,
     }
     return render(request, "dashboard/webpages/chapter/update.html", context)
+
+
+
+
+
+def subject_chapter_delete(request,chapter_id, subject_id):
+    try:
+        subject = Chapter.objects.get(id=chapter_id, is_deleted=False)
+        subject.is_deleted = True
+        subject.save()  
+        messages.success(request, 'Chapter Deleted')
+    except Subject.DoesNotExist:
+        messages.error(request, 'Chapter not found or already deleted.')
+
+    return redirect('subject-chapters-list', subject_id=subject_id)
+
+
+
+
+
+
+
+def chapter_lesson_list(request,chapter_id):
+    context = {
+        "title": "Lessons",
+        "chapter": chapter_id,
+    }
+    return render(request,'dashboard/webpages/lesson/manager.html',context)
+
+
+def chapter_detail_lesson(request, pk):
+    draw = int(request.GET.get("draw", 1))
+    start = int(request.GET.get("start", 0))
+    length = int(request.GET.get("length", 10))
+    search_value = request.GET.get("search[value]", "")
+    order_column = int(request.GET.get("order[0][column]", 0))
+    order_dir = request.GET.get("order[0][dir]", "desc")
+    
+    chapter = get_object_or_404(Chapter, id=pk)
+
+    order_columns = {
+        0: 'id',
+        1: 'subject_name',
+        2: 'description',
+        3: 'created',
+    }
+    
+    order_field = order_columns.get(order_column, 'id')
+    if order_dir == 'desc':
+        order_field = '-' + order_field
+    
+    lessons = Lesson.objects.filter(chapter=chapter, is_deleted=False)
+    if search_value:
+        lessons = lessons.filter(lesson_name__icontains=search_value)
+    
+    total_records = lessons.count()
+
+    lessons = lessons.order_by(order_field)
+    paginator = Paginator(lessons, length)
+    page_number = (start // length) + 1
+    page_obj = paginator.get_page(page_number)
+
+    data = []
+    for lesson in page_obj:
+        videos = Video.objects.filter(lesson=lesson, is_deleted=False)
+        pdfs = PDFNote.objects.filter(lesson=lesson, is_deleted=False)
+        
+        video_data = []
+        for video in videos:
+            video_data.append({
+                "video_url": video.url if video.url else "N/A",
+                "video_title": video.title if video.title else "N/A",
+                "video_is_free": video.is_free
+            })
+
+        pdf_data = []
+        for pdf in pdfs:
+            pdf_data.append({
+                "pdf_title": pdf.title if pdf.title else "N/A",
+                "pdf_is_free": pdf.is_free,
+                "pdf_file": pdf.file.url if pdf.file else "N/A"
+            })
+
+        data.append({
+            "id": lesson.id,
+            "image": lesson.image.url if lesson.image else None,
+            "chapter_name": chapter.chapter_name,
+            "videos": video_data,
+            "pdfs": pdf_data,
+            "description": lesson.description,
+            "created": lesson.created.strftime('%Y-%m-%d %H:%M:%S')
+        })
+    
+    response = {
+        "draw": draw,
+        "chapter": chapter.id,
+        "recordsTotal": total_records,
+        "recordsFiltered": total_records,
+        "data": data,
+    }
+
+    return JsonResponse(response)
+
+
+
+
+
+
+
+
+
+
+
+def chapter_lesson_add(request,pk):
+    try:
+        chapter = Chapter.objects.get(id=pk, is_deleted=False)
+        print(chapter,"chapter")
+    except Chapter.DoesNotExist:
+        messages.error(request, "Subject not found.")
+        return redirect('dashboard-course')
+    
+
+    if request.method == 'POST':
+        form = LessonForm(request.POST, request.FILES)
+        if form.is_valid():
+            lesson = form.save(commit=False)
+            lesson.chapter = chapter
+            lesson.save()
+            video_title = form.cleaned_data.get('video_title')
+            video_url = form.cleaned_data.get('video_url')
+            video_is_downloadable = form.cleaned_data.get('video_is_downloadable')
+            video_is_free = form.cleaned_data.get('video_is_free')
+
+            pdf_title = form.cleaned_data.get('pdf_title')
+            pdf_file = form.cleaned_data.get('pdf_file')
+            pdf_is_downloadable = form.cleaned_data.get('pdf_is_downloadable')
+            pdf_is_free = form.cleaned_data.get('pdf_is_free')
+
+
+            if video_url:
+                Video.objects.create(
+                    lesson=lesson,
+                    title=video_title,
+                    url=video_url,
+                    is_downloadable=video_is_downloadable,
+                    is_free=video_is_free,
+                )
+            if pdf_file is not None:
+                 PDFNote.objects.create(
+                    lesson=lesson,
+                    title=pdf_title if pdf_title else None,
+                    file=pdf_file,
+                    is_downloadable=pdf_is_downloadable,
+                    is_free=pdf_is_free,
+                )
+
+
+
+            
+            messages.success(request, "chapter added successfully!")
+            return redirect('dashboard-chapters-lesson-list', chapter_id=chapter.id)
+    else:
+        form = LessonForm()
+
+    context = {
+        "form": form,
+        "chapter": pk,
+    }
+    return render(request, "dashboard/webpages/lesson/add.html",context)
+
+
+
+
+
+
+
+def chapter_lesson_update(request, chapter_id, lesson_id):
+    # Retrieve the chapter and lesson
+    chapter = get_object_or_404(Chapter, id=chapter_id, is_deleted=False)
+    lesson = get_object_or_404(Lesson, id=lesson_id, chapter=chapter, is_deleted=False)
+    
+    if request.method == 'POST':
+        form = LessonForm(request.POST, request.FILES, instance=lesson)
+        if form.is_valid():
+            # Save the updated lesson
+            lesson = form.save(commit=False)
+            lesson.chapter = chapter  # Ensure the chapter is set
+            lesson.save()
+
+            # Handle the video data
+            video_title = form.cleaned_data.get('video_title')
+            video_url = form.cleaned_data.get('video_url')
+            video_is_downloadable = form.cleaned_data.get('video_is_downloadable')
+            video_is_free = form.cleaned_data.get('video_is_free')
+
+            # Handle video update or creation
+            if video_url:
+                Video.objects.update_or_create(
+                    lesson=lesson,
+                    defaults={
+                        'title': video_title,
+                        'url': video_url,
+                        'is_downloadable': video_is_downloadable,
+                        'is_free': video_is_free,
+                    }
+                )
+
+            # Handle the PDF data
+            pdf_title = form.cleaned_data.get('pdf_title')
+            pdf_file = form.cleaned_data.get('pdf_file')
+            pdf_is_downloadable = form.cleaned_data.get('pdf_is_downloadable')
+            pdf_is_free = form.cleaned_data.get('pdf_is_free')
+
+            # Handle PDF update or creation
+            if pdf_file is not None:
+                PDFNote.objects.update_or_create(
+                    lesson=lesson,
+                    defaults={
+                        'title': pdf_title if pdf_title else None,
+                        'file': pdf_file,
+                        'is_downloadable': pdf_is_downloadable,
+                        'is_free': pdf_is_free,
+                    }
+                )
+
+            messages.success(request, "Lesson updated successfully!")
+            return redirect('dashboard-chapters-lesson-list', chapter_id=chapter.id)
+    else:
+        form = LessonForm(instance=lesson)
+
+    context = {
+        "title": "Update Lesson",
+        "form": form,
+        "chapter": chapter,
+    }
+    return render(request, "dashboard/webpages/lesson/update.html", context)
+
+
+
+
+
+
+
+
+def  chapter_lesson_delete(request,chapter_id,lesson_id):
+    lesson = get_object_or_404(Lesson, id=lesson_id)
+    lesson.is_deleted = True
+    lesson.save()
+    return redirect('dashboard-chapters-lesson-list', chapter_id=chapter_id)

@@ -8,4 +8,4 @@ def home(request):
         "user": user,
     }
 
-    return render(request, "dashboard/webpages/home/index.html",context)
+    return render(request, "dashboard/home/index.html",context)

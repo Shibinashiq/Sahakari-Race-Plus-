@@ -85,31 +85,80 @@
                                         <h5 class="card-title">Add Subject</h5>
                                     </div>
                                     <div class="card-body">
-                                        <form method="POST" enctype="multipart/form-data">
-                                            {% csrf_token %}
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        {{ form.chapter_name|as_crispy_field }}
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        {{ form.image|as_crispy_field }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        {{ form.description|as_crispy_field }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <button type="submit" class="btn btn-primary mt-2">Submit</button>
-                                            </div>
-                                        </form>
+											<form method="POST" enctype="multipart/form-data" >
+												{% csrf_token %}
+												<div class="row">
+													<!-- Chapter Fields -->
+													<div class="col-md-6">
+														<div class="form-group">
+															{{ form.lesson_name|as_crispy_field }}
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															{{ form.image|as_crispy_field }}
+														</div>
+													</div>
+												</div>
+												
+												
+												<!-- Video Fields -->
+												<div class="row">
+													<div class="col-md-6">
+														<div class="form-group">
+															{{ form.video_title|as_crispy_field }}
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															{{ form.video_url|as_crispy_field }}
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															{{ form.video_is_downloadable|as_crispy_field }}
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															{{ form.video_is_free|as_crispy_field }}
+														</div>
+													</div>
+												</div>
+											<br>
+												<!-- PDF Note Fields -->
+												<div class="row">
+													<div class="col-md-6">
+														<div class="form-group">
+															{{ form.pdf_title|as_crispy_field }}
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															{{ form.pdf_file|as_crispy_field }}
+														</div>
+													</div>
+													
+													
+												</div>
+												<div class="col-md-4">
+													<div class="form-group">
+														{{ form.pdf_is_downloadable|as_crispy_field }}
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-md-6">
+														<div class="form-group">
+															{{ form.description|as_crispy_field }}
+														</div>
+													</div>
+												</div>					
+											
+												<div class="form-group">
+													<button type="submit" class="btn btn-primary mt-2">Submit</button>
+												</div>
+											</form>
+											
                                     </div>
                                 </div>
                                 

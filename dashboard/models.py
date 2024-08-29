@@ -126,7 +126,8 @@ class Subject(models.Model):
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.subject_name
+        return self.subject_name  
+
 
 class Chapter(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='chapters')
@@ -137,7 +138,7 @@ class Chapter(models.Model):
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.title
+        return f"{self.chapter_name} - {self.subject.subject_name}"
 
 class Lesson(models.Model):
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, related_name='lessons')
@@ -148,7 +149,7 @@ class Lesson(models.Model):
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.title
+        return self.lesson_name
 
 class Video(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='videos')
@@ -164,7 +165,7 @@ class Video(models.Model):
 
 class PDFNote(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='pdf_notes')
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=255, blank=True, null=True)
     file = models.FileField(upload_to='pdf_notes/')
     is_downloadable = models.BooleanField(default=False)
     is_free = models.BooleanField(default=False)

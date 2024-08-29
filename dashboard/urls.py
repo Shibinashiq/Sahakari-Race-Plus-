@@ -44,12 +44,19 @@ urlpatterns = [
 
 
     #chapter inside the subject
-    path("subject/chapter/list/<int:pk>/", course.course_subject_chapters_list, name="subject-chapters-list"), #here list the chapters
-    path("subject/chapter/detail/<int:pk>/", course.subject_detail_chapter, name="subject-chapters-detail"),
+    path("subject/chapter/list/<int:subject_id>/", course.course_subject_chapters_list, name="subject-chapters-list"), #here list the chapters
+    path("subject/chapter/detail/<int:pk>/", course.subject_detail_chapter, name="dashboard-subject-chapters-detail"),
     path("subject/chapter/add/<int:pk>/", course.subject_chapter_add, name="dashboard-subject-chapter-add"),
     path("subject/chapter/update/<int:subject_id>/<int:chapter_id>/", course.subject_chapter_update, name="dashboard-subject-chapter-update"),
+    path("subject/chapter/delete/<int:subject_id>/<int:chapter_id>/", course.subject_chapter_delete, name="dashboard-subject-chapter-delete"),
 
 
+    #lesson inside the chapter
+    path("chapter/lesson/list/<int:chapter_id>/", course.chapter_lesson_list, name="dashboard-chapters-lesson-list"), #here list the lesson
+    path("chapter/lesson/detail/<int:pk>/", course.chapter_detail_lesson, name="dashboard-chapters-lesson-detail"),
+    path("chapter/lesson/add/<int:pk>/", course.chapter_lesson_add, name="dashboad-chapter-lesson-add"),
+    path("chapter/lesson/update/<int:chapter_id>/<int:lesson_id>/", course.chapter_lesson_update, name="dashboard-chapter-lesson-update"),
+    path("chapter/lesson/delete/<int:chapter_id>/<int:lesson_id>/", course.chapter_lesson_delete, name="dashboard-chapter-lesson-delete"),
     # ==================================== Course ============================================= #
 
     path("subject/", subject.manager, name="dashboard-subject"),

@@ -78,7 +78,6 @@
                             </div>
                             <!--end col-->
                         </div>
-                        <h1>{{course}}</h1>
 
                         <div class="pt-4 pb-3">
                             {# ------------------------------------Contents start------------------------------------ #}
@@ -189,11 +188,16 @@
                 
                
                 {
-                    "data": "subject_name",
-                    "render": function (data, type, full, meta) {
-                        return '<td class="align-middle" style="margin-bottom: 10rem;">' + data + '</td>';
-                    }
-                },
+                "data": "subject_name",
+                "render": function (data, type, full, meta) {
+                    var subjectId = full.id; 
+                    var detailUrl = "{% url 'subject-chapters-list' subject_id='0' %}".replace('0', subjectId);
+                    return `<td class="align-middle" style="margin-bottom: 10rem;">
+                                <a href="${detailUrl}">${data}</a>
+                            </td>`;
+                }
+            }
+,
                 {
                     "data": "description",
                     "render": function (data, type, full, meta) {
