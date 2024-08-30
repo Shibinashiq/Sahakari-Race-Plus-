@@ -15,18 +15,30 @@ from dashboard.views import (
     home,
     subject,
     customer,
+    batch
    
 )
 
 urlpatterns = [
-    # ==================================== Course ============================================= #
+    # ==================================== Authentication ============================================= #
 
     path("login/", authentication.login, name="dashboard-login"),
     path("logout/", auth_views.LogoutView.as_view(), name="dashboard-logout"),
 
-    # ==================================== Course ============================================= #
+    # ==================================== Home ============================================= #
     
     path("", home.home, name="dashboard-home"),
+
+
+
+    # ==================================== Batch ============================================= #
+    path("batch/", batch.manager, name="dashboard-batch"),
+    path("batch/list", batch.list, name="dashboard-batch-list"),
+    path("batch/add/", batch.add, name="dashboard-batch-add"),
+    path("batch/update/<int:pk>/", batch.update, name="dashboard-batch-update"),
+    path("batch/delete/<int:pk>/", batch.delete, name="dashboard-batch-delete"),
+
+
 
     # ==================================== Course ============================================= #
 
@@ -67,8 +79,20 @@ urlpatterns = [
 
 
 
-    # ==================================== Course ============================================= #
+    # ==================================== Customer Management ============================================= #
 
-    path("subject/", customer.manager, name="dashboard-customer"),
+    path("customer/", customer.manager, name="dashboard-customer"),
+    path("customer/list", customer.list, name="dashboard-customer-list"),
+    path("customer/add", customer.add, name="dashboard-customer-add"),
+    path("customer/update/<int:pk>/", customer.update, name="dashboard-customer-update"),
+    path("customer/delete/<int:pk>/", customer.delete, name="dashboard-customer-delete"),
+    path("customer/detail/<int:pk>/", customer.detail, name="dashboard-user-detail"),
+
+
+
+
+
+
+
     
 ]

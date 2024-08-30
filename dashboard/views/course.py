@@ -34,17 +34,10 @@ def add(request):
             if form.is_valid():
                 course = form.save(commit=False)
 
-                course_fee = form.cleaned_data.get('course_fee')
-                course_expire = form.cleaned_data.get('course_expire')
-
+              
                 course.save()
 
-                Batch.objects.create(
-                    course=course,
-                    batch_price=course_fee,
-                    batch_expiry=course_expire
-                )
-
+               
                 messages.success(request, "Course and Batch information added successfully!")
                 return redirect('dashboard-course')
             else:
@@ -78,20 +71,11 @@ def update(request, pk):
         form = AddForm(request.POST, request.FILES, instance=course)
         if form.is_valid():
             course = form.save(commit=False)
-            course_fee = form.cleaned_data.get('course_fee')
-            course_expire = form.cleaned_data.get('course_expire')
+          
             
             course.save()
 
-            batch, created = Batch.objects.update_or_create(
-                course=course,
-                defaults={'batch_price': course_fee, 'batch_expiry': course_expire}
-            )
-
-            if created:
-                messages.success(request, 'Batch created successfully')
-            else:
-                messages.success(request, 'Batch updated successfully')
+           
 
             return redirect('dashboard-course')
         else:

@@ -84,33 +84,37 @@
 							<div class="m-1">
 
 								<div class="card">
+									</div>
+									<div class="card">
 										<div class="card-header">
 											<h5 class="card-title">Add Subject</h5>
 										</div>
 										<div class="card-body">
-											<form method="POST" enctype="multipart/form-data" action="{% url 'dashboard-customer-add' %}">
+											<form method="POST" enctype="multipart/form-data"
+										action="{% url 'dashboard-batch-add' %}">
 												{% csrf_token %}
 												<div class="row">
 													<div class="col-md-6">
 														<div class="form-group">
-															{{ form.name|as_crispy_field }}
+															{{ form.course|as_crispy_field }}
 														</div>
 													</div>
 													<div class="col-md-6">
 														<div class="form-group">
-															{{ form.email|as_crispy_field }}
+															{{ form.batch_price|as_crispy_field }}
 														</div>
 													</div>
 												</div>
 												<div class="row">
+													
 													<div class="col-md-6">
 														<div class="form-group">
-															{{ form.phone_number|as_crispy_field }}
+															{{ form.start_date|as_crispy_field }}
 														</div>
 													</div>
 													<div class="col-md-6">
 														<div class="form-group">
-															{{ form.district|as_crispy_field }}
+															{{ form.batch_expiry|as_crispy_field }}
 														</div>
 													</div>
 												</div>
@@ -119,7 +123,6 @@
 												</div>
 											</form>
 										</div>
-										
 									</div>
 									
 								</div>

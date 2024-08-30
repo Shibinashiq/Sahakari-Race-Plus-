@@ -1,34 +1,36 @@
 
 from django.db import models
-from django.contrib.auth.models import AbstractUser, BaseUserManager, Group, Permission
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Group, Permission
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password
 
 class MyUserManager(BaseUserManager):
-    def _create_user(self, username, password, **extra_fields):
-        if not username:
-            raise ValueError("Username must be set")
-        user = self.model(username=username, **extra_fields)
-        user.set_password(password)
-        user.save()
+    def _create_user(self, email, name, phone_number, district,  **extra_fields):
+        if not email:
+            raise ValueError(_("The Email field must be set"))
+        email = self.normalize_email(email)
+        user = self.model(email=email, name=name, phone_number=phone_number, district=district, **extra_fields)
+      
+        user.save(using=self._db)
         return user
 
-    def create_superuser(self, username, password, **extra_fields):
+    def create_user(self, email, name, phone_number, district, **extra_fields):
+        return self._create_user(email, name, phone_number, district, **extra_fields)
+
+    def create_superuser(self, email, name, phone_number, district,  **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
-        extra_fields.setdefault("user_type", 1)
-        extra_fields.setdefault("name", "Superuser")
+        extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("is_staff", True)
 
         if extra_fields.get("is_staff") is not True:
-            raise ValueError("Superuser must have is_staff=True.")
+            raise ValueError(_("Superuser must have is_staff=True."))
         if extra_fields.get("is_superuser") is not True:
-            raise ValueError("Superuser must have is_superuser=True.")
-        if extra_fields.get("user_type") != 1:
-            raise ValueError("Superuser must have user_type=1.")
-        return self._create_user(username, password, **extra_fields)
+            raise ValueError(_("Superuser must have is_superuser=True."))
 
+        return self._create_user(email, name, phone_number, district, **extra_fields)
 
-class CustomUser(AbstractUser):
+class CustomUser(AbstractBaseUser):
     DISTRICT_CHOICES = [
         ('0', 'Thiruvananthapuram'),
         ('1', 'Kollam'),
@@ -45,26 +47,33 @@ class CustomUser(AbstractUser):
         ('12', 'Kannur'),
         ('13', 'Kasargode'),
     ]
-    
-    district = models.CharField(max_length=2, choices=DISTRICT_CHOICES)
+
+    email = models.EmailField(unique=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
+    district = models.CharField(max_length=2, choices=DISTRICT_CHOICES)
+    created = models.DateTimeField(default=timezone.now)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False)
+
     objects = MyUserManager()
 
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['name', 'phone_number', 'district']
+
     def __str__(self):
-        if self.name:
-            return self.name
-        else:
-            return self.username
-        
+        return self.email
+
     def save(self, *args, **kwargs):
         if self.password and not self.password.startswith(('pbkdf2_sha256$', 'bcrypt$', 'argon2')):
             self.password = make_password(self.password)
         super().save(*args, **kwargs)
 
-
     groups = models.ManyToManyField(
         Group,
-        related_name='customuser_set',  
+        related_name='customuser_set',
         blank=True,
         help_text="Groups this user belongs to.",
         related_query_name='customuser'
@@ -72,27 +81,21 @@ class CustomUser(AbstractUser):
 
     user_permissions = models.ManyToManyField(
         Permission,
-        related_name='customuser_set', 
+        related_name='customuser_set',
         blank=True,
         help_text="Specific permissions for this user.",
         related_query_name='customuser'
     )
-    def save(self, *args, **kwargs):
-   
-        if self.password and not self.password.startswith(('pbkdf2_sha256$', 'bcrypt$', 'argon2')):
-        
-            self.password = make_password(self.password)
-        
-        super().save(*args, **kwargs)
 
 
 
 
 class Batch(models.Model):
+    start_date = models.DateField()
     batch_expiry = models.DateField()
     batch_price = models.DecimalField(max_digits=10, decimal_places=2)
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
-    created = models.DateTimeField(default=timezone.now)
+    
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
@@ -105,7 +108,7 @@ class Subscription(models.Model):
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Subscription of {self.user.username} to batch {self.batch.batch_expiry}"
+        return f"Subscription of {self.user.name} to batch {self.batch.batch_expiry}"
 
 class Course(models.Model):
     course_name = models.CharField(max_length=200)
@@ -185,7 +188,7 @@ class Comment(models.Model):
 
 
     def __str__(self):
-        return f"Comment by {self.user.username}"
+        return f"Comment by {self.user.name}"
 
 class Like(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -199,8 +202,8 @@ class Like(models.Model):
 
     def __str__(self):
         if self.video:
-            return f"{self.user.username} liked video: {self.video.title}"
+            return f"{self.user.name} liked video: {self.video.title}"
         elif self.pdf_note:
-            return f"{self.user.username} liked PDF: {self.pdf_note.title}"
+            return f"{self.user.name} liked PDF: {self.pdf_note.title}"
 
             

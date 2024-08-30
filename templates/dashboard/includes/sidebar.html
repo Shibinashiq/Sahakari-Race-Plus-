@@ -49,15 +49,25 @@
                 </li>
                 <li class="menu-title"><span data-key="t-menu">Content</span></li>
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="{% url 'dashboard-batch' %}" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
+                        <i class="bx bxs-grid"></i>
+                         <span data-key="t-dashboards">Batch</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="{% url 'dashboard-course' %}" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="bx bxs-user-check"></i> <span data-key="t-dashboards">Course</span>
+                        <i class="bx bxs-graduation"></i>
+                    </i> <span data-key="t-dashboards">Course</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{% url 'dashboard-subject' %}" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="bx bxs-user-check"></i> <span data-key="t-dashboards">Subjects</span>
+                        <i class="bx bxs-book"></i>
+
+                         <span data-key="t-dashboards">Subjects</span>
                     </a>
                 </li>
+               
                 <li class="nav-item">
                     <!-- <a class="nav-link menu-link"  role="button" aria-expanded="false" aria-controls="sidebarDashboards">
                         <i class="fa fa-building"></i>
@@ -67,9 +77,10 @@
                 <li class="menu-title"><span data-key="t-menu">Customer Management</span></li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{% url 'dashboard-customer' %}" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="bx bxs-user-check"></i> <span data-key="t-dashboards">Customer</span>
+                        <i class="bx bxs-user"></i> <span data-key="t-dashboards">Customer</span>
                     </a>
                 </li>
+               
             </ul>
         </div>
         

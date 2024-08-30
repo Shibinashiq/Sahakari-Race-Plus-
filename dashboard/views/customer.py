@@ -1,20 +1,23 @@
 from django.shortcuts import redirect, render , get_object_or_404
 from dashboard.models import *
-from django.contrib import auth, messages
+from django.contrib import  messages
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from dashboard.models import CustomUser
 from dashboard.forms.customer import CustomerForm
+from django.db.models import Q
+
+
+
+
 def manager(request):
     return render(request, "dashboard/webpages/customer/manager.html")
 
-
-
-def customer_list(request):
+def list(request):
     draw = int(request.GET.get("draw", 1))
     start = int(request.GET.get("start", 0))
     length = int(request.GET.get("length", 10))  
-    search_value = request.GET.get("search[value]", "")
+    search_value = request.GET.get("search[value]", "").strip()
     order_column = int(request.GET.get("order[0][column]", 0))
     order_dir = request.GET.get("order[0][dir]", "desc")
     
@@ -33,7 +36,12 @@ def customer_list(request):
         order_field = '-' + order_field
     
     if search_value:
-        users = users.filter(username__icontains=search_value)
+        users = users.filter(
+            Q(name__icontains=search_value) |
+            Q(phone_number__icontains=search_value) |
+            Q(district__icontains=search_value) |
+            Q(email__icontains=search_value)
+        )
     
     total_records = users.count()
 
@@ -47,11 +55,11 @@ def customer_list(request):
     for user in page_obj:
         data.append({
             "id": user.id,
-            "username": user.username,
-            "email": user.email,
-            "district": user.get_district_display(), 
-            "phone_number": user.phone_number,
-            "created":user.created_at.strftime("%d-%m-%Y %H:%M:%S"),
+            "username": user.name if user.name else "N/A",
+            "email": user.email if user.email else "N/A",
+            "district": user.get_district_display() if user.district else "N/A", 
+            "phone_number": user.phone_number if user.phone_number else "N/A",
+            "created": user.created.strftime("%d-%m-%Y %H:%M:%S"),
         })
     
     response = {
@@ -68,36 +76,73 @@ def customer_list(request):
 
 
 
-
-def customer_add(request):
+def add(request):
     if request.method == "POST":
-            form = CustomerForm(request.POST, request.FILES)
-            if form.is_valid():
-                course = form.save(commit=False)
+        form = CustomerForm(request.POST, request.FILES)
+        if form.is_valid():
+            customer = form.save(commit=False)
+            customer.save()
 
-                course_fee = form.cleaned_data.get('course_fee')
-                course_expire = form.cleaned_data.get('course_expire')
-
-                course.save()
-
-                Batch.objects.create(
-                    course=course,
-                    batch_price=course_fee,
-                    batch_expiry=course_expire
-                )
-
-                messages.success(request, "Course and Batch information added successfully!")
-                return redirect('dashboard-course')
-            else:
-                context = {
-                    "title": "Add Course | Dashboard",
-                    "form": form,
-                }
-                return render(request, "dashboard/webpages/course/manager.html", context)
-    else:
-            form = CustomerForm()  
+            messages.success(request, "Customer added successfully!")
+            return redirect('dashboard-customer')
+        else:
             context = {
-                "title": "Add Course | Agua Dashboard",
+                "title": "Add Customer | Dashboard",
                 "form": form,
             }
-            return render(request, "dashboard/webpages/course/manager.html", context)
+            return render(request, "dashboard/webpages/customer/add.html", context)
+    else:
+        form = CustomerForm()  
+        context = {
+            "title": "Add Customer",
+            "form": form,
+        }
+        return render(request, "dashboard/webpages/customer/add.html", context)
+
+
+def update(request, pk):
+    customer = get_object_or_404(CustomUser, pk=pk)
+    if request.method == "POST":
+        form = CustomerForm(request.POST, request.FILES, instance=customer)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Customer updated successfully!")
+            return redirect('dashboard-customer')
+        else:
+            context = {
+                "title": "Update Customer | Dashboard",
+                "form": form,
+            }
+            return render(request, "dashboard/webpages/customer/update.html", context)
+    else:
+        form = CustomerForm(instance=customer)
+        context = {
+            "title": "Update Customer",
+            "form": form,
+        }
+        return render(request, "dashboard/webpages/customer/update.html", context)
+    
+
+
+
+def delete(request,pk):
+    if request.method == "POST":
+        customer = get_object_or_404(CustomUser, pk=pk)
+        customer.is_deleted = True
+        customer.save()
+        messages.success(request, "Customer deleted successfully!")
+        return redirect('dashboard-customer')
+    else:
+        messages.error(request, "Invalid request .")
+        return redirect('dashboard-customer')
+    
+
+def detail(request, pk):
+    customer = get_object_or_404(CustomUser, pk=pk)
+    context = {
+        "title": "Customer Detail",
+        "customer": customer,
+    }
+    return render (request,"dashboard/webpages/customer/detail.html",context)
+    
+    
