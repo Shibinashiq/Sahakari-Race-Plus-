@@ -40,7 +40,7 @@ def list(request):
                 Q(description__icontains=search_value)|
                 Q(chapter__chapter_name__icontains=search_value)|
                 Q(created__icontains=search_value)
-            )
+            ) 
         
         total_records = subjects.count()
 
