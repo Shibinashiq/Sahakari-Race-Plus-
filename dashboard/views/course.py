@@ -1,9 +1,9 @@
 from django.shortcuts import redirect, render , get_object_or_404
 from dashboard.models import *
-from dashboard.forms.course import AddForm
-from dashboard.forms.subject import SubjectForm
-from dashboard.forms.chapter import ChapterForm
-from dashboard.forms.lesson import LessonForm
+from dashboard.forms.content.course import AddForm
+from dashboard.forms.content.subject import SubjectForm
+from dashboard.forms.content.chapter import ChapterForm
+from dashboard.forms.content.lesson import LessonForm
 from django.contrib import auth, messages
 from django.http import JsonResponse
 from django.core.paginator import Paginator
@@ -24,7 +24,7 @@ def manager(request):
             "courses": courses,
             "batches": batches,
         }
-        return render(request, "dashboard/webpages/course/manager.html", context)
+        return render(request, "dashboard/webpages/content/course/manager.html", context)
    
 
 
@@ -45,14 +45,14 @@ def add(request):
                     "title": "Add Course | Dashboard",
                     "form": form,
                 }
-                return render(request, "dashboard/webpages/course/manager.html", context)
+                return render(request, "dashboard/webpages/content/course/manager.html", context)
         else:
             form = AddForm()  
             context = {
                 "title": "Add Course | Agua Dashboard",
                 "form": form,
             }
-            return render(request, "dashboard/webpages/course/manager.html", context)
+            return render(request, "dashboard/webpages/content/course/manager.html", context)
 
 
 
@@ -102,7 +102,7 @@ def course_subjects_list(request,pk):
          "title": "Subjects",
          "course": pk,
      }
-     return render(request,'dashboard/webpages/subject/manager.html',context)
+     return render(request,'dashboard/webpages/content/subject/manager.html',context)
 
 
 def course_detail_subject(request, course_id):
@@ -146,7 +146,7 @@ def course_detail_subject(request, course_id):
                 "image": subject.image.url if subject.image else None,
                 "subject_name": subject.subject_name,
                 "description": subject.description,
-                "created": subject.created.strftime('%Y-%m-%d %H:%M:%S')
+                "created": subject.created.strftime('%Y-%m-%d %H:%M')
             })
         
         response = {
@@ -182,7 +182,7 @@ def course_subject_add(request, course_id):
         "form": form,
         "course": course,
     }
-    return render(request, "dashboard/webpages/subject/add.html",context)
+    return render(request, "dashboard/webpages/content/subject/add.html",context)
 
 
 
@@ -217,7 +217,7 @@ def course_subject_update(request, course_id, subject_id):
         "form": form,
         "course": course,
     }
-    return render(request, "dashboard/webpages/subject/update.html", context)
+    return render(request, "dashboard/webpages/content/subject/update.html", context)
     
 
 
@@ -243,7 +243,7 @@ def course_subject_chapters_list(request, subject_id):
         "subject": subject_id,
     }
 
-    return render(request,'dashboard/webpages/chapter/manager.html',context)
+    return render(request,'dashboard/webpages/content/chapter/manager.html',context)
 
 
 
@@ -288,7 +288,7 @@ def subject_detail_chapter(request, pk):
             "image": chapter.image.url if chapter.image else None,
             "chapter_name": chapter.chapter_name,
             "description": chapter.description,
-            "created": chapter.created.strftime('%Y-%m-%d %H:%M:%S')
+            "created": chapter.created.strftime('%Y-%m-%d %H:%M')
         })
     
     response = {
@@ -327,7 +327,7 @@ def subject_chapter_add(request, pk):
         "form": form,
         "subject": subject,
     }
-    return render(request, "dashboard/webpages/chapter/add.html",context)
+    return render(request, "dashboard/webpages/content/chapter/add.html",context)
 
 
 
@@ -352,7 +352,7 @@ def subject_chapter_update(request, chapter_id, subject_id):
         "form": form,
         "subject": subject,
     }
-    return render(request, "dashboard/webpages/chapter/update.html", context)
+    return render(request, "dashboard/webpages/content/chapter/update.html", context)
 
 
 
@@ -380,7 +380,7 @@ def chapter_lesson_list(request,chapter_id):
         "title": "Lessons",
         "chapter": chapter_id,
     }
-    return render(request,'dashboard/webpages/lesson/manager.html',context)
+    return render(request,'dashboard/webpages/content/lesson/manager.html',context)
 
 
 def chapter_detail_lesson(request, pk):
@@ -443,7 +443,7 @@ def chapter_detail_lesson(request, pk):
             "videos": video_data,
             "pdfs": pdf_data,
             "description": lesson.description,
-            "created": lesson.created.strftime('%Y-%m-%d %H:%M:%S')
+            "created": lesson.created.strftime('%Y-%m-%d %H:%M')
         })
     
     response = {
@@ -469,7 +469,6 @@ def chapter_detail_lesson(request, pk):
 def chapter_lesson_add(request,pk):
     try:
         chapter = Chapter.objects.get(id=pk, is_deleted=False)
-        print(chapter,"chapter")
     except Chapter.DoesNotExist:
         messages.error(request, "Subject not found.")
         return redirect('dashboard-course')
@@ -521,7 +520,7 @@ def chapter_lesson_add(request,pk):
         "form": form,
         "chapter": pk,
     }
-    return render(request, "dashboard/webpages/lesson/add.html",context)
+    return render(request, "dashboard/webpages/content/lesson/add.html",context)
 
 
 
@@ -530,25 +529,23 @@ def chapter_lesson_add(request,pk):
 
 
 def chapter_lesson_update(request, chapter_id, lesson_id):
-    # Retrieve the chapter and lesson
-    chapter = get_object_or_404(Chapter, id=chapter_id, is_deleted=False)
-    lesson = get_object_or_404(Lesson, id=lesson_id, chapter=chapter, is_deleted=False)
     
+    chapter = get_object_or_404(Chapter, id=chapter_id, is_deleted=False)
+    print(chapter,"chapter")
+    lesson = get_object_or_404(Lesson, id=lesson_id, chapter=chapter, is_deleted=False)
+    print(lesson,"lesson")
     if request.method == 'POST':
         form = LessonForm(request.POST, request.FILES, instance=lesson)
         if form.is_valid():
-            # Save the updated lesson
             lesson = form.save(commit=False)
-            lesson.chapter = chapter  # Ensure the chapter is set
+            lesson.chapter = chapter  
             lesson.save()
 
-            # Handle the video data
             video_title = form.cleaned_data.get('video_title')
             video_url = form.cleaned_data.get('video_url')
             video_is_downloadable = form.cleaned_data.get('video_is_downloadable')
             video_is_free = form.cleaned_data.get('video_is_free')
 
-            # Handle video update or creation
             if video_url:
                 Video.objects.update_or_create(
                     lesson=lesson,
@@ -560,13 +557,11 @@ def chapter_lesson_update(request, chapter_id, lesson_id):
                     }
                 )
 
-            # Handle the PDF data
             pdf_title = form.cleaned_data.get('pdf_title')
             pdf_file = form.cleaned_data.get('pdf_file')
             pdf_is_downloadable = form.cleaned_data.get('pdf_is_downloadable')
             pdf_is_free = form.cleaned_data.get('pdf_is_free')
 
-            # Handle PDF update or creation
             if pdf_file is not None:
                 PDFNote.objects.update_or_create(
                     lesson=lesson,
@@ -588,7 +583,7 @@ def chapter_lesson_update(request, chapter_id, lesson_id):
         "form": form,
         "chapter": chapter,
     }
-    return render(request, "dashboard/webpages/lesson/update.html", context)
+    return render(request, "dashboard/webpages/content/lesson/update.html", context)
 
 
 
@@ -597,7 +592,7 @@ def chapter_lesson_update(request, chapter_id, lesson_id):
 
 
 
-def  chapter_lesson_delete(request,chapter_id,lesson_id):
+def chapter_lesson_delete(request,chapter_id,lesson_id):
     lesson = get_object_or_404(Lesson, id=lesson_id)
     lesson.is_deleted = True
     lesson.save()

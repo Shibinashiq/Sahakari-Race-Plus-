@@ -15,7 +15,8 @@ from dashboard.views import (
     home,
     subject,
     customer,
-    batch
+    batch,
+    chapter,
    
 )
 
@@ -70,12 +71,21 @@ urlpatterns = [
     path("chapter/lesson/add/<int:pk>/", course.chapter_lesson_add, name="dashboad-chapter-lesson-add"),
     path("chapter/lesson/update/<int:chapter_id>/<int:lesson_id>/", course.chapter_lesson_update, name="dashboard-chapter-lesson-update"),
     path("chapter/lesson/delete/<int:chapter_id>/<int:lesson_id>/", course.chapter_lesson_delete, name="dashboard-chapter-lesson-delete"),
-    # ==================================== Course ============================================= #
+    # ==================================== Subject Management ============================================= #
 
     path("subject/", subject.manager, name="dashboard-subject"),
+    path("subject/list", subject.list, name="dashboard-subject-list"),
     path("subject/add/", subject.add, name="dashboard-subject-add"),
     path("subject/update/<int:pk>/", subject.update, name="dashboard-subject-update"),
     path("subject/delete/<int:pk>/", subject.delete, name="dashboard-subject-delete"),
+
+    # ==================================== Chapter Management ============================================= #
+
+    path("chapter/", chapter.manager, name="dashboard-chapter"),
+    path("chapter/list", chapter.list, name="dashboard-chapter-list"),
+    path("chapter/add/", chapter.add, name="dashboard-chapter-add"),
+    path("chapter/update/<int:pk>/", chapter.update, name="dashboard-chapter-update"),
+    path("chapter/delete/<int:pk>/", chapter.delete, name="dashboard-chapter-delete"),
 
 
 

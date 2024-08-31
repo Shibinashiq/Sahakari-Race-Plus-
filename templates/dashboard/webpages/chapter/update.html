@@ -90,7 +90,7 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        {{ form.chapter_name|as_crispy_field }}
+                                                        {{ form.subject_name|as_crispy_field }}
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -100,6 +100,11 @@
                                                 </div>
                                             </div>
                                             <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        {{ form.chapter|as_crispy_field }}
+                                                    </div>
+                                                </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         {{ form.description|as_crispy_field }}

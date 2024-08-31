@@ -1,0 +1,306 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+
+{% block css %}
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+    <!-- Sweet Alert css-->
+    <link href="{% static 'dashboard/assets/libs/sweetalert2/sweetalert2.min.css' %}" rel="stylesheet" type="text/css"/>
+    <!--Swiper slider css-->
+    <link href="{% static 'dashboard/assets/libs/swiper/swiper-bundle.min.css' %}" rel="stylesheet" type="text/css"/>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+{% endblock css %}
+
+{% block style %}
+    <style>
+        .form-group {
+            margin-top: 1rem;
+        }
+        #alert-box-top-right {
+        position: absolute;
+        top: 5%;
+        right: 5%;
+        transform: translate(5%, -5%);
+    }
+    .border-red {
+        border: 1px solid #ff0000;
+    }
+    
+    </style>
+{% endblock style %}
+
+
+{% block content %}
+
+    <div class="page-content">
+        <div class="container-fluid">
+
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0">Chapter Manager</h4>
+
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="/" class="text-primary">Admin</a></li>
+                                <li class="breadcrumb-item"><a href="" class="text-primary">Chapter</a></li>
+                                <li class="breadcrumb-item active">Manage</li>
+                            </ol>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- end page title -->
+
+            <div class="row">
+                <div class="col">
+                    <div class="h-100">
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-flex align-items-lg-center flex-lg-row flex-column">
+                                    <div class="flex-grow-1">
+                                        {#<h4 class="fs-16 mb-1">Good Morning, {{ request.user }}!</h4>#}
+                                    </div>
+                                    <div class="mt-3 mt-lg-0"></div>
+                                </div><!-- end card header -->
+                            </div>
+                            <!--end col-->
+                        </div>
+
+                        <div class="pt-4 pb-3">
+                            {# ------------------------------------Contents start------------------------------------ #}
+
+                            <div class="m-1">
+
+                                <div class="card">
+                                    <div class="card-header d-flex justify-content-end align-items-center">
+                                        {% if subject %}
+                                        <div class="col-auto">
+                                           
+                                            <a href="{% url 'dashboard-subject-chapter-add' pk=subject %}" class="btn btn-success btn-label waves-effect waves-light">
+                                                <i class="mdi mdi-plus-thick label-icon align-middle fs-16 me-2"></i> Add Chapter
+                                            </a>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="card-body">
+                                        <table id="productDatatable" class="table table-sm w-100">
+                                            <thead class="bg-light">
+                                            <tr class="text-uppercase">
+                                                <th class="align-middle">#</th>
+                                                <th class="align-middle">image</th>
+                                                <th class="align-middle">Name</th>
+                                                <th class="align-middle">description</th>
+                                                <th class="align-middle">Created</th>
+                                                <th class="align-middle">actions</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                           
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div><!-- end row -->
+
+                            {# -------------------------------------Contents end------------------------------------- #}
+                        </div>
+
+                        <!--end row-->
+                    </div> <!-- end .h-100-->
+                </div> <!-- end col -->
+            </div>
+            <input type="hidden" id="courseId" value="{{ course.id }}">
+
+            <!-- Add Modals -->
+           
+
+            {% comment %} {% include 'dashboard/includes/modals/add.html' with title="Subject" %} {% endcomment %}
+
+            {% comment %} {% include "dashboard/includes/modals/update.html" with title="Subject" %} {% endcomment %}
+
+            {% include "dashboard/includes/modals/delete.html" with title1="a Subject" title2="Subject" %}
+            
+
+{% endblock content %}
+
+{% block js %}
+
+    <script src="{% static 'dashboard/assets/libs/sweetalert2/sweetalert2.min.js' %}"></script>
+    <script src="{% static 'dashboard/assets/libs/apexcharts/apexcharts.min.js' %}"></script>
+    <script src="{% static 'dashboard/assets/js/pages/modal.init.js' %}"></script>
+
+{% endblock js %}
+
+{% block script %}
+<script>
+    $(document).ready(function () {
+        var subject = "{{ subject }}";
+        var dataTable = $('#productDatatable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                "url": "{% url 'dashboard-subject-chapters-detail' pk='0' %}".replace('0', subject),
+                "type": "GET",
+                "data": function (d) {
+                    d.search = {
+                        "value": $('input[type="search"]').val(),
+                        "regex": false
+                    };
+                    d.page = (d.start / d.length) + 1;
+                    d.page_size = d.length;
+                    return d;
+                },
+            },
+            "columns": [
+            {
+                    "data": "id",
+                    "render": function (data, type, full, meta) {
+                        return '<td class="align-middle">' + data + '</td>';
+                    }
+                },
+                {
+                    "data": "image",
+                    "render": function (data, type, full, meta) {
+                        if (data) {
+                            return '<td><img src="' + data +
+                                '" alt="chapter" style="width: 4rem; height: 4rem; ' +
+                                'object-fit: contain"></td>';
+                        } else {
+                            return '<td>No chpater image</td>';
+                        }
+                    }
+                },
+                
+               
+                {
+                "data": "chapter_name",
+                "render": function (data, type, full, meta) {
+                    var Chapter = full.id; 
+                    var detailUrl = "{% url 'dashboard-chapters-lesson-list' chapter_id='0' %}".replace('0', Chapter);
+                    return `<td class="align-middle" style="margin-bottom: 10rem;">
+                                <a href="${detailUrl}">${data}</a>
+                            </td>`;
+                }
+            }
+,
+                {
+                    "data": "description",
+                    "render": function (data, type, full, meta) {
+                        return '<td class="align-middle">' + data + '</td>';
+                    }
+                },
+                {
+                    "data": "created",
+                    "render": function (data, type, full, meta) {
+                        return '<td class="align-middle">' + data + '</td>';
+                    }
+                },
+                {
+                    
+                "data": "id",
+                    "render": function (data, type, row, meta) {
+                        var editUrl = "{% url 'dashboard-subject-chapter-update' subject_id='0' chapter_id='0' %}".replace('0', subject).replace('0', data);
+                        var deleteUrl = "{% url 'dashboard-subject-chapter-delete' subject_id='0' chapter_id='0' %}".replace('0', subject).replace('0', data);
+                        return `
+                            <a href="${editUrl}" class="btn-update" data-bs-toggle="tooltip" data-bs-trigger="hover"
+                               data-bs-placement="top" title="Edit">
+                                <i class="mdi mdi-pencil"></i>
+                            </a>
+                           <a href="" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
+                                class="text-danger d-inline-block deleteConfirmModalClass" data-id="${data}"
+                                data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
+                                title="Remove">
+                                <i class="mdi mdi-delete fs-16"></i>
+                            </a>
+                        `;
+                    }
+                }
+            ],
+            "lengthMenu": [
+                [25, 50, 100],
+                [25, 50, 100]
+            ],
+            "pageLength": 25,
+            "responsive": true,
+            "scrollX": true,
+            "scrollY": "50vh",
+            "scrollCollapse": true,
+            "ordering": true,
+            "language": {
+                "searchPlaceholder": "Search Subjects...",
+                "lengthMenu": "Show _MENU_",
+                "zeroRecords": `<span class="text-danger">No data found</span>`,
+                "info": "Showing page _PAGE_ of _PAGES_ (Total records: _TOTAL_)",
+                "infoEmpty": "No records available",
+                "infoFiltered": "(filtered from _MAX_ total records)",
+                "infoTotal": "Total records: _TOTAL_",
+                "paginate": {
+                    "first": `<i class="mdi mdi-arrow-left"></i>`,
+                    "previous": `<i class="mdi mdi-arrow-left"></i>`,
+                    "last": `<i class="mdi mdi-arrow-right"></i>`,
+                    "next": `<i class="mdi mdi-arrow-right"></i>`,
+                }
+            }
+        });
+    
+       
+
+        $(document).ready(function () {
+            var subjectId = "{{ subject }}"; 
+
+            $(document).on('click', '.deleteConfirmModalClass', function () {
+                var chapterId = $(this).data('id');
+                $('#delete-record').data('chapter-id', chapterId);
+                $('#delete-record').data('subject-id', subjectId);
+            });
+
+            $('#delete-record').click(function () {
+                var chapterId = $(this).data('chapter-id');
+                var subjectId = $(this).data('subject-id');
+
+                console.log("Deleting Chapter ID: " + chapterId + " Subject ID: " + subjectId);
+
+                $.ajax({
+                    url: '/subject/chapter/delete/' + subjectId + '/' + chapterId + '/',
+                    type: 'POST',
+                    data: {
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                    },
+                    success: function (data) {
+                        console.log("Deleted successfully");
+                        window.location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error deleting chapter:", error);
+                    }
+                });
+            });
+        });
+
+    
+       
+    });
+    
+</script>
+        
+<script>
+    $(document).ready(function () {
+        $('.noty-tost').click();
+    });
+</script>
+{% endblock script %}
+

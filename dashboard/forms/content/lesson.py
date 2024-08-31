@@ -1,6 +1,6 @@
 from django import forms
 from dashboard.models import Lesson
-
+from django.core.exceptions import ValidationError
 
 
 class LessonForm(forms.ModelForm):
@@ -35,6 +35,16 @@ class LessonForm(forms.ModelForm):
         self.fields['pdf_file'].widget.attrs.update({'class': 'form-control'})
         self.fields['pdf_is_downloadable'].widget.attrs.update({'class': 'form-check-input'})
         self.fields['pdf_is_free'].widget.attrs.update({'class': 'form-check-input'})
+    def clean(self):
+        cleaned_data = super().clean()
+        video_url = cleaned_data.get('video_url')
+        pdf_file = cleaned_data.get('pdf_file')
+
+        if not video_url and not pdf_file:
+            raise ValidationError("Either video URL or PDF file must be provided.")
+
+        return cleaned_data
+
 
     def save(self, commit=True):
         instance = super().save(commit=False)
