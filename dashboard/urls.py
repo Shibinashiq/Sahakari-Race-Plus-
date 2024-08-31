@@ -17,6 +17,7 @@ from dashboard.views import (
     customer,
     batch,
     chapter,
+    lesson,
    
 )
 
@@ -86,6 +87,13 @@ urlpatterns = [
     path("chapter/add/", chapter.add, name="dashboard-chapter-add"),
     path("chapter/update/<int:pk>/", chapter.update, name="dashboard-chapter-update"),
     path("chapter/delete/<int:pk>/", chapter.delete, name="dashboard-chapter-delete"),
+    # ==================================== Chapter Management ============================================= #
+
+    path("lesson/", lesson.manager, name="dashboard-lesson"),
+    path("lesson/list", lesson.list, name="dashboard-lesson-list"),
+    path("lesson/add/", lesson.add, name="dashboard-lesson-add"),
+    path("lesson/update/<int:pk>/", lesson.update, name="dashboard-lesson-update"),
+    path("lesson/delete/<int:pk>/", lesson.delete, name="dashboard-lesson-delete"),
 
 
 
