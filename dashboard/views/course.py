@@ -62,10 +62,6 @@ def update(request, pk):
         messages.error(request, 'Course not found')
         return redirect('dashboard-course')
 
-    try:
-        batch = Batch.objects.get(course=course, is_deleted=False)
-    except Batch.DoesNotExist:
-        batch = None
 
     if request.method == 'POST':
         form = AddForm(request.POST, request.FILES, instance=course)
@@ -81,11 +77,8 @@ def update(request, pk):
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
-        initial_data = {
-            'course_fee': batch.batch_price if batch else 0.0,
-            'course_expire': batch.batch_expiry if batch else None,
-        }
-        form = AddForm(instance=course, initial=initial_data)
+        
+        form = AddForm(instance=course)
     
     context = {
         "title": "Update Course | Agua Dashboard",
