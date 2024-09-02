@@ -111,9 +111,9 @@ urlpatterns = [
    # ==================================== Question Management ============================================= #
      path("question/manager", question.manager, name="dashboard-question-manager"),
      path("question/list", question.list, name="dashboard-question-list"),
-
      path("question/add", question.add, name="dashboard-question-add"),
      path("question/update/<int:pk>/", question.update, name="dashboard-question-update"),
+     path("question/delete/<int:pk>/", question.delete, name="dashboard-question-delete"),
 
 
 

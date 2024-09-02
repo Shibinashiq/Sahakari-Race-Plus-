@@ -130,11 +130,11 @@
             <!-- Add Modals -->
            
 
-            {% comment %} {% include 'dashboard/includes/modals/add.html' with title="Subject" %} {% endcomment %}
+            {% comment %} {% include 'dashboard/includes/modals/add.html' with title="Question" %} {% endcomment %}
 
-            {% comment %} {% include "dashboard/includes/modals/update.html" with title="Subject" %} {% endcomment %}
+            {% comment %} {% include "dashboard/includes/modals/update.html" with title="Question" %} {% endcomment %}
 
-            {% include "dashboard/includes/modals/delete.html" with title1="a Subject" title2="Subject" %}
+            {% include "dashboard/includes/modals/delete.html" with title1="a Question" title2="Question" %}
             
 
 {% endblock content %}
@@ -258,7 +258,6 @@
             }
         });
 
-        // Re-render MathJax after DataTable draws
         dataTable.on('draw', function () {
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         });
@@ -272,7 +271,7 @@
             var batch_id = $('#delete-record').data('batch-id'); 
 
             $.ajax({
-                url: '/batch/delete/' + batch_id + '/', 
+                url: '/question/delete/' + batch_id + '/', 
                 type: 'POST',
                 data: {
                     csrfmiddlewaretoken: '{{ csrf_token }}',
