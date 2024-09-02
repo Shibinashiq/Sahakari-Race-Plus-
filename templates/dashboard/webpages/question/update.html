@@ -57,7 +57,7 @@
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="/" class="text-primary">Dashboard</a></li>
                                 <li class="breadcrumb-item"><a href="" class="text-primary">Question</a></li>
-                                <li class="breadcrumb-item active">Edit</li>
+                                <li class="breadcrumb-item active">Update</li>
                             </ol>
                         </div>
                     </div>
@@ -68,15 +68,27 @@
             <div class="row">
                 <div class="col">
                     <div class="h-100">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-flex align-items-lg-center flex-lg-row flex-column">
+                                    <div class="flex-grow-1">
+                                        {# <h4 class="fs-16 mb-1">Good Morning, {{ request.user }}!</h4> #}
+                                    </div>
+                                    <div class="mt-3 mt-lg-0"></div>
+                                </div><!-- end card header -->
+                            </div>
+                            <!-- end col -->
+                        </div>
+
                         <div class="pt-4 pb-3">
                             <!-- Contents start -->
                             <div class="m-1">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h5 class="card-title">Edit Question</h5>
+                                        <h5 class="card-title">Update Question</h5>
                                     </div>
                                     <div class="card-body">
-                                        <form method="POST" enctype="multipart/form-data" action="{% url 'dashboard-question-edit' question.id %}">
+                                        <form method="POST" enctype="multipart/form-data">
                                             {% csrf_token %}
                                             <div class="row">
                                                 <div class="col-md-6">
@@ -105,11 +117,11 @@
                                                     <div class="form-group">
                                                         <label for="options">Options</label>
                                                         <div id="options-container">
-                                                            {% for option in form.options %}
-                                                                <div class="option-field">
-                                                                    <input type="text" name="options[]" class="form-control" value="{{ option.value }}" placeholder="Enter option">
-                                                                    <button type="button" class="btn btn-danger btn-sm mt-2 remove-btn remove-option">Remove</button>
-                                                                </div>
+                                                            {% for option in options %}
+                                                            <div class="option-field">
+                                                                <input type="text" name="options[]" class="form-control" value="{{ option }}">
+                                                                <button type="button" class="btn btn-danger btn-sm mt-2 remove-btn remove-option">Remove</button>
+                                                            </div>
                                                             {% endfor %}
                                                         </div>
                                                         <button type="button" id="add-option" class="btn btn-secondary mt-2">Add Option</button>
@@ -119,11 +131,11 @@
                                                     <div class="form-group">
                                                         <label for="answers">Right Answers</label>
                                                         <div id="answers-container">
-                                                            {% for answer in form.answers %}
-                                                                <div class="answers-field">
-                                                                    <input type="text" name="answers[]" class="form-control" value="{{ answer.value }}" placeholder="Enter answer">
-                                                                    <button type="button" class="btn btn-danger btn-sm mt-2 remove-btn remove-answer">Remove</button>
-                                                                </div>
+                                                            {% for answer in answers %}
+                                                            <div class="answers-field">
+                                                                <input type="text" name="answers[]" class="form-control" value="{{ answer }}">
+                                                                <button type="button" class="btn btn-danger btn-sm mt-2 remove-btn remove-answer">Remove</button>
+                                                            </div>
                                                             {% endfor %}
                                                         </div>
                                                         <button type="button" id="add-answers" class="btn btn-secondary mt-2">Add Answer</button>
@@ -131,7 +143,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <button type="submit" class="btn btn-primary mt-2">Save Changes</button>
+                                                <button type="submit" class="btn btn-primary mt-2">Submit</button>
                                             </div>
                                         </form>
                                     </div>
@@ -157,7 +169,6 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 
     <script>
-        // Initialize CKEditor with MathJax
         CKEDITOR.plugins.addExternal('mathjax', 'https://cdn.ckeditor.com/4.16.1/full-all/plugins/mathjax/', 'plugin.js');
         CKEDITOR.replace('editor1', {
             extraPlugins: 'mathjax',
@@ -165,7 +176,6 @@
             mathJaxClass: 'equation'
         });
 
-        // JavaScript for dynamically adding/removing options and answers
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('add-option').addEventListener('click', function() {
                 const container = document.getElementById('options-container');

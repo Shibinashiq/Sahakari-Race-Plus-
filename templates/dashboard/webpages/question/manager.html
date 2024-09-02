@@ -214,7 +214,7 @@
                 {
                     "data": "id",
                     "render": function (data, type, row, meta) {
-                        var editUrl = "{% url 'dashboard-batch-update' pk='0' %}".replace('0', data);
+                        var editUrl = "{% url 'dashboard-question-update' pk='0' %}".replace('0', data);
                         var deleteUrl = "{% url 'dashboard-batch-delete' pk='0' %}".replace('0', data);
                         return `
                             <a href="${editUrl}" class="btn-update" data-bs-toggle="tooltip" data-bs-trigger="hover"

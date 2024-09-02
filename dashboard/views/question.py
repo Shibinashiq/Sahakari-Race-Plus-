@@ -106,8 +106,6 @@ def add(request):
     return render(request, 'dashboard/webpages/question/add.html', {'form': form})
 
 
-
-
 def update(request, pk):
     question = get_object_or_404(Question, pk=pk)
     
@@ -120,8 +118,6 @@ def update(request, pk):
             exam_id = form.cleaned_data.get('exam')
             options = request.POST.getlist('options[]')
             answers = request.POST.getlist('answers[]')
-            print("Options:", options)
-            print("Answers:", answers)
 
             question.question_type = question_type
             question.question_description = question_description
@@ -131,8 +127,13 @@ def update(request, pk):
             question.right_answers = answers
             question.save()
             
-            return redirect('dashboard-question-list')  
+            return redirect('dashboard-question-manager')  
     else:
         form = QuestionForm(instance=question)
     
-    return render(request, 'dashboard/webpages/question/edit.html', {'form': form, 'question': question})
+    return render(request, 'dashboard/webpages/question/update.html', {
+        'form': form,
+        'question': question,
+        'options': question.options,
+        'answers': question.right_answers
+    })

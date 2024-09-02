@@ -113,7 +113,7 @@ urlpatterns = [
      path("question/list", question.list, name="dashboard-question-list"),
 
      path("question/add", question.add, name="dashboard-question-add"),
-     path("question/update", question.update, name="dashboard-question-update"),
+     path("question/update/<int:pk>/", question.update, name="dashboard-question-update"),
 
 
 
