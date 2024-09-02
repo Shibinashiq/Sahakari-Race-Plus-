@@ -13,6 +13,9 @@
     <link href="{% static 'dashboard/assets/libs/swiper/swiper-bundle.min.css' %}" rel="stylesheet" type="text/css"/>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Add this script in the <head> or before the closing </body> tag -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
 
 <!-- Bootstrap Bundle with Popper -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
@@ -87,7 +90,7 @@
                                     <div class="card-header d-flex justify-content-end align-items-center">
                                         <div class="col-auto">
                                            
-                                            <a href="{% url 'dashboard-batch-add' %}" class="btn btn-success btn-label waves-effect waves-light">
+                                            <a href="{% url 'dashboard-question-add' %}" class="btn btn-success btn-label waves-effect waves-light">
                                                 <i class="mdi mdi-plus-thick label-icon align-middle fs-16 me-2"></i> Add Question
                                             </a>
                                         </div>
@@ -96,19 +99,21 @@
                                     <div class="card-body">
                                         <table id="productDatatable" class="table table-sm w-100">
                                             <thead class="bg-light">
-                                            <tr class="text-uppercase">
-                                                <th class="align-middle">#</th>
-                                                <th class="align-middle">Course</th>
-                                                <th class="align-middle">price</th>
-                                                <th class="align-middle">start date</th>
-                                                <th class="align-middle">end date</th>
-                                                <th class="align-middle">actions</th>
-                                            </tr>
+                                                <tr class="text-uppercase">
+                                                    <th class="align-middle">#</th>
+                                                    <th class="align-middle">Question Description</th>
+                                                    <th class="align-middle">Hint</th>
+                                                    <th class="align-middle">Exam</th>
+                                                    <th class="align-middle">Options</th>
+                                                    <th class="align-middle">Right Answers</th>
+                                                    <th class="align-middle">Created</th>
+                                                    <th class="align-middle">Actions</th>
+                                                </tr>
                                             </thead>
                                             <tbody>
                                             </tbody>
-                                           
                                         </table>
+                                        
                                     </div>
                                 </div>
 
@@ -149,7 +154,7 @@
             "processing": true,
             "serverSide": true,
             "ajax": {
-                "url": "{% url 'dashboard-batch-list' %}",
+                "url": "{% url 'dashboard-question-list' %}",
                 "type": "GET",
                 "data": function (d) {
                     d.search = {
@@ -162,43 +167,52 @@
                 },
             },
             "columns": [
-            {
+                {
                     "data": "id",
                     "render": function (data, type, full, meta) {
-                        return '<td class="align-middle">' + data + '</td>';
+                        return data;
                     }
                 },
                 {
-                    "data": "course",
+                    "data": "question_description",
                     "render": function (data, type, full, meta) {
-                        return '<td class="align-middle">' + data + '</td>';
+                         return `<div class="latex-content">
+                                    ${data}
+                                </div>`;
                     }
                 },
-                
-               
                 {
-                "data": "price",
-                "render": function (data, type, full, meta) {
-                    return '<td class="align-middle">' + data + '</td>';
-                   
-                }
-            }
-                ,
-                {
-                    "data": "start_date",
+                    "data": "hint",
                     "render": function (data, type, full, meta) {
-                        return '<td class="align-middle">' + data + '</td>';
+                        return '<div class="latex-content">' + data + '</div>';
                     }
                 },
                 {
-                    "data": "end_date",
+                    "data": "exam",
                     "render": function (data, type, full, meta) {
-                        return '<td class="align-middle">' + data + '</td>';
+                        return data;
                     }
                 },
                 {
-                    
-                "data": "id",
+                    "data": "options",
+                    "render": function (data, type, full, meta) {
+                        return '<div>' + data + '</div>';
+                    }
+                },
+                {
+                    "data": "right_answers",
+                    "render": function (data, type, full, meta) {
+                        return '<div>' + data + '</div>';
+                    }
+                },
+                {
+                    "data": "created",
+                    "render": function (data, type, full, meta) {
+                        return data; // Date formatting is handled in the backend
+                    }
+                },
+                {
+                    "data": "id",
                     "render": function (data, type, row, meta) {
                         var editUrl = "{% url 'dashboard-batch-update' pk='0' %}".replace('0', data);
                         var deleteUrl = "{% url 'dashboard-batch-delete' pk='0' %}".replace('0', data);
@@ -228,7 +242,7 @@
             "scrollCollapse": true,
             "ordering": true,
             "language": {
-                "searchPlaceholder": "Search Batches...",
+                "searchPlaceholder": "Search...",
                 "lengthMenu": "Show _MENU_",
                 "zeroRecords": `<span class="text-danger">No data found</span>`,
                 "info": "Showing page _PAGE_ of _PAGES_ (Total records: _TOTAL_)",
@@ -243,8 +257,11 @@
                 }
             }
         });
-    
-       
+
+        // Re-render MathJax after DataTable draws
+        dataTable.on('draw', function () {
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        });
 
         $(document).on('click', '.deleteConfirmModalClass', function () {
             var batch_id = $(this).data('id');
@@ -271,6 +288,8 @@
         });
     });
 </script>
+
+
 <script>
     $(document).ready(function () {
         $('.noty-tost').click();
