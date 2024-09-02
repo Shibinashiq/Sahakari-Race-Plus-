@@ -206,4 +206,36 @@ class Like(models.Model):
         elif self.pdf_note:
             return f"{self.user.name} liked PDF: {self.pdf_note.title}"
 
-            
+
+
+class Exam(models.Model):
+    title = models.CharField(max_length=255, blank=True, null=True)
+    total_questions = models.PositiveIntegerField(default=0)
+    duration = models.DurationField(null=True, blank=True)
+    start_time = models.DateTimeField(null=True, blank=True)
+    end_time = models.DateTimeField(null=True, blank=True)
+    subject = models.CharField(max_length=255, blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    is_deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title or 'No title'
+
+class Question(models.Model):
+    QUESTION_TYPES = (
+        (1, 'Text'),
+        (2, 'Image'),
+    )
+  
+    question_type = models.PositiveIntegerField(choices=QUESTION_TYPES, default=1)
+    question_description = models.TextField(null=True, blank=True)
+    hint = models.TextField(null=True, blank=True)
+    options = models.JSONField(default=list, null=True, blank=True)
+    right_answers = models.JSONField(default=list, null=True, blank=True)  
+    # talenthunt = models.ForeignKey('TalenHunt', on_delete=models.CASCADE, null=True, blank=True)
+    exam = models.ForeignKey('Exam', on_delete=models.CASCADE, null=True, blank=True)
+    created = models.DateTimeField(default=timezone.now)
+    is_deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.question_description or 'No description'

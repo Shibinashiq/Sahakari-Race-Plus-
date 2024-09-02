@@ -82,44 +82,41 @@
                                 </div>
                                 <div class="card">
                                     <div class="card-header">
-                                        <h5 class="card-title">Add Customer</h5>
+                                        <h5 class="card-title">Add Subject</h5>
                                     </div>
                                     <div class="card-body">
-                                        <form method="POST" enctype="multipart/form-data" >
-                                            {% csrf_token %}
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        {{ form.name|as_crispy_field }}
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        {{ form.email|as_crispy_field }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        {{ form.phone_number|as_crispy_field }}
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        {{ form.district|as_crispy_field }}
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        {{ form.batches|as_crispy_field }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <button type="submit" class="btn btn-primary mt-2">Submit</button>
-                                            </div>
-                                        </form>
+                                        <form method="POST" enctype="multipart/form-data"
+										>
+												{% csrf_token %}
+												<div class="row">
+													<div class="col-md-6">
+														<div class="form-group">
+															{{ form.course|as_crispy_field }}
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															{{ form.batch_price|as_crispy_field }}
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													
+													<div class="col-md-6">
+														<div class="form-group">
+															{{ form.start_date|as_crispy_field }}
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															{{ form.batch_expiry|as_crispy_field }}
+														</div>
+													</div>
+												</div>
+												<div class="form-group">
+													<button type="submit" class="btn btn-primary mt-2">Submit</button>
+												</div>
+											</form>
                                     </div>
                                 </div>
                                 

@@ -53,12 +53,19 @@ def list(request):
 
     data = []
     for user in page_obj:
+        subscriptions = Subscription.objects.filter(user=user)
+        subscription_details = [
+            f'<span style="color: blue;">{subscription.batch.course.course_name}</span> (<span style="color: green;">Start: {subscription.batch.start_date.strftime("%d-%m-%Y")}, <span style="color: red;">Expiry: {subscription.batch.batch_expiry.strftime("%d-%m-%Y")}</span>)'
+            for subscription in subscriptions
+        ]
+        subscriptions_display = '<br>'.join(subscription_details) if subscription_details else "N/A"
         data.append({
             "id": user.id,
             "username": user.name if user.name else "N/A",
             "email": user.email if user.email else "N/A",
             "district": user.get_district_display() if user.district else "N/A", 
             "phone_number": user.phone_number if user.phone_number else "N/A",
+            "batch_names_display":subscriptions_display,
             "created": user.created.strftime("%d-%m-%Y %H:%M:%S"),
         })
     
@@ -82,6 +89,13 @@ def add(request):
         if form.is_valid():
             customer = form.save(commit=False)
             customer.save()
+            batches = form.cleaned_data.get('batches')
+            Subscription.objects.filter(user=customer).delete() 
+            for batch in batches:
+                Subscription.objects.create(user=customer, batch=batch)
+           
+
+            
 
             messages.success(request, "Customer added successfully!")
             return redirect('dashboard-customer')
@@ -105,7 +119,15 @@ def update(request, pk):
     if request.method == "POST":
         form = CustomerForm(request.POST, request.FILES, instance=customer)
         if form.is_valid():
-            form.save()
+            updated_customer = form.save(commit=False)
+            batch = form.cleaned_data.get('batch')
+            updated_customer.save()
+
+            Subscription.objects.update_or_create(
+                user=updated_customer,
+                defaults={'batch': batch}
+            )
+
             messages.success(request, "Customer updated successfully!")
             return redirect('dashboard-customer')
         else:
@@ -146,3 +168,11 @@ def detail(request, pk):
     return render (request,"dashboard/webpages/customer/detail.html",context)
     
     
+
+
+
+
+
+
+
+

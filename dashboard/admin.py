@@ -12,4 +12,6 @@ admin.site.register(Video)
 admin.site.register(PDFNote)
 admin.site.register(Comment)
 admin.site.register(Like)
+admin.site.register(Exam)
+admin.site.register(Question)
 

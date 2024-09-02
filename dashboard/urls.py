@@ -18,6 +18,7 @@ from dashboard.views import (
     batch,
     chapter,
     lesson,
+    question
    
 )
 
@@ -107,7 +108,9 @@ urlpatterns = [
     path("customer/detail/<int:pk>/", customer.detail, name="dashboard-user-detail"),
 
 
+   # ==================================== Question Management ============================================= #
 
+     path("question/add", question.add, name="dashboard-question-add"),
 
 
 

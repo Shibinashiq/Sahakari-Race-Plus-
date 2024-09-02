@@ -1,6 +1,11 @@
 from django import forms
-from dashboard.models import CustomUser
+from dashboard.models import CustomUser ,Batch ,Subscription
 class CustomerForm(forms.ModelForm):
+    batches = forms.ModelMultipleChoiceField(
+        queryset=Batch.objects.filter(is_deleted=False),
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
+        required = False,
+    )
     class Meta:
         model = CustomUser
         fields = ['name', 'email', 'phone_number', 'district']
@@ -19,6 +24,11 @@ class CustomerForm(forms.ModelForm):
         self.fields['phone_number'].required = True
         self.fields['district'].required = True
         self.fields['district'].widget.choices = CustomUser.DISTRICT_CHOICES
+        if self.instance and not self.instance.pk:
+            self.fields['batches'].initial = []
+        elif self.instance:
+            subscriptions = Subscription.objects.filter(user=self.instance)
+            self.fields['batches'].initial = [sub.batch for sub in subscriptions]
 
     def clean_name(self):
         name = self.cleaned_data.get('name')
