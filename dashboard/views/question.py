@@ -17,7 +17,6 @@ def add(request):
             question_description = form.cleaned_data.get('question_description')
             hint = form.cleaned_data.get('hint')
             exam_id = form.cleaned_data.get('exam')
-            right_answers = form.cleaned_data.get('right_answers')
             options = request.POST.getlist('options[]')
             answers = request.POST.getlist('answers[]')
             print("Options:", options)
@@ -28,7 +27,7 @@ def add(request):
                 question_description=question_description,
                 hint=hint,
                 options=options,
-                right_answers=right_answers,
+                right_answers=answers,
                 exam_id=exam_id
             )
             question.save()
@@ -38,6 +37,6 @@ def add(request):
             return render(request, 'dashboard/webpages/question/add.html', {'form': form})
 
     else:
-        form = QuestionForm()  # Create a blank form for GET requests
+        form = QuestionForm()  
 
     return render(request, 'dashboard/webpages/question/add.html', {'form': form})

@@ -130,3 +130,170 @@ STATIC_ROOT = "assets/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_RESTRICT_BY_DATE = False
+CKEDITOR_IMAGE_BACKEND = "ckeditor_uploader.backends.PillowBackend"
+MEDIA_URL = "/media/"
+CKEDITOR_CONFIGS = {
+    "default": {
+        "toolbar": [
+            # {'name': 'document', 'items': ['Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-']},
+            {"name": "clipboard", "items": ["Undo", "Redo"]},
+            {"name": "editing", "items": ["Find", "Replace"]},
+            # {'name': 'forms',
+            #  'items': ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
+            #    'HiddenField']},
+            # '/',
+            {
+                "name": "basicstyles",
+                "items": [
+                    "Bold",
+                    "Italic",
+                    "Underline",
+                    "Strike",
+                    "Subscript",
+                    "Superscript",
+                    "-",
+                    "RemoveFormat",
+                ],
+            },
+            {
+                "name": "paragraph",
+                "items": [
+                    "NumberedList",
+                    "BulletedList",
+                    "-",
+                    "Outdent",
+                    "Indent",
+                    "-",
+                    "Blockquote",
+                    "-",
+                    "JustifyLeft",
+                    "JustifyCenter",
+                    "JustifyRight",
+                    "JustifyBlock",
+                ],
+            },
+            {"name": "links", "items": ["Link", "Unlink"]},
+            {
+                "name": "insert",
+                "items": [
+                    "Image",
+                    "Flash",
+                    "Table",
+                    "HorizontalRule",
+                    "SpecialChar",
+                    "Preview",
+                ],
+            },
+            "/",
+            {"name": "styles", "items": ["Styles", "Format", "Font", "FontSize"]},
+            # {'name': 'colors', 'items': ['TextColor', 'BGColor']},
+            # {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
+            # {'name': 'about', 'items': ['About']},
+            {"name": "youtube", "items": ["Youtube"]},
+            {"name": "math", "items": ["Mathjax"]},
+        ],
+        #   [
+        #  {'name': 'youcustomtools', 'items': [
+        # 'Save',
+        # 'Source',
+        # 'Image',
+        # 'Embed',
+        # 'Mathjax',
+        # 'Preview',
+        # ]},
+        # ],
+        "font_names": "Poppins/Poppins",
+        "fontSize_sizes": "16/16px;",
+        "contentsCss": [
+            "https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap",
+            "/static/css/ckeditor_contents.css",  # Assuming you have a CSS file in static files
+        ],
+        "bodyClass": "poppins-text",
+        "mathJaxLib": "//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML",
+        "tabSpaces": 4,
+        "extraPlugins": ",".join(
+            [
+                "mathjax",
+                "embed",
+                # "imageuploader",
+                "youtube",
+            ]
+        ),
+        # "removeButtons": 'Underline,Subscript,Superscript',
+        # "format_tags": 'p;h1;h2;h3;pre',
+        # "removeDialogTabs": 'image:advanced;link:advanced',
+        "youtube_disabled_fields": "txtEmbed,chkAutoplay",
+        "youtube_width": "640",
+        "youtube_height": "480",
+        "youtube_responsive": True,
+        "youtube_older": False,
+        "youtube_related": True,
+        "youtube_autoplay": False,
+        "youtube_controls": True,
+        "youtube_privacy": False,
+        # 'embed_provider': '//ckeditor.iframe.ly/api/oembed?url={url}&callback={callback}&api_key=' + IFRAMELY_API_KEY,
+        # "extraAllowedContent": "iframe[*]",
+        "removePlugins": ["iframe"],
+        "allowedContent": True,
+        "height": 150,
+    },
+    "option_ckeditor": {
+        "toolbar": [
+            # {'name': 'document', 'items': ['Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-']},
+            # {'name': 'clipboard', 'items': [ 'Undo', 'Redo']},
+            # {'name': 'editing', 'items': ['Find', 'Replace']},
+            # {'name': 'forms',
+            #  'items': ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
+            #    'HiddenField']},
+            # '/',
+            # {'name': 'basicstyles',
+            #  'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']},
+            #     {'name': 'paragraph',
+            #      'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', '-',
+            #                'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
+            #     {'name': 'links', 'items': ['Link', 'Unlink']},
+            #    {'name': 'insert',
+            #      'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'SpecialChar','Preview']},
+            # '/',
+            # {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
+            # {'name': 'colors', 'items': ['TextColor', 'BGColor']},
+            # {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
+            # {'name': 'about', 'items': ['About']},
+            {"name": "math", "items": ["Mathjax"]}
+        ],
+        #   [
+        #  {'name': 'youcustomtools', 'items': [
+        # 'Save',
+        # 'Source',
+        # 'Image',
+        # 'Embed',
+        # 'Mathjax',
+        # 'Preview',
+        # ]},
+        # ],
+        "font_names": "Poppins/Poppins",
+        "fontSize_sizes": "16/16px;",
+        "contentsCss": [
+            "https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap",
+            "/static/css/ckeditor_contents.css",
+        ],
+        "bodyClass": "poppins-text",
+        "mathJaxLib": "//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML",
+        "tabSpaces": 4,
+        "extraPlugins": ",".join(
+            [
+                "mathjax",
+                "embed",
+            ]
+        ),
+        "height": 70,
+        # 'width': 500,
+    },
+}
