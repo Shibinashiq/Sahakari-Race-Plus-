@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'crispy_bootstrap4',
     # 'multiselectfield'
+    'ckeditor',
+    'ckeditor_uploader',
 ]
 
 MIDDLEWARE = [

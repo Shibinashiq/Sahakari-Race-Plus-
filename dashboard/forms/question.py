@@ -1,8 +1,8 @@
 from django import forms
 from dashboard.models import Question, Exam
-
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
 class QuestionForm(forms.ModelForm):
-  
+    question_description = forms.CharField(widget=CKEditorUploadingWidget())
     hint = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
     class Meta:
         model = Question
