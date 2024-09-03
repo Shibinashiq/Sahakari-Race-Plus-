@@ -220,7 +220,7 @@ class Exam(models.Model):
 
     def __str__(self):
         return self.title or 'No title'
-
+from ckeditor.fields import RichTextField
 class Question(models.Model):
     QUESTION_TYPES = (
         (1, 'Text'),
@@ -228,7 +228,7 @@ class Question(models.Model):
     )
   
     question_type = models.PositiveIntegerField(choices=QUESTION_TYPES, default=1)
-    question_description = models.TextField(null=True, blank=True)
+    question_description = RichTextField()
     hint = models.TextField(null=True, blank=True)
     options = models.JSONField(default=list, null=True, blank=True)
     right_answers = models.JSONField(default=list, null=True, blank=True)  
