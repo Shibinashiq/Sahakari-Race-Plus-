@@ -63,7 +63,7 @@ def list(request):
             "id": question.id,
             "question_description": question.question_description if question.question_description else "N/A",
             "hint": question.hint if question.hint else "N/A",
-            "exam": question.exam.name if question.exam else "N/A",
+            "exam": question.exam.title if question.exam else "N/A",
             "options": options_str,
             "right_answers": right_answers_str,
             "created": question.created.strftime('%Y-%m-%d %H:%M')
@@ -97,7 +97,7 @@ def add(request):
                 hint=hint,
                 options=options,
                 right_answers=answers,
-                exam_id=exam_id
+                exam_id=exam_id.id
             )
             question.save()
             messages.success(request, "Question added successfully.")
