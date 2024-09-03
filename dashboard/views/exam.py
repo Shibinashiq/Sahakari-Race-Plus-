@@ -42,7 +42,7 @@ def list(request):
         )
     
     total_records = exam.count()
-
+   
     exam = exam.order_by(order_field)
     paginator = Paginator(exam, length)
     page_number = (start // length) + 1
