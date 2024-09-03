@@ -165,18 +165,19 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 
     <script>
-        CKEDITOR.plugins.addExternal('mathjax', 'https://cdn.ckeditor.com/4.16.1/full-all/plugins/mathjax/', 'plugin.js');
-    
-        CKEDITOR.replace('question_description', {
-            extraPlugins: 'uploadimage,image,mathjax',
-            filebrowserUploadUrl: '{% url "ckeditor_upload" %}?type=Files',
-            filebrowserBrowseUrl: '{% url "ckeditor_browse" %}?type=Files',
-            height: 200,
-            removeDialogTabs: 'image:advanced;link:advanced',
-            mathJaxLib: '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML',
-            mathJaxClass: 'equation'
-        });
-    
+    CKEDITOR.plugins.addExternal('mathjax', 'https://cdn.ckeditor.com/4.16.1/full-all/plugins/mathjax/', 'plugin.js');
+
+    CKEDITOR.replace('question_description', {
+        extraPlugins: 'uploadimage,image,mathjax',
+        filebrowserUploadUrl: '{% url "ckeditor_upload" %}',
+        filebrowserBrowseUrl: '{% url "ckeditor_browse" %}',
+        height: 200,
+        removeDialogTabs: 'image:advanced;link:advanced',
+        mathJaxLib: '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML',
+        mathJaxClass: 'equation'
+    });
+
+
         // JavaScript for dynamically adding/removing options and answers
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('add-option').addEventListener('click', function() {
@@ -189,13 +190,13 @@
                 `;
                 container.appendChild(newField);
             });
-    
+
             document.getElementById('options-container').addEventListener('click', function(e) {
                 if (e.target.classList.contains('remove-option')) {
                     e.target.parentElement.remove();
                 }
             });
-    
+
             document.getElementById('add-answers').addEventListener('click', function() {
                 const container = document.getElementById('answers-container');
                 const newField = document.createElement('div');
@@ -206,12 +207,12 @@
                 `;
                 container.appendChild(newField);
             });
-    
+
             document.getElementById('answers-container').addEventListener('click', function(e) {
                 if (e.target.classList.contains('remove-answer')) {
                     e.target.parentElement.remove();
                 }
             });
         });
-        </script>
+    </script>
 {% endblock js %}

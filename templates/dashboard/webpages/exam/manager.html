@@ -13,9 +13,6 @@
     <link href="{% static 'dashboard/assets/libs/swiper/swiper-bundle.min.css' %}" rel="stylesheet" type="text/css"/>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Add this script in the <head> or before the closing </body> tag -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
-
 
 <!-- Bootstrap Bundle with Popper -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
@@ -50,12 +47,12 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0">Question Manager</h4>
+                        <h4 class="mb-sm-0">Exam Manager</h4>
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="/" class="text-primary">Admin</a></li>
-                                <li class="breadcrumb-item"><a href="" class="text-primary">Question</a></li>
+                                <li class="breadcrumb-item"><a href="" class="text-primary">Exam</a></li>
                                 <li class="breadcrumb-item active">Manage</li>
                             </ol>
                         </div>
@@ -90,8 +87,8 @@
                                     <div class="card-header d-flex justify-content-end align-items-center">
                                         <div class="col-auto">
                                            
-                                            <a href="{% url 'dashboard-question-add' %}" class="btn btn-success btn-label waves-effect waves-light">
-                                                <i class="mdi mdi-plus-thick label-icon align-middle fs-16 me-2"></i> Add Question
+                                            <a href="{% url 'dashboard-exam-add'  %}" class="btn btn-success btn-label waves-effect waves-light">
+                                                <i class="mdi mdi-plus-thick label-icon align-middle fs-16 me-2"></i> Add Exam
                                             </a>
                                         </div>
                                     </div>
@@ -101,19 +98,17 @@
                                             <thead class="bg-light">
                                                 <tr class="text-uppercase">
                                                     <th class="align-middle">#</th>
-                                                    <th class="align-middle">Question Description</th>
-                                                    <th class="align-middle">Hint</th>
-                                                    <th class="align-middle">Exam</th>
-                                                    <th class="align-middle">Options</th>
-                                                    <th class="align-middle">Right Answers</th>
+                                                    <th class="align-middle">title</th>
+                                                    <th class="align-middle">subject</th>
+                                                    <th class="align-middle">duration</th>
                                                     <th class="align-middle">Created</th>
                                                     <th class="align-middle">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                             </tbody>
+                                           
                                         </table>
-                                        
                                     </div>
                                 </div>
 
@@ -126,15 +121,16 @@
                     </div> <!-- end .h-100-->
                 </div> <!-- end col -->
             </div>
+            <input type="hidden" id="courseId" value="{{ course.id }}">
 
             <!-- Add Modals -->
            
 
-            {% comment %} {% include 'dashboard/includes/modals/add.html' with title="Question" %} {% endcomment %}
+            {% comment %} {% include 'dashboard/includes/modals/add.html' with title="Exam" %} {% endcomment %}
 
-            {% comment %} {% include "dashboard/includes/modals/update.html" with title="Question" %} {% endcomment %}
+            {% comment %} {% include "dashboard/includes/modals/update.html" with title="Exam" %} {% endcomment %}
 
-            {% include "dashboard/includes/modals/delete.html" with title1="a Question" title2="Question" %}
+            {% include "dashboard/includes/modals/delete.html" with title1="a Exam" title2="Exam" %}
             
 
 {% endblock content %}
@@ -154,7 +150,7 @@
             "processing": true,
             "serverSide": true,
             "ajax": {
-                "url": "{% url 'dashboard-question-list' %}",
+                "url": "{% url 'dashboard-exam-list' %}",
                 "type": "GET",
                 "data": function (d) {
                     d.search = {
@@ -164,74 +160,60 @@
                     d.page = (d.start / d.length) + 1;
                     d.page_size = d.length;
                     return d;
-                },
+                }
             },
             "columns": [
                 {
                     "data": "id",
                     "render": function (data, type, full, meta) {
-                        return data;
+                        return '<td class="align-middle">' + data + '</td>';
                     }
                 },
                 {
-                    "data": "question_description",
+                    "data": "title",
                     "render": function (data, type, full, meta) {
-                         return `<div class="latex-content">
-                                    ${data}
-                                </div>`;
+                        return '<td class="align-middle">' + data + '</td>';
                     }
                 },
                 {
-                    "data": "hint",
+                    "data": "subject",
                     "render": function (data, type, full, meta) {
-                        return '<div class="latex-content">' + data + '</div>';
+                        return '<td class="align-middle">' + data + '</td>';
                     }
                 },
                 {
-                    "data": "exam",
+                    "data": "duration",
                     "render": function (data, type, full, meta) {
-                        return data;
-                    }
-                },
-                {
-                    "data": "options",
-                    "render": function (data, type, full, meta) {
-                        return '<div>' + data + '</div>';
-                    }
-                },
-                {
-                    "data": "right_answers",
-                    "render": function (data, type, full, meta) {
-                        return '<div>' + data + '</div>';
+                        return '<td class="align-middle">' + data + '</td>';
                     }
                 },
                 {
                     "data": "created",
                     "render": function (data, type, full, meta) {
-                        return data; // Date formatting is handled in the backend
+                        return '<td class="align-middle">' + data + '</td>';
                     }
                 },
                 {
                     "data": "id",
                     "render": function (data, type, row, meta) {
-                        var editUrl = "{% url 'dashboard-question-update' pk='0' %}".replace('0', data);
-                        var deleteUrl = "{% url 'dashboard-batch-delete' pk='0' %}".replace('0', data);
+                        var editUrl = "{% url 'dashboard-exam-update' pk='0' %}".replace('0', data);
+                        var deleteUrl = "{% url 'dashboard-exam-delete' pk='0' %}".replace('0', data);
                         return `
                             <a href="${editUrl}" class="btn-update" data-bs-toggle="tooltip" data-bs-trigger="hover"
                                data-bs-placement="top" title="Edit">
                                 <i class="mdi mdi-pencil"></i>
                             </a>
-                           <a href="" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
-                                class="text-danger d-inline-block deleteConfirmModalClass" data-id="${data}"
-                                data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
-                                title="Remove">
-                                <i class="mdi mdi-delete fs-16"></i>
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
+                               class="text-danger d-inline-block deleteConfirmModalClass" data-id="${data}"
+                               data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
+                               title="Remove">
+                               <i class="mdi mdi-delete fs-16"></i>
                             </a>
                         `;
                     }
                 }
             ],
-            "order": [[6, 'desc']],
+            "order": [[5, 'desc']],
             "lengthMenu": [
                 [25, 50, 100],
                 [25, 50, 100]
@@ -243,7 +225,7 @@
             "scrollCollapse": true,
             "ordering": true,
             "language": {
-                "searchPlaceholder": "Search...",
+                "searchPlaceholder": "Search Exams...",
                 "lengthMenu": "Show _MENU_",
                 "zeroRecords": `<span class="text-danger">No data found</span>`,
                 "info": "Showing page _PAGE_ of _PAGES_ (Total records: _TOTAL_)",
@@ -254,42 +236,38 @@
                     "first": `<i class="mdi mdi-arrow-left"></i>`,
                     "previous": `<i class="mdi mdi-arrow-left"></i>`,
                     "last": `<i class="mdi mdi-arrow-right"></i>`,
-                    "next": `<i class="mdi mdi-arrow-right"></i>`,
+                    "next": `<i class="mdi mdi-arrow-right"></i>`
                 }
             }
         });
-
-        dataTable.on('draw', function () {
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-        });
-
+    
         $(document).on('click', '.deleteConfirmModalClass', function () {
-            var batch_id = $(this).data('id');
-            $('#delete-record').data('batch-id', batch_id); 
+            var examId = $(this).data('id');
+            $('#delete-record').data('exam-id', examId); 
         });
-
+    
         $('#delete-record').click(function () {
-            var batch_id = $('#delete-record').data('batch-id'); 
-
+            var examId = $(this).data('exam-id'); 
+    
             $.ajax({
-                url: '/question/delete/' + batch_id + '/', 
+                url: '/exam/delete/' + examId + '/', 
                 type: 'POST',
                 data: {
-                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    csrfmiddlewaretoken: '{{ csrf_token }}' 
                 },
                 success: function (data) {
-                    console.log("Deleted successfully");
-                    window.location.reload(); 
+                    $('#deleteConfirmModal').modal('hide'); 
+                    dataTable.ajax.reload(); 
                 },
                 error: function(xhr, status, error) {
-                    console.error("Error deleting batch:", error);
+                    console.error("Error deleting exam:", error);
                 }
             });
         });
     });
-</script>
-
-
+    </script>
+    
+        
 <script>
     $(document).ready(function () {
         $('.noty-tost').click();

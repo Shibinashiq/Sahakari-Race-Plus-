@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Group, Permission
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password
-
+from ckeditor.fields import RichTextField
 class MyUserManager(BaseUserManager):
     def _create_user(self, email, name, phone_number, district,  **extra_fields):
         if not email:
@@ -118,7 +118,7 @@ class Course(models.Model):
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.course_name
+        return self.course_name  or 'No title'
 
 class Subject(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='subjects')
@@ -129,7 +129,7 @@ class Subject(models.Model):
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.subject_name  
+        return self.subject_name  or 'No title'
 
 
 class Chapter(models.Model):
@@ -141,7 +141,7 @@ class Chapter(models.Model):
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.chapter_name} - {self.subject.subject_name}"
+        return self.chapter_name  or 'No title'
 
 class Lesson(models.Model):
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, related_name='lessons')
@@ -152,7 +152,7 @@ class Lesson(models.Model):
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.lesson_name
+        return self.lesson_name  or 'No title'
 
 class Video(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='videos')
@@ -164,7 +164,7 @@ class Video(models.Model):
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.title 
+        return self.title  or 'No title'
 
 class PDFNote(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='pdf_notes')
@@ -176,7 +176,7 @@ class PDFNote(models.Model):
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.title 
+        return self.title  or 'No title'
 
 class Comment(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -210,17 +210,14 @@ class Like(models.Model):
 
 class Exam(models.Model):
     title = models.CharField(max_length=255, blank=True, null=True)
-    total_questions = models.PositiveIntegerField(default=0)
-    duration = models.DurationField(null=True, blank=True)
-    start_time = models.DateTimeField(null=True, blank=True)
-    end_time = models.DateTimeField(null=True, blank=True)
-    subject = models.CharField(max_length=255, blank=True, null=True)
+    duration = models.TimeField(null=True, blank=True)
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title or 'No title'
-from ckeditor.fields import RichTextField
+
 class Question(models.Model):
     QUESTION_TYPES = (
         (1, 'Text'),
@@ -233,7 +230,7 @@ class Question(models.Model):
     options = models.JSONField(default=list, null=True, blank=True)
     right_answers = models.JSONField(default=list, null=True, blank=True)  
     # talenthunt = models.ForeignKey('TalenHunt', on_delete=models.CASCADE, null=True, blank=True)
-    exam = models.ForeignKey('Exam', on_delete=models.CASCADE, null=True, blank=True)
+    exam = models.ForeignKey(Exam, on_delete=models.SET_NULL, null=True, blank=True)
     created = models.DateTimeField(default=timezone.now)
     is_deleted = models.BooleanField(default=False)
 

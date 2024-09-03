@@ -109,10 +109,10 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="hint">Hint</label>
-                                                        <textarea name="hint" class="form-control">{{ form.hint.value|safe }}</textarea>
-                                                    </div>
-                                                </div>
+                                                         <label for="hint">Hint</label>
+                                                         {{ form.hint }}
+                                                     </div>
+                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="options">Options</label>
@@ -170,12 +170,17 @@
 
     <script>
         CKEDITOR.plugins.addExternal('mathjax', 'https://cdn.ckeditor.com/4.16.1/full-all/plugins/mathjax/', 'plugin.js');
-        CKEDITOR.replace('editor1', {
-            extraPlugins: 'mathjax',
+    
+        CKEDITOR.replace('question_description', {
+            extraPlugins: 'uploadimage,image,mathjax',
+            filebrowserUploadUrl: '{% url "ckeditor_upload" %}?type=Files',
+            filebrowserBrowseUrl: '{% url "ckeditor_browse" %}?type=Files',
+            height: 200,
+            removeDialogTabs: 'image:advanced;link:advanced',
             mathJaxLib: '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML',
             mathJaxClass: 'equation'
         });
-
+    
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('add-option').addEventListener('click', function() {
                 const container = document.getElementById('options-container');
@@ -187,13 +192,13 @@
                 `;
                 container.appendChild(newField);
             });
-
+    
             document.getElementById('options-container').addEventListener('click', function(e) {
                 if (e.target.classList.contains('remove-option')) {
                     e.target.parentElement.remove();
                 }
             });
-
+    
             document.getElementById('add-answers').addEventListener('click', function() {
                 const container = document.getElementById('answers-container');
                 const newField = document.createElement('div');
@@ -204,12 +209,12 @@
                 `;
                 container.appendChild(newField);
             });
-
+    
             document.getElementById('answers-container').addEventListener('click', function(e) {
                 if (e.target.classList.contains('remove-answer')) {
                     e.target.parentElement.remove();
                 }
             });
         });
-    </script>
+        </script>
 {% endblock js %}

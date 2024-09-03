@@ -85,9 +85,7 @@
                
                
                 <li class="nav-item">
-                    <!-- <a class="nav-link menu-link"  role="button" aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="fa fa-building"></i>
-                     <span data-key="t-dashboards">Company</span> -->
+                   
                     </a>
                 </li>
                 <li class="menu-title"><span data-key="t-menu">Customer Management</span></li>
@@ -98,8 +96,17 @@
                 </li>
                 <li class="menu-title"><span data-key="t-menu">Exam Management</span></li>
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="{% url 'dashboard-exam-manager' %}" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
+                        <i class="fas fa-pencil-alt"></i>
+
+                        <span data-key="t-dashboards">Exam</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="{% url 'dashboard-question-manager' %}" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="bx bxs-user"></i> <span data-key="t-dashboards">Question</span>
+                        <i class="fas fa-pencil-alt"></i>
+
+                        <span data-key="t-dashboards">Question</span>
                     </a>
                 </li>
             </ul>

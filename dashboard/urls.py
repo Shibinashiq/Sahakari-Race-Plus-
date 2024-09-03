@@ -18,7 +18,8 @@ from dashboard.views import (
     batch,
     chapter,
     lesson,
-    question
+    exam,
+    question,
    
 )
 
@@ -96,8 +97,6 @@ urlpatterns = [
     path("lesson/update/<int:pk>/", lesson.update, name="dashboard-lesson-update"),
     path("lesson/delete/<int:pk>/", lesson.delete, name="dashboard-lesson-delete"),
 
-
-
     # ==================================== Customer Management ============================================= #
 
     path("customer/", customer.manager, name="dashboard-customer"),
@@ -107,13 +106,22 @@ urlpatterns = [
     path("customer/delete/<int:pk>/", customer.delete, name="dashboard-customer-delete"),
     path("customer/detail/<int:pk>/", customer.detail, name="dashboard-user-detail"),
 
+    # ==================================== Exam Management ============================================= #
+   
+    path("exam/", exam.manager, name="dashboard-exam-manager"),
+    path("exam/list", exam.list, name="dashboard-exam-list"),
+    path("exam/add", exam.add, name="dashboard-exam-add"),
+    path("exam/update/<int:pk>/", exam.update, name="dashboard-exam-update"),
+    path("exam/delete/<int:pk>/", exam.delete, name="dashboard-exam-delete"),
+
 
    # ==================================== Question Management ============================================= #
-     path("question/manager", question.manager, name="dashboard-question-manager"),
-     path("question/list", question.list, name="dashboard-question-list"),
-     path("question/add", question.add, name="dashboard-question-add"),
-     path("question/update/<int:pk>/", question.update, name="dashboard-question-update"),
-     path("question/delete/<int:pk>/", question.delete, name="dashboard-question-delete"),
+
+    path("question/", question.manager, name="dashboard-question-manager"),
+    path("question/list", question.list, name="dashboard-question-list"),
+    path("question/add", question.add, name="dashboard-question-add"),
+    path("question/update/<int:pk>/", question.update, name="dashboard-question-update"),
+    path("question/delete/<int:pk>/", question.delete, name="dashboard-question-delete"),
 
 
 

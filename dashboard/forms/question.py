@@ -5,6 +5,11 @@ class QuestionForm(forms.ModelForm):
     # question_description = forms.CharField(widget=CKEditorUploadingWidget())
     question_description = forms.CharField(widget=CKEditorUploadingWidget())
     hint = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    exam= forms.ModelChoiceField(
+        queryset=Exam.objects.filter(is_deleted=False),
+        widget=forms.Select(attrs={'class': 'form-control', 'required': True}),
+        empty_label="Select a Exam"
+    )
     class Meta:
         model = Question
         fields = [
