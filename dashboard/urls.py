@@ -74,6 +74,15 @@ urlpatterns = [
     path("chapter/lesson/add/<int:pk>/", course.chapter_lesson_add, name="dashboad-chapter-lesson-add"),
     path("chapter/lesson/update/<int:chapter_id>/<int:lesson_id>/", course.chapter_lesson_update, name="dashboard-chapter-lesson-update"),
     path("chapter/lesson/delete/<int:chapter_id>/<int:lesson_id>/", course.chapter_lesson_delete, name="dashboard-chapter-lesson-delete"),
+
+
+    #question inside the lesson
+    path("chapter/question/list/<int:chapter_id>/", course.chapter_question_list, name="dashboard-chapter-question-list"), #here list the question
+    path("chapter/question/detail/<int:pk>/", course.chapter_detail_question, name="dashboard-chapter-question-detail"),
+    path("chapter/question/add/<int:pk>/", course.chapter_question_add, name="dashboard-chapter-question-add"),  
+
+    path("chapter/question/update/<int:chapter_id>/<int:question_id>/", course.chapter_question_update, name="dashboard-chapter-question-update"),
+    path("chapter/question/delete/<int:chapter_id>/<int:question_id>/", course.chapter_question_delete, name="dashboard-chapter-question-delete"),
     # ==================================== Subject Management ============================================= #
 
     path("subject/", subject.manager, name="dashboard-subject"),

@@ -206,7 +206,15 @@ class Like(models.Model):
         elif self.pdf_note:
             return f"{self.user.name} liked PDF: {self.pdf_note.title}"
 
+class TalentHunt(models.Model):
+    title = models.CharField(max_length=255, blank=True, null=True)
+    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True, blank=True)
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    is_deleted = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.title or 'No title'
 
 class Exam(models.Model):
     title = models.CharField(max_length=255, blank=True, null=True)
@@ -229,8 +237,10 @@ class Question(models.Model):
     hint = models.TextField(null=True, blank=True)
     options = models.JSONField(default=list, null=True, blank=True)
     right_answers = models.JSONField(default=list, null=True, blank=True)  
-    # talenthunt = models.ForeignKey('TalenHunt', on_delete=models.CASCADE, null=True, blank=True)
+    master_question = models.IntegerField(null=True, blank=True)
     exam = models.ForeignKey(Exam, on_delete=models.SET_NULL, null=True, blank=True)
+    chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True, blank=True)
+    talenthunt = models.ForeignKey(TalentHunt, on_delete=models.SET_NULL, null=True, blank=True)
     created = models.DateTimeField(default=timezone.now)
     is_deleted = models.BooleanField(default=False)
 
