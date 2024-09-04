@@ -172,9 +172,11 @@
                 {
                     "data": "title",
                     "render": function (data, type, full, meta) {
-                        return '<td class="align-middle">' + data + '</td>';
+                        var detailUrl = "/exam/question/" + full.id + "/"; 
+                        return '<td class="align-middle"><a href="' + detailUrl + '" class="btn btn-link">' + data + '</a></td>';
                     }
                 },
+
                 {
                     "data": "subject",
                     "render": function (data, type, full, meta) {

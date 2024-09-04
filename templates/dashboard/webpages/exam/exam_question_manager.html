@@ -55,6 +55,7 @@
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="/" class="text-primary">Admin</a></li>
+                                <li class="breadcrumb-item"><a href="" class="text-primary">Exam</a></li>
                                 <li class="breadcrumb-item"><a href="" class="text-primary">Question</a></li>
                                 <li class="breadcrumb-item active">Manage</li>
                             </ol>
@@ -90,7 +91,7 @@
                                     <div class="card-header d-flex justify-content-end align-items-center">
                                         <div class="col-auto">
                                            
-                                            <a href="{% url 'dashboard-exam-question-add' exam_id=exam_id %}" class="btn btn-success btn-label waves-effect waves-light">
+                                            <a href="{% url 'dashboard-exam-question-add' exam_id=exam %}" class="btn btn-success btn-label waves-effect waves-light">
                                                 <i class="mdi mdi-plus-thick label-icon align-middle fs-16 me-2"></i> Add Question
                                             </a>
                                         </div>
@@ -149,7 +150,7 @@
 {% block script %}
 <script>
     $(document).ready(function () {
-        var exam = "{{ exam_id }}";
+        var exam = "{{ exam }}";
         var dataTable = $('#productDatatable').DataTable({
             "processing": true,
             "serverSide": true,
@@ -188,6 +189,7 @@
                     }
                 },
                 
+                
                 {
                     "data": "options",
                     "render": function (data, type, full, meta) {
@@ -203,14 +205,14 @@
                 {
                     "data": "created",
                     "render": function (data, type, full, meta) {
-                        return data; // Date formatting is handled in the backend
+                        return data; 
                     }
                 },
                 {
                     "data": "id",
                     "render": function (data, type, row, meta) {
-                        var editUrl = "{% url 'dashboard-exam-question-update' exam_id=0 question_id=0 %}".replace('0', exam).replace('0', data);
-                        var deleteUrl = "{% url 'dashboard-batch-delete' pk='0' %}".replace('0', data);
+                        var editUrl = "{% url 'dashboard-exam-question-update' exam_id='0' question_id='0' %}".replace('0', exam).replace('0', data);
+                        var deleteUrl = "".replace('0', data);
                         return `
                             <a href="${editUrl}" class="btn-update" data-bs-toggle="tooltip" data-bs-trigger="hover"
                                data-bs-placement="top" title="Edit">
@@ -254,20 +256,17 @@
             }
         });
 
-        dataTable.on('draw', function () {
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-        });
-
         $(document).on('click', '.deleteConfirmModalClass', function () {
-            var batch_id = $(this).data('id');
-            $('#delete-record').data('batch-id', batch_id); 
+            var questionId = $(this).data('id');
+            $('#delete-record').data('question-id', questionId); 
         });
 
         $('#delete-record').click(function () {
-            var batch_id = $('#delete-record').data('batch-id'); 
+            var questionId = $('#delete-record').data('question-id'); 
 
             $.ajax({
-                url: '/question/delete/' + batch_id + '/', 
+                url: "{% url 'dashboard-exam-question-delete' exam_id=0 question_id=0 %}".replace('0', exam).replace('0', questionId), 
+                type: 'POST',
                 type: 'POST',
                 data: {
                     csrfmiddlewaretoken: '{{ csrf_token }}',

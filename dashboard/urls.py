@@ -115,6 +115,13 @@ urlpatterns = [
     path("exam/delete/<int:pk>/", exam.delete, name="dashboard-exam-delete"),
 
 
+    path("exam/question/<int:exam_id>/", exam.exam_question_manager, name="dashboard-exam-question-manager"),
+    path("exam/question/list/<int:exam_id>/", exam.exam_question_list, name="dashboard-exam-question-list"),
+    path("exam/question/add/<int:exam_id>/", exam.exam_question_add, name="dashboard-exam-question-add"),
+    path("exam/question/update/<int:exam_id>/<int:question_id>/", exam.exam_question_update, name="dashboard-exam-question-update"),
+    path("exam/question/delete/<int:exam_id>/<int:question_id>/", exam.exam_question_delete, name="dashboard-exam-question-delete"),
+    
+
    # ==================================== Question Management ============================================= #
 
     path("question/", question.manager, name="dashboard-question-manager"),
