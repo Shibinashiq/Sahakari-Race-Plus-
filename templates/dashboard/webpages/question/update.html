@@ -91,14 +91,24 @@
                                         <form method="POST" enctype="multipart/form-data">
                                             {% csrf_token %}
                                             <div class="row">
-                                                <div class="col-md-6">
+                                                <div class="col-md-3">
                                                     <div class="form-group">
                                                         {{ form.question_type|as_crispy_field }}
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6">
+                                                <div class="col-md-3">
                                                     <div class="form-group">
                                                         {{ form.exam|as_crispy_field }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        {{ form.chapter|as_crispy_field }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        {{ form.talenthunt|as_crispy_field }}
                                                     </div>
                                                 </div>
                                             </div>

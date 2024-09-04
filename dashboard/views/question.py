@@ -86,19 +86,41 @@ def add(request):
             question_description = form.cleaned_data.get('question_description')
             hint = form.cleaned_data.get('hint')
             exam_id = form.cleaned_data.get('exam')
+            talenthunt = form.cleaned_data.get('talenthunt')
+            chapter = form.cleaned_data.get('chapter')
             options = request.POST.getlist('options[]')
             answers = request.POST.getlist('answers[]')
-            print("Options:", options)
-            print("answers",answers)
+           
+            if exam_id:
+                question = Question(
+                    question_type=question_type,
+                    question_description=question_description,
+                    hint=hint,
+                    options=options,
+                    right_answers=answers,
+                    exam=exam_id
 
-            question = Question(
-                question_type=question_type,
-                question_description=question_description,
-                hint=hint,
-                options=options,
-                right_answers=answers,
-                exam_id=exam_id.id
-            )
+                )
+            elif talenthunt:
+                 question = Question(
+                    question_type=question_type,
+                    question_description=question_description,
+                    hint=hint,
+                    options=options,
+                    right_answers=answers,
+                    talenthunt=talenthunt
+
+                )
+            elif chapter:
+                question = Question(
+                    question_type=question_type,
+                    question_description=question_description,
+                    hint=hint,
+                    options=options,
+                    right_answers=answers,
+                    chapter=chapter
+                )
+
             question.save()
             messages.success(request, "Question added successfully.")
             return redirect('dashboard-question-manager')  
@@ -121,13 +143,20 @@ def update(request, pk):
             question_description = form.cleaned_data.get('question_description')
             hint = form.cleaned_data.get('hint')
             exam_id = form.cleaned_data.get('exam')
+            talenthunt = form.cleaned_data.get('talenthunt')
+            chapter = form.cleaned_data.get('chapter')
             options = request.POST.getlist('options[]')
             answers = request.POST.getlist('answers[]')
 
             question.question_type = question_type
             question.question_description = question_description
             question.hint = hint
-            question.exam_id = exam_id
+            if exam_id:
+                question.exam = exam_id
+            elif talenthunt:
+                question.talenthunt = talenthunt
+            elif chapter:
+                question.chapter = chapter
             question.options = options
             question.right_answers = answers
             question.save()
