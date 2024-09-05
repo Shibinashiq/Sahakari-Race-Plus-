@@ -20,7 +20,9 @@ from dashboard.views import (
     lesson,
     exam,
     question,
-   
+   talenthunt,
+   level,
+   talenthuntsubject
 )
 
 urlpatterns = [
@@ -138,6 +140,40 @@ urlpatterns = [
     path("question/add", question.add, name="dashboard-question-add"),
     path("question/update/<int:pk>/", question.update, name="dashboard-question-update"),
     path("question/delete/<int:pk>/", question.delete, name="dashboard-question-delete"),
+
+
+    # ==================================== Talent Hunt Management ============================================= #
+   
+    path("talenthunt/", talenthunt.manager, name="dashboard-talenthunt-manager"),
+    path("talenthunt/list/", talenthunt.list, name="dashboard-talenthunt-list"),
+    path("talenthunt/add/", talenthunt.add, name="dashboard-talenthunt-add"),
+    path("talenthunt/update/<int:pk>/", talenthunt.update, name="dashboard-talenthunt-update"),
+    path("talenthunt/delete/<int:pk>/", talenthunt.delete, name="dashboard-talenthunt-delete"),
+
+
+    path('fetch-course-subjects/', talenthunt.fetch_course_subjects, name='fetch-course-subjects'),
+
+
+    path("talenthunt/subject/manager/<int:pk>/", talenthuntsubject.manager, name="dashboard-talenthunt-subject-manager"),
+    path("talenthunt/subject/list/<int:pk>/", talenthuntsubject.list, name="dashboard-talenthunt-subject-list"),
+    path("talenthunt/subject/add/<int:pk>/", talenthuntsubject.add, name="dashboard-talenthunt-subject-add"),
+    path("talenthunt/subject/update/<int:pk>/", talenthuntsubject.update, name="dashboard-talenthunt-subject-update"),
+    path("talenthunt/subject/delete/<int:pk>/", talenthuntsubject.delete, name="dashboard-talenthunt-subject-delete"),
+
+
+
+    path("level/<int:pk>/", level.manager, name="dashboard-level-manager"),
+    path("level/list/<int:pk>/", level.list, name="dashboard-level-list"),
+    path("level/add/<int:pk>/", level.add, name="dashboard-level-add"),
+    path("level/update/<int:pk>/<int:level_id>/", level.update, name="dashboard-level-update"),
+    path("level/delete/<int:pk>/", level.delete, name="dashboard-level-delete"),
+
+
+    path("level/question/<int:pk>/", level.level_question_manager, name="dashboard-level-question-manager"),
+    path("level/question/list/<int:pk>/", level.level_question_list, name="dashboard-level-question-list"),
+    path("level/question/add/<int:pk>/", level.level_question_add, name="dashboard-level-question-add"),
+    path("level/question/update/<int:pk>/", level.level_question_update, name="dashboard-level-question-update"),
+    path("level/delete/<int:pk>/", level.delete, name="dashboard-level-question-delete"),
 
 
 

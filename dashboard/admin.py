@@ -14,4 +14,7 @@ admin.site.register(Comment)
 admin.site.register(Like)
 admin.site.register(Exam)
 admin.site.register(Question)
+admin.site.register(TalentHunt)
+admin.site.register(TalentHuntSubject)
+admin.site.register(Level) 
 

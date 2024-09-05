@@ -1,0 +1,294 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+
+{% block css %}
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+    <!-- Sweet Alert css-->
+    <link href="{% static 'dashboard/assets/libs/sweetalert2/sweetalert2.min.css' %}" rel="stylesheet" type="text/css"/>
+    <!--Swiper slider css-->
+    <link href="{% static 'dashboard/assets/libs/swiper/swiper-bundle.min.css' %}" rel="stylesheet" type="text/css"/>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+{% endblock css %}
+
+{% block style %}
+    <style>
+        .form-group {
+            margin-top: 1rem;
+        }
+        #alert-box-top-right {
+        position: absolute;
+        top: 5%;
+        right: 5%;
+        transform: translate(5%, -5%);
+    }
+    .border-red {
+        border: 1px solid #ff0000;
+    }
+    
+    </style>
+{% endblock style %}
+
+
+{% block content %}
+
+    <div class="page-content">
+        <div class="container-fluid">
+
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0">Level Manager</h4>
+
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="/" class="text-primary">Admin</a></li>
+                                <li class="breadcrumb-item"><a href="" class="text-primary">TalentHunt</a></li>
+                                <li class="breadcrumb-item"><a href="" class="text-primary">Subject</a></li>
+                                <li class="breadcrumb-item"><a href="" class="text-primary">Level</a></li>
+                                <li class="breadcrumb-item active">Manage</li>
+                            </ol>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- end page title -->
+
+            <div class="row">
+                <div class="col">
+                    <div class="h-100">
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-flex align-items-lg-center flex-lg-row flex-column">
+                                    <div class="flex-grow-1">
+                                        {#<h4 class="fs-16 mb-1">Good Morning, {{ request.user }}!</h4>#}
+                                    </div>
+                                    <div class="mt-3 mt-lg-0"></div>
+                                </div><!-- end card header -->
+                            </div>
+                            <!--end col-->
+                        </div>
+
+                        <div class="pt-4 pb-3">
+                            {# ------------------------------------Contents start------------------------------------ #}
+
+                            <div class="m-1">
+
+                                <div class="card">
+                                    <div class="card-header d-flex justify-content-end align-items-center">
+                                        <div class="col-auto">
+                                           
+                                            <a href="{% url 'dashboard-level-add' pk %}" class="btn btn-success btn-label waves-effect waves-light">
+                                                <i class="mdi mdi-plus-thick label-icon align-middle fs-16 me-2"></i> Add Level
+                                            </a>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card-body">
+                                        <table id="customerDatatable" class="table table-sm w-100">
+                                            <thead class="bg-light">
+                                                <tr class="text-uppercase">
+                                                    <th class="align-middle">#</th>
+                                                    <th class="align-middle">Name</th>
+                                                    <th class="align-middle">Level</th>
+                                                    <th class="align-middle">Created</th>
+                                                    <th class="align-middle">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                           
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div><!-- end row -->
+
+                            {# -------------------------------------Contents end------------------------------------- #}
+                        </div>
+
+                        <!--end row-->
+                    </div> <!-- end .h-100-->
+                </div> <!-- end col -->
+            </div>
+            <input type="hidden" id="courseId" value="{{ course.id }}">
+
+            <!-- Add Modals -->
+           
+
+            {% comment %} {% include 'dashboard/includes/modals/add.html' with title="Level" %} {% endcomment %}
+
+            {% comment %} {% include "dashboard/includes/modals/update.html" with title="Level" %} {% endcomment %}
+
+            {% include "dashboard/includes/modals/delete.html" with title1="a Level" title2="Level" %}
+            
+
+{% endblock content %}
+
+{% block js %}
+
+    <script src="{% static 'dashboard/assets/libs/sweetalert2/sweetalert2.min.js' %}"></script>
+    <script src="{% static 'dashboard/assets/libs/apexcharts/apexcharts.min.js' %}"></script>
+    <script src="{% static 'dashboard/assets/js/pages/modal.init.js' %}"></script>
+
+{% endblock js %}
+
+{% block script %}
+<script>
+     
+    $(document).ready(function () {
+        var pk = "{{ pk }}";
+        var dataTable = $('#customerDatatable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                "url": "{% url 'dashboard-level-list' pk='0' %}".replace('0', pk),
+                "type": "GET",
+                "data": function (d) {
+                    d.search = {
+                        "value": $('input[type="search"]').val(),
+                        "regex": false
+                    };
+                    d.page = (d.start / d.length) + 1;
+                    d.page_size = d.length;
+                    return d;
+                },
+            },
+            "columns": [
+                {
+                    "data": "id",
+                    "render": function (data, type, full, meta) {
+                        return data;
+                    }
+                },
+              
+                {
+                    "data": "title",
+                    "render": function (data, type, full, meta) {
+                        console.log("ID:", full.id);
+                        // Construct the URL
+                        var detailUrl = "/level/question/" + full.id + "/"; 
+                        return '<td class="align-middle"><a href="' + detailUrl + '" class="btn btn-link">' + data + '</a></td>';
+                    }
+                },
+
+                {
+                    "data": "number",
+                    "render": function (data, type, full, meta) {
+                        return data;
+                    }
+                },
+                 
+                {
+                    "data": "created",
+                    "render": function (data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    "data": "id",
+                    "render": function (data, type, row, meta) {
+                        var editUrl = "{% url 'dashboard-level-update' pk=0 level_id=0 %}".replace('0', pk).replace('0', data);
+
+                        var deleteUrl = "{% url 'dashboard-customer-delete' pk='0' %}".replace('0', data);
+                        return `
+                            <a href="${editUrl}" class="btn-update" data-bs-toggle="tooltip" data-bs-trigger="hover"
+                               data-bs-placement="top" title="Edit">
+                                <i class="mdi mdi-pencil"></i>
+                            </a>
+                              <a href="" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
+                       class="text-danger d-inline-block deleteConfirmModalClass" data-id="${data}"
+                       data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
+                       title="Remove">
+                       <i class="mdi mdi-delete fs-16"></i>
+                    </a>
+                        `;
+                    }
+                }
+            ],
+            "order": [[2,'desc']],
+            "lengthMenu": [
+                [25, 50, 100],
+                [25, 50, 100]
+            ],
+            "pageLength": 25,
+            "responsive": true,
+            "scrollX": true,
+            "scrollY": "50vh",
+            "scrollCollapse": true,
+            "ordering": true,
+            "language": {
+                "searchPlaceholder": "Search Level",
+                "lengthMenu": "Show _MENU_",
+                "zeroRecords": `<span class="text-danger">No data found</span>`,
+                "info": "Showing page _PAGE_ of _PAGES_ (Total records: _TOTAL_)",
+                "infoEmpty": "No Customers available",
+                "infoFiltered": "(filtered from _MAX_ total records)",
+                "infoTotal": "Total records: _TOTAL_",
+                "paginate": {
+                    "first": `<i class="mdi mdi-arrow-left"></i>`,
+                    "previous": `<i class="mdi mdi-arrow-left"></i>`,
+                    "last": `<i class="mdi mdi-arrow-right"></i>`,
+                    "next": `<i class="mdi mdi-arrow-right"></i>`,
+                }
+            }
+        });
+    
+        });
+    
+       
+        $(document).ready(function () {
+        var chapterId = "{{ chapter }}"; 
+
+        $(document).on('click', '.deleteConfirmModalClass', function () {
+            var lesson_id = $(this).data('id');
+            $('#delete-record').data('chapter-id', chapterId);
+            $('#delete-record').data('lesson-id', lesson_id); 
+        });
+
+        $('#delete-record').click(function () {
+            var chapterId = $(this).data('chapter-id');
+            var lesson_id = $(this).data('lesson-id'); 
+
+            console.log("Deleting Chapter ID: " + chapterId + " Lesson ID: " + lesson_id);
+
+            $.ajax({
+                url: '/level/update/' + lesson_id +  '/', 
+                type: 'POST',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                },
+                success: function (data) {
+                    console.log("Deleted successfully");
+                    window.location.reload(); 
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error deleting lesson:", error);
+                }
+            });
+        });
+    });
+
+        
+        
+        
+</script>
+        
+<script>
+    $(document).ready(function () {
+        $('.noty-tost').click();
+    });
+</script>
+{% endblock script %}
+

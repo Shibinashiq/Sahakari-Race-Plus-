@@ -1,64 +1,65 @@
+
 from django.shortcuts import redirect, render , get_object_or_404
 from dashboard.models import *
 from django.contrib import  messages
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from dashboard.models import CustomUser
-from dashboard.forms.exam import ExamForm ,QuestionForm
+from dashboard.forms.level import LevelForm ,QuestionForm
 from django.db.models import Q
 
-def manager(request):
-    return render(request, "dashboard/webpages/exam/manager.html")
+def manager(request,pk):
+    context={
+         'pk':pk
+    }
+    return render(request, 'dashboard/webpages/level/manager.html',context)
 
 
-def list(request):
+
+
+def list(request,pk):
+
     draw = int(request.GET.get("draw", 1))
     start = int(request.GET.get("start", 0))
-    length = int(request.GET.get("length", 10))
+    length = int(request.GET.get("length", 10))  
     search_value = request.GET.get("search[value]", "")
     order_column = int(request.GET.get("order[0][column]", 0))
-    order_dir = request.GET.get("order[0][dir]", "asc")
+    order_dir = request.GET.get("order[0][dir]", "desc")
     
+
     order_columns = {
         0: 'id',
-        1: 'exam__title',
-        2: 'subject__subject_name',
-        3: 'duration',
-        4: 'created'
+        3: 'course',
+
     }
     
     order_field = order_columns.get(order_column, 'id')
     if order_dir == 'desc':
         order_field = '-' + order_field
     
-    exam = Exam.objects.filter(is_deleted=False) 
+    level = Level.objects.filter(is_deleted=False,talenthuntsubject=pk)
     
     if search_value:
-        exam = exam.filter(
-            Q(created__icontains=search_value)|
-            Q(subject__subject_name__icontains=search_value) |
-            Q(duration__icontains=search_value)|
-            Q(title__icontains=search_value)
+        level = level.filter(
+            Q(title__icontains=search_value)|
+            Q(number__icontains=search_value)|
+            Q(created__icontains=search_value)
         )
     
-    total_records = exam.count()
-   
-    exam = exam.order_by(order_field)
-    paginator = Paginator(exam, length)
+    total_records = level.count()
+
+    level = level.order_by(order_field)
+    paginator = Paginator(level, length)
     page_number = (start // length) + 1
     page_obj = paginator.get_page(page_number)
 
     data = []
-    for exam in page_obj:
-        
-        
-        
+    for level in page_obj:
         data.append({
-            "id": exam.id,
-            "title": exam.title if exam.title else "N/A",
-             "subject": exam.subject.subject_name if exam.subject.subject_name else "N/A",
-            "duration": exam.duration if exam.duration else "N/A",
-            "created": exam.created.strftime('%Y-%m-%d %H:%M')
+            "id": level.id,
+            "title":level.title if  level.title else "N/A",
+            "number": level.number if level.number else "N/A",
+            "created": level.created.strftime('%Y-%m-%d %H:%M')
         })
     
     response = {
@@ -72,75 +73,98 @@ def list(request):
 
 
 
-
-def add(request):
-    if request.method == 'POST':
-        form = ExamForm(request.POST)  
+def add(request,pk):
+    if request.method == "POST":
+        talenthuntsubject= TalentHuntSubject.objects.get(id=pk)
+        form = LevelForm(request.POST, request.FILES)
         if form.is_valid():
-           
-            form.save()
-            messages.success(request, "Question added successfully.")
-            return redirect('dashboard-exam-manager')  
+            level = form.save(commit=False)
+            talenthuntsubject= form.cleaned_data.get('talenthuntsubject')
+            level.talenthuntsubject = talenthuntsubject
+
+            level.save()
+
+            
+            messages.success(request, "Level  added successfully!")
+            return redirect('dashboard-level-manager',pk)
         else:
-            return render(request, 'dashboard/webpages/exam/add.html', {'form': form})
-
+            context = {
+                "title": "Add Subject",
+                "form": form,
+                "pk":pk,
+            }
+            return render(request, "dashboard/webpages/level/add.html", context)
     else:
-        form = ExamForm()  
-
-    return render(request, 'dashboard/webpages/exam/add.html', {'form': form})
-
-
-
-
-def update(request, pk):
-    exam = get_object_or_404(Exam, pk=pk)
-
-    if request.method == 'POST':
-        form = ExamForm(request.POST, instance=exam)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Exam updated successfully.")
-            return redirect('dashboard-exam-manager') 
-        else:
-            messages.error(request, "Failed to update exam. Please check the form for errors.")
-    else:
-        form = ExamForm(instance=exam)
+            form = LevelForm()  
+            context = {
+                "title": "Add level ",
+                "form": form,
+                "pk":pk,
+            }
+            return render(request, "dashboard/webpages/level/add.html", context)
     
 
-    return render(request, 'dashboard/webpages/exam/update.html', {'form': form})
 
 
+def update(request, pk, level_id):
+    talenthuntsubject = get_object_or_404(TalentHuntSubject, id=pk)
+    level = get_object_or_404(Level, id=level_id, talenthuntsubject=talenthuntsubject)
+    
+    if request.method == "POST":
+        form = LevelForm(request.POST, request.FILES, instance=level)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Level updated successfully!")
+            return redirect('dashboard-level-manager', pk)
+        else:
+            context = {
+                "title": "Update Level",
+                "form": form,
+                "pk": pk,
+                "level_id": level_id
+            }
+            return render(request, "dashboard/webpages/level/update.html", context)
+    
+    else:
+        form = LevelForm(instance=level)
+        context = {
+            "title": "Update Level",
+            "form": form,
+            "pk": pk,
+            "level_id": level_id
+        }
+        return render(request, "dashboard/webpages/level/update.html", context)
+    
 
 
 def delete(request, pk):
-    exam = get_object_or_404(Exam, pk=pk)
+    level = get_object_or_404(Level, id=pk)
 
-    if request.method == 'POST':
-        exam.is_deleted = True
-        exam.save()
-        messages.success(request, "Exam deleted successfully.")
-        return redirect('dashboard-exam-manager')  
-    messages.error(request, "Failed to delete exam.")
-    return render(request, 'dashboard/webpages/exam/manager', {'exam': exam})
+    if request.method == "POST":
+        level.is_deleted = True
+        level.save()
+        messages.success(request, "Level deleted successfully!")
+        return redirect('dashboard-level-manager', pk)
 
-
-
-
-
-
+    context = {
+        "title": "Delete Level",
+        "pk": pk,
+    }
+    return redirect('dashboard-level-question-manager',context)  
 
 
 
 
 
-def exam_question_manager(request, exam_id):
-    exam = get_object_or_404(Exam, pk=exam_id)
-    return render(request, 'dashboard/webpages/exam/exam_question_manager.html', {'exam': exam.id})
+def level_question_manager(request,pk):
+    context={
+         'pk':pk
+    }
+    return render(request, 'dashboard/webpages/level/question_manager.html',context)
 
 
 
-
-def exam_question_list(request,exam_id):
+def level_question_list(request,pk):
     draw = int(request.GET.get("draw", 1))
     start = int(request.GET.get("start", 0))
     length = int(request.GET.get("length", 10))
@@ -160,13 +184,12 @@ def exam_question_list(request,exam_id):
     if order_dir == 'desc':
         order_field = '-' + order_field
     
-    questions = Question.objects.filter(is_deleted=False,exam=exam_id)
+    questions = Question.objects.filter(is_deleted=False,level=pk)
     
     if search_value:
         questions = questions.filter(
             Q(question_description__icontains=search_value) |
-            Q(hint__icontains=search_value) |
-            Q(exam__name__icontains=search_value)
+            Q(hint__icontains=search_value) 
         )
     
     total_records = questions.count()
@@ -204,44 +227,41 @@ def exam_question_list(request,exam_id):
 
     return JsonResponse(response)
 
-
-
-def exam_question_add(request, exam_id):
-    exam=Exam.objects.get(id=exam_id,is_deleted=False)
-    
+def level_question_add(request,pk):
     if request.method == 'POST':
         form = QuestionForm(request.POST)  
         if form.is_valid():
+            level=Level.objects.get(id=pk,is_deleted=False)
             question_type = form.cleaned_data.get('question_type')
             question_description = form.cleaned_data.get('question_description')
             hint = form.cleaned_data.get('hint')
             options = request.POST.getlist('options[]')
             answers = request.POST.getlist('answers[]')
-
+           
             question = Question(
                 question_type=question_type,
                 question_description=question_description,
                 hint=hint,
                 options=options,
                 right_answers=answers,
-                exam_id=exam.id
+                level=level
+
             )
+           
+
             question.save()
             messages.success(request, "Question added successfully.")
-            return redirect('dashboard-exam-question-manager',exam_id=exam_id)  
+            return redirect('dashboard-level-question-manager',pk)  
         else:
-            return render(request, 'dashboard/webpages/exam/question_add.html', {'form': form ,'exam':exam_id})
+            return render(request, 'dashboard/webpages/level/question_add.html', {'form': form ,'pk':pk})
 
     else:
         form = QuestionForm()  
 
-    return render(request, 'dashboard/webpages/exam/question_add.html', {'form': form ,'exam':exam_id})
+    return render(request, 'dashboard/webpages/level/question_add.html', {'form': form ,'pk':pk})
 
-
-
-def exam_question_update(request,exam_id,question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    exam = Exam.objects.get(id=exam_id)
+def level_question_update(request,pk):
+    question = get_object_or_404(Question, id=pk)
     
     if request.method == 'POST':
         form = QuestionForm(request.POST, instance=question)
@@ -255,35 +275,28 @@ def exam_question_update(request,exam_id,question_id):
             question.question_type = question_type
             question.question_description = question_description
             question.hint = hint
-            question.exam_id = exam.id
             question.options = options
             question.right_answers = answers
             question.save()
             messages.success(request, 'Question updated successfully.')
-            return redirect('dashboard-exam-question-manager',exam_id=exam_id)  
+            return redirect('dashboard-level-question-manager',pk=question.level.id)  
     else:
         form = QuestionForm(instance=question)
     
-    return render(request, 'dashboard/webpages/exam/question_update.html', {
+    return render(request, 'dashboard/webpages/level/question_update.html', {
         'form': form,
         'question': question,
         'options': question.options,
         'answers': question.right_answers
     })
 
+def level_question_delete(request,pk):
+    question = get_object_or_404(Question, id=pk)
 
-
-
-
-
-
-def exam_question_delete(request,exam_id,question_id):
-    if request.method == 'POST':
-        question = get_object_or_404(Question, pk=question_id)
+    if request.method == "POST":
         question.is_deleted = True
         question.save()
-        messages.success(request, 'Question deleted successfully.')
-        return redirect('dashboard-exam-question-manager',exam_id=exam_id)  
-    messages.error(request, 'Failed to delete question.')
-    return redirect('dashboard-exam-question-manager',exam_id=exam_id)  
+        messages.success(request, "Question deleted successfully!")
+        return redirect('dashboard-level-question-manager',pk=question.level.id)  
    
+    return redirect('dashboard-level-question-manager',pk=question.level.id)  

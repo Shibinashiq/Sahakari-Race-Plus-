@@ -209,7 +209,27 @@ class Like(models.Model):
 class TalentHunt(models.Model):
     title = models.CharField(max_length=255, blank=True, null=True)
     course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True, blank=True)
+    # subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    is_deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title or 'No title'
+    
+class TalentHuntSubject(models.Model):
+    title = models.CharField(max_length=255, blank=True, null=True)
+    talentHunt = models.ForeignKey(TalentHunt, on_delete=models.SET_NULL, null=True, blank=True)
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    is_deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title or 'No title'
+
+class Level(models.Model):
+    title = models.CharField(max_length=255, blank=True, null=True)
+    number = models.IntegerField( blank=True, null=True)
+    talenthuntsubject = models.ForeignKey(TalentHuntSubject, on_delete=models.SET_NULL, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
 
@@ -241,6 +261,7 @@ class Question(models.Model):
     exam = models.ForeignKey(Exam, on_delete=models.SET_NULL, null=True, blank=True)
     chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True, blank=True)
     talenthunt = models.ForeignKey(TalentHunt, on_delete=models.SET_NULL, null=True, blank=True)
+    level=models.ForeignKey(Level, on_delete=models.SET_NULL, null=True, blank=True)
     created = models.DateTimeField(default=timezone.now)
     is_deleted = models.BooleanField(default=False)
 
