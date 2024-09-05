@@ -1,0 +1,166 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+
+{% block css %}
+
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+	<!-- Sweet Alert css-->
+	<link href="{% static 'dashboard/assets/libs/sweetalert2/sweetalert2.min.css' %}" rel="stylesheet" type="text/css"/>
+	<!--Swiper slider css-->
+	<link href="{% static 'dashboard/assets/libs/swiper/swiper-bundle.min.css' %}" rel="stylesheet" type="text/css"/>
+
+{% endblock css %}
+
+{% block style %}
+	<style>
+        .form-group {
+            margin-top: 1rem;
+        }
+
+		#alert-box-top-right {
+        position: absolute;
+        top: 5%;
+        right: 5%;
+        transform: translate(5%, -5%);
+    }
+    .border-red {
+        border: 1px solid #ff0000;
+    }
+    
+	</style>
+{% endblock style %}
+
+
+{% block content %}
+
+	<div class="page-content">
+		<div class="container-fluid">
+
+			<!-- start page title -->
+			<div class="row">
+				<div class="col-12">
+					<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+						<h4 class="mb-sm-0">Schedule Manager</h4>
+
+						<div class="page-title-right">
+							<ol class="breadcrumb m-0">
+								<li class="breadcrumb-item"><a href="/" class="text-primary">Dashboard</a></li>
+								<li class="breadcrumb-item"><a
+										href=""
+										class="text-primary">Schedule</a></li>
+								
+								<li class="breadcrumb-item active">Add</li>
+							</ol>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<!-- end page title -->
+
+			<div class="row">
+				<div class="col">
+					<div class="h-100">
+
+						<div class="row">
+							<div class="col-12">
+								<div class="d-flex align-items-lg-center flex-lg-row flex-column">
+									<div class="flex-grow-1">
+										{#<h4 class="fs-16 mb-1">Good Morning, {{ request.user }}!</h4>#}
+									</div>
+									<div class="mt-3 mt-lg-0"></div>
+								</div><!-- end card header -->
+							</div>
+							<!--end col-->
+						</div>
+
+						<div class="pt-4 pb-3">
+							{# ------------------------------------Contents start------------------------------------ #}
+
+
+							<div class="m-1">
+
+								<div class="card">
+									</div>
+									<div class="card">
+										<div class="card-header">
+											<h5 class="card-title">Add Schedule</h5>
+										</div>
+										<div class="card-body">
+											<form method="POST" enctype="multipart/form-data" action="{% url 'dashboard-schedule-add' %}">
+												{% csrf_token %}
+												<div class="row">
+													<!-- Chapter Fields -->
+													<div class="col-md-4">
+														<div class="form-group">
+															{{ form.title|as_crispy_field }}
+														</div>
+													</div>
+													<div class="col-md-4">
+														<div class="form-group">
+															{{ form.lesson|as_crispy_field }}
+														</div>
+													</div>
+													<div class="col-md-4">
+														<div class="form-group">
+															{{ form.exam|as_crispy_field }}
+														</div>
+													</div>
+												</div>
+												
+												
+												<!-- Video Fields -->
+												<div class="row">
+													<div class="col-md-6">
+														<div class="form-group">
+															{{ form.date|as_crispy_field }}
+														</div>
+													</div>
+												
+												</div>
+											
+												<div class="form-group">
+													<button type="submit" class="btn btn-primary mt-2">Submit</button>
+												</div>
+											</form>
+											
+										</div>
+									</div>
+									
+								</div>
+							</div><!-- end row -->
+
+							{# -------------------------------------Contents end------------------------------------- #}
+						</div>
+
+						<!--end row-->
+					</div> <!-- end .h-100-->
+				</div> <!-- end col -->
+			</div>
+
+
+		</div>
+		<!-- container-fluid -->
+	</div>
+
+
+{% endblock content %}
+
+{% block js %}
+
+	<script src="{% static 'dashboard/assets/libs/sweetalert2/sweetalert2.min.js' %}"></script>
+	<script src="{% static 'dashboard/assets/libs/apexcharts/apexcharts.min.js' %}"></script>
+	<script src="{% static 'dashboard/assets/js/pages/modal.init.js' %}"></script>
+	<script>
+		$(document).ready(function () {
+			$('.noty-tost').click();
+		});
+	</script>
+
+{% endblock js %}
+
+{% block script %}
+{% endblock script %}

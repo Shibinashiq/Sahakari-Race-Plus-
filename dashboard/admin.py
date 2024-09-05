@@ -17,4 +17,5 @@ admin.site.register(Question)
 admin.site.register(TalentHunt)
 admin.site.register(TalentHuntSubject)
 admin.site.register(Level) 
+admin.site.register(Schedule) 
 

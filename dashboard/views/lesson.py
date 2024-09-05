@@ -136,7 +136,6 @@ def update(request, pk):
             chapter = form.cleaned_data.get('chapter')
             lesson.chapter = chapter
             
-            # Save the lesson
             lesson.save()
             
             # Update or create video
@@ -149,7 +148,6 @@ def update(request, pk):
             }
             Video.objects.update_or_create(lesson=lesson, defaults=video_data)
             
-            # Update or create PDF
             pdf_data = {
                 'title': form.cleaned_data.get('pdf_title'),
                 'is_downloadable': form.cleaned_data.get('pdf_is_downloadable'),

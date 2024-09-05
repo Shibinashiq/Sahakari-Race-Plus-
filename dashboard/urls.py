@@ -22,7 +22,8 @@ from dashboard.views import (
     question,
    talenthunt,
    level,
-   talenthuntsubject
+   talenthuntsubject,
+   schedule,
 )
 
 urlpatterns = [
@@ -176,6 +177,14 @@ urlpatterns = [
     path("level/delete/<int:pk>/", level.delete, name="dashboard-level-question-delete"),
 
 
+ # ==================================== Schedule Management ============================================= #
+
+
+    path("schedule/", schedule.manager, name="dashboard-schedule-manager"),
+    path("schedule/list", schedule.list, name="dashboard-schedule-list"),
+    path("schedule/add/", schedule.add, name="dashboard-schedule-add"),
+    path("schedule/update/<int:pk>/", schedule.update, name="dashboard-schedule-update"),
+    path("schedule/delete/<int:pk>/", schedule.delete, name="dashboard-schedule-delete"),
 
 
     
