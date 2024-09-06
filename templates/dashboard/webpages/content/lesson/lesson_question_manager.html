@@ -14,9 +14,9 @@
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Add this script in the <head> or before the closing </body> tag -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" async></script> -->
 
-
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 <!-- Bootstrap Bundle with Popper -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
@@ -255,7 +255,9 @@
                 }
             }
         });
-
+        dataTable.on('draw', function () {
+        MathJax.Hub.Typeset();
+    });
         $(document).on('click', '.deleteConfirmModalClass', function () {
             var questionId = $(this).data('id');
             $('#delete-record').data('question-id', questionId); 

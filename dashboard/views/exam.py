@@ -264,13 +264,22 @@ def exam_question_update(request,exam_id,question_id):
             question.right_answers = answers
             question.save()
             if question.master_question:
-                master_question=Question.objects.get(id=question.master_question)
+                master_question=Question.objects.get(id=question.master_question,is_deleted=False)
                 master_question.question_type = question_type
                 master_question.question_description = question_description
                 master_question.hint = hint
                 master_question.options = options
                 master_question.right_answers = answers
                 master_question.save()
+            related_questions = Question.objects.filter(master_question=question.id, is_deleted=False)
+            for related_question in related_questions:
+                related_question.question_type = question_type
+                related_question.question_description = question_description
+                related_question.hint = hint
+                related_question.options = options
+                related_question.right_answers = answers
+                related_question.save()
+
             messages.success(request, 'Question updated successfully.')
             return redirect('dashboard-exam-question-manager',exam_id=exam_id)  
     else:
