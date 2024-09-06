@@ -259,10 +259,18 @@ def exam_question_update(request,exam_id,question_id):
             question.question_type = question_type
             question.question_description = question_description
             question.hint = hint
-            question.exam_id = exam.id
+            question.exam = exam
             question.options = options
             question.right_answers = answers
             question.save()
+            if question.master_question:
+                master_question=Question.objects.get(id=question.master_question)
+                master_question.question_type = question_type
+                master_question.question_description = question_description
+                master_question.hint = hint
+                master_question.options = options
+                master_question.right_answers = answers
+                master_question.save()
             messages.success(request, 'Question updated successfully.')
             return redirect('dashboard-exam-question-manager',exam_id=exam_id)  
     else:
@@ -322,20 +330,25 @@ def paste(request):
         for i in ids:
             try:
                 master_question = Question.objects.get(id=i)
+               
                 
-                if Question.objects.filter(exam=exam, master_question=i).exists():
+                if Question.objects.filter(exam=exam,master_question=i,is_deleted=False).exists() or Question.objects.filter(exam=exam,id=master_question.master_question,is_deleted=False).exists():
                     already_exists.append(i)  
                     continue  
-                
-                Question.objects.create(
+                   
+                question=Question.objects.create(
                     question_type=master_question.question_type,
                     question_description=master_question.question_description,
                     hint=master_question.hint,
                     options=master_question.options,
                     right_answers=master_question.right_answers,
                     exam=exam,
-                    master_question=i
+                    
                 )
+                if master_question.master_question:
+                    question.master_question = master_question.master_question
+                question.master_question = i
+                question.save()
                 success_count += 1  
             except ObjectDoesNotExist:
                 error_messages.append(f"Master question with ID {i} does not exist.")
