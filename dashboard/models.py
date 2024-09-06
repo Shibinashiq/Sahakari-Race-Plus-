@@ -266,7 +266,7 @@ class Question(models.Model):
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.question_type or 'No question type'
+        return self.question_description or 'No question type'
 
 
 
