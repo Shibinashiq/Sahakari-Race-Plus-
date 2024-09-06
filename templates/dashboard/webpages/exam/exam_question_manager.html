@@ -11,12 +11,12 @@
     <link href="{% static 'dashboard/assets/libs/sweetalert2/sweetalert2.min.css' %}" rel="stylesheet" type="text/css"/>
     <!--Swiper slider css-->
     <link href="{% static 'dashboard/assets/libs/swiper/swiper-bundle.min.css' %}" rel="stylesheet" type="text/css"/>
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Add this script in the <head> or before the closing </body> tag -->
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" async></script> -->
     <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
  -->
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
@@ -28,6 +28,7 @@
 
 {% block style %}
     <style>
+       
         .form-group {
             margin-top: 1rem;
         }
@@ -92,14 +93,23 @@
                             <div class="m-1">
 
                                 <div class="card">
-                                    <div class="card-header d-flex justify-content-end align-items-center">
-                                        <div class="col-auto">
-                                           
-                                            <a href="{% url 'dashboard-exam-question-add' exam_id=exam %}" class="btn btn-success btn-label waves-effect waves-light">
-                                                <i class="mdi mdi-plus-thick label-icon align-middle fs-16 me-2"></i> Add Question
-                                            </a>
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <!-- Paste ID Field and Button (left side) -->
+                                            <input type="text" id="pasteIdField" class="form-control me-2" placeholder="Paste or enter ID here" style="width: 200px;" />
+                                            <button id="pasteIdButton" class="btn btn-primary">
+                                                <i class="mdi mdi-paste"></i> Add
+                                            </button>
                                         </div>
+                                    
+                                        <!-- Add Question Button (right side) -->
+                                        <a href="{% url 'dashboard-exam-question-add' exam_id=exam %}" class="btn btn-success btn-label waves-effect waves-light me-2">
+                                            <i class="mdi mdi-plus-thick label-icon align-middle fs-16 me-2"></i> Add Question
+                                        </a>
                                     </div>
+                                    
+                                    
+                                    
                                     
                                     <div class="card-body">
                                         <table id="productDatatable" class="table table-sm w-100">
@@ -130,7 +140,6 @@
                     </div> <!-- end .h-100-->
                 </div> <!-- end col -->
             </div>
-            <input type="hidden" id="examId" value="{{ exam_id }}">
             <!-- Add Modals -->
            
 
@@ -218,7 +227,8 @@
                         var editUrl = "{% url 'dashboard-exam-question-update' exam_id='0' question_id='0' %}".replace('0', exam).replace('0', data);
                         var deleteUrl = "".replace('0', data);
                         return `
-                            <a href="${editUrl}" class="btn-update" data-bs-toggle="tooltip" data-bs-trigger="hover"
+                      
+                             <a href="${editUrl}" class="btn-update" data-bs-toggle="tooltip" data-bs-trigger="hover"
                                data-bs-placement="top" title="Edit">
                                 <i class="mdi mdi-pencil"></i>
                             </a>
@@ -228,6 +238,18 @@
                                 title="Remove">
                                 <i class="mdi mdi-delete fs-16"></i>
                             </a>
+
+                            <a href="#" 
+                                class="text-primary d-inline-block btn-copy-question" 
+                                data-question-id="${data}"
+                                data-bs-toggle="tooltip" 
+                                data-bs-trigger="hover" 
+                                data-bs-placement="top"
+                                title="Copy">
+                                    <i class="mdi mdi-content-copy fs-16"></i>
+                                </a>
+
+                           
                         `;
                     }
                 }
@@ -259,6 +281,18 @@
                 }
             }
         });
+
+//question id copying clipboard
+
+        $('#productDatatable tbody').on('click', '.btn-copy-question', function () {
+            var questionId = $(this).data('question-id');
+
+            navigator.clipboard.writeText(questionId).then(function() {
+            
+            });
+        });
+
+    
         dataTable.on('draw', function () {
         MathJax.Hub.Typeset();
     });
@@ -278,11 +312,9 @@
                     csrfmiddlewaretoken: '{{ csrf_token }}',
                 },
                 success: function (data) {
-                    console.log("Deleted successfully");
                     window.location.reload(); 
                 },
                 error: function(xhr, status, error) {
-                    console.error("Error deleting batch:", error);
                 }
             });
         });
@@ -290,10 +322,95 @@
 </script>
 
 
+
 <script>
+    
     $(document).ready(function () {
         $('.noty-tost').click();
     });
 </script>
+
+
+
+<script>
+    $(document).ready(function() {
+    var examId = "{{ exam }}";
+    console.log("Exam ID:", examId);
+    console.log("hello");
+
+    $('#pasteIdButton').click(function() {
+        var idsText = $('#pasteIdField').val().trim();
+        
+        if (idsText) {
+            var ids = idsText.split(/,\s*/).filter(function(id) {
+                return id;
+            });
+            
+            if (ids.length > 0) {
+                    $.ajax({
+                        url: "{% url 'dashboard-exam-paste'  %}", 
+                        type: 'POST',
+                        data: {
+                            exam_id: examId,
+                            ids: JSON.stringify(ids),
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        success: function(response) {
+                            console.log("Response:", response);
+
+                            if (response.message) {
+                                Toastify({
+                                    text: response.message,
+                                    duration: 3000,
+                                    close: true,
+                                    gravity: "top",
+                                    position: 'right',
+                                    stopOnFocus: true
+                                }).showToast();
+                            }
+
+                            if (response.errors && response.errors.length > 0) {
+                                response.errors.forEach(function(error) {
+                                    Toastify({
+                                        text: error,
+                                        duration: 3000,
+                                        close: true,
+                                        gravity: "top",
+                                        position: 'right',
+                                        stopOnFocus: true
+                                    }).showToast();
+                                });
+                            }
+                        },
+                        // error: function(xhr, status, error) {
+                        //     console.error("Error:", error);
+                        //     console.log("Response:", xhr.responseText);
+
+                        //     // Show a general error message
+                        //     Toastify({
+                        //         text: "Failed to add IDs! " + xhr.responseText,
+                        //         duration: 3000,
+                        //         close: true,
+                        //         gravity: "top",
+                        //         position: 'right',
+                        //         backgroundColor: "red",
+                        //         stopOnFocus: true
+                        //     }).showToast();
+                        // }
+                    });
+                } else {
+                    alert("Please enter at least one valid ID.");
+                }
+            } else {
+                alert("Please enter some IDs.");
+            }
+        });
+    });
+</script>
+
+</script>
+
+
+
 {% endblock script %}
 

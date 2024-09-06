@@ -125,6 +125,7 @@ urlpatterns = [
     path("exam/add", exam.add, name="dashboard-exam-add"),
     path("exam/update/<int:pk>/", exam.update, name="dashboard-exam-update"),
     path("exam/delete/<int:pk>/", exam.delete, name="dashboard-exam-delete"),
+    path("exam/paste/", exam.paste, name="dashboard-exam-paste"),
 
 
     path("exam/question/<int:exam_id>/", exam.exam_question_manager, name="dashboard-exam-question-manager"),

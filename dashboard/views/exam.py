@@ -1,13 +1,17 @@
 from django.shortcuts import redirect, render , get_object_or_404
 from dashboard.models import *
 from django.contrib import  messages
-from django.http import JsonResponse
 from django.core.paginator import Paginator
-from dashboard.models import CustomUser
 from dashboard.forms.exam import ExamForm ,QuestionForm
 from django.db.models import Q
+from django.http import JsonResponse
+import json
+from django.core.exceptions import ObjectDoesNotExist
+
+
 
 def manager(request):
+
     return render(request, "dashboard/webpages/exam/manager.html")
 
 
@@ -287,3 +291,67 @@ def exam_question_delete(request,exam_id,question_id):
     messages.error(request, 'Failed to delete question.')
     return redirect('dashboard-exam-question-manager',exam_id=exam_id)  
    
+
+
+
+def paste(request):
+    print("helloo")
+    
+    if request.method == 'POST':
+        ids_json = request.POST.get('ids')
+        exam_id = request.POST.get('exam_id')
+
+        try:
+            exam = Exam.objects.get(id=exam_id, is_deleted=False)
+        except Exam.DoesNotExist:
+            return JsonResponse({'error': 'Exam does not exist.'}, status=404)
+        
+        try:
+            ids = json.loads(ids_json) if ids_json else []
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid IDs format. Must be valid JSON.'}, status=400)
+
+        if not all(str(i).isdigit() for i in ids):
+            return JsonResponse({'error': 'All IDs must be numeric.'}, status=400)
+
+        success_count = 0
+        error_messages = []
+        already_exists = []
+        
+
+        for i in ids:
+            try:
+                master_question = Question.objects.get(id=i)
+                
+                if Question.objects.filter(exam=exam, master_question=i).exists():
+                    already_exists.append(i)  
+                    continue  
+                
+                Question.objects.create(
+                    question_type=master_question.question_type,
+                    question_description=master_question.question_description,
+                    hint=master_question.hint,
+                    options=master_question.options,
+                    right_answers=master_question.right_answers,
+                    exam=exam,
+                    master_question=i
+                )
+                success_count += 1  
+            except ObjectDoesNotExist:
+                error_messages.append(f"Master question with ID {i} does not exist.")
+            except Exception as e:
+                error_messages.append(f"Error creating question with ID {i}: {str(e)}")
+
+        if success_count == 0 and not already_exists:
+            return JsonResponse({'error': 'No questions were created.', 'details': error_messages}, status=400)
+        print(already_exists,"already_exists")
+        response_data = {
+            'message': f'Successfully added {success_count} question(s) to the exam.',
+            'errors': error_messages
+        }
+        if already_exists:
+            response_data['existing'] = f"The following questions already existed in the exam: {', '.join(map(str, already_exists))}"
+
+        return JsonResponse(response_data, status=200)
+
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
