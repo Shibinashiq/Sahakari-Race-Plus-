@@ -532,9 +532,7 @@ def chapter_lesson_add(request,pk):
 def chapter_lesson_update(request, chapter_id, lesson_id):
     
     chapter = get_object_or_404(Chapter, id=chapter_id, is_deleted=False)
-    print(chapter,"chapter")
     lesson = get_object_or_404(Lesson, id=lesson_id, chapter=chapter, is_deleted=False)
-    print(lesson,"lesson")
     if request.method == 'POST':
         form = LessonForm(request.POST, request.FILES, instance=lesson)
         if form.is_valid():

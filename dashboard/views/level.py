@@ -138,6 +138,7 @@ def update(request, pk, level_id):
 
 
 def delete(request, pk):
+    print("hiiiiii")
     level = get_object_or_404(Level, id=pk)
 
     if request.method == "POST":
@@ -278,6 +279,22 @@ def level_question_update(request,pk):
             question.options = options
             question.right_answers = answers
             question.save()
+            if question.master_question:
+                master_question=Question.objects.get(id=question.master_question,is_deleted=False)
+                master_question.question_type = question_type
+                master_question.question_description = question_description
+                master_question.hint = hint
+                master_question.options = options
+                master_question.right_answers = answers
+                master_question.save()
+            related_questions = Question.objects.filter(master_question=question.id, is_deleted=False)
+            for related_question in related_questions:
+                related_question.question_type = question_type
+                related_question.question_description = question_description
+                related_question.hint = hint
+                related_question.options = options
+                related_question.right_answers = answers
+                related_question.save()
             messages.success(request, 'Question updated successfully.')
             return redirect('dashboard-level-question-manager',pk=question.level.id)  
     else:
@@ -300,3 +317,83 @@ def level_question_delete(request,pk):
         return redirect('dashboard-level-question-manager',pk=question.level.id)  
    
     return redirect('dashboard-level-question-manager',pk=question.level.id)  
+
+
+from django.http import JsonResponse
+import json
+from django.core.exceptions import ObjectDoesNotExist
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt  # Allow CSRF for AJAX POST
+def paste(request):
+    if request.method == 'POST':
+        ids_json = request.POST.get('ids')
+        level_id = request.POST.get('level_id')
+        
+        # Debugging print
+        print(ids_json, level_id)
+
+        try:
+            level = Level.objects.get(id=level_id, is_deleted=False)
+        except Level.DoesNotExist:
+            return JsonResponse({'error': 'Level does not exist.'}, status=404)
+
+        # Parse the list of IDs
+        try:
+            ids = json.loads(ids_json) if ids_json else []
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid IDs format. Must be valid JSON.'}, status=400)
+
+        # Check if all IDs are numeric
+        if not all(str(i).isdigit() for i in ids):
+            return JsonResponse({'error': 'All IDs must be numeric.'}, status=400)
+
+        success_count = 0
+        error_messages = []
+        already_exists = []
+
+        # Process each ID
+        for i in ids:
+            try:
+                master_question = Question.objects.get(id=i)
+                
+                # Check if the question already exists in this level
+                if Question.objects.filter(level=level, master_question=i, is_deleted=False).exists() or \
+                   Question.objects.filter(level=level, id=master_question.master_question, is_deleted=False).exists() or \
+                   Question.objects.filter(level=level, id=i, is_deleted=False).exists():
+                    already_exists.append(i)
+                    continue
+
+                # Create a new question for this level
+                question = Question.objects.create(
+                    question_type=master_question.question_type,
+                    question_description=master_question.question_description,
+                    hint=master_question.hint,
+                    options=master_question.options,
+                    right_answers=master_question.right_answers,
+                    level=level,
+                )
+                
+                question.master_question = master_question.master_question or i
+                question.save()
+
+                success_count += 1
+            except ObjectDoesNotExist:
+                error_messages.append(f"Master question with ID {i} does not exist.")
+            except Exception as e:
+                error_messages.append(f"Error creating question with ID {i}: {str(e)}")
+
+        # Prepare the response data
+        if success_count == 0 and not already_exists:
+            return JsonResponse({'message': 'No questions were created.', 'errors': error_messages}, status=400)
+
+        response_data = {
+            'message': f'Successfully added {success_count} question(s) to the level.',
+            'errors': error_messages,
+        }
+        if already_exists:
+            response_data['existing'] = f"The following questions already existed in the level: {', '.join(map(str, already_exists))}"
+
+        return JsonResponse(response_data, status=200)
+
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)

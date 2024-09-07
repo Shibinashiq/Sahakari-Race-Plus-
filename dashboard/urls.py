@@ -170,12 +170,12 @@ urlpatterns = [
     path("level/update/<int:pk>/<int:level_id>/", level.update, name="dashboard-level-update"),
     path("level/delete/<int:pk>/", level.delete, name="dashboard-level-delete"),
 
-
+    path("level/paste/", level.paste, name="dashboard-level-paste"),
     path("level/question/<int:pk>/", level.level_question_manager, name="dashboard-level-question-manager"),
     path("level/question/list/<int:pk>/", level.level_question_list, name="dashboard-level-question-list"),
     path("level/question/add/<int:pk>/", level.level_question_add, name="dashboard-level-question-add"),
     path("level/question/update/<int:pk>/", level.level_question_update, name="dashboard-level-question-update"),
-    path("level/delete/<int:pk>/", level.delete, name="dashboard-level-question-delete"),
+    path("level/question/delete/<int:pk>/", level.level_question_delete, name="dashboard-level-question-delete"),
 
 
  # ==================================== Schedule Management ============================================= #

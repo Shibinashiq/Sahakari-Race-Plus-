@@ -173,6 +173,9 @@ def update(request, pk):
             "form": form,
         }
         return render(request, "dashboard/webpages/lesson/update.html", context)
+    
+
+    
 def delete(request, pk):
     if request.method == "POST":
             lesson = get_object_or_404(Lesson, id=pk)

@@ -312,7 +312,6 @@ def exam_question_delete(request,exam_id,question_id):
 
 
 def paste(request):
-    print("helloo")
     
     if request.method == 'POST':
         ids_json = request.POST.get('ids')
@@ -341,9 +340,11 @@ def paste(request):
                 master_question = Question.objects.get(id=i)
                
                 
-                if Question.objects.filter(exam=exam,master_question=i,is_deleted=False).exists() or Question.objects.filter(exam=exam,id=master_question.master_question,is_deleted=False).exists():
-                    already_exists.append(i)  
-                    continue  
+                if Question.objects.filter(exam=exam, master_question=i, is_deleted=False).exists() or \
+                    Question.objects.filter(exam=exam, id=master_question.master_question, is_deleted=False).exists() or \
+                    Question.objects.filter(exam=exam, id=i, is_deleted=False).exists():
+                        already_exists.append(i)
+                        continue
                    
                 question=Question.objects.create(
                     question_type=master_question.question_type,
@@ -366,7 +367,7 @@ def paste(request):
 
         if success_count == 0 and not already_exists:
             return JsonResponse({'error': 'No questions were created.', 'details': error_messages}, status=400)
-        print(already_exists,"already_exists")
+        
         response_data = {
             'message': f'Successfully added {success_count} question(s) to the exam.',
             'errors': error_messages
