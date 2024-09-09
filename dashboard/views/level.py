@@ -59,7 +59,7 @@ def list(request,pk):
             "id": level.id,
             "title":level.title if  level.title else "N/A",
             "number": level.number if level.number else "N/A",
-            "created": level.created.strftime('%Y-%m-%d %H:%M')
+             "created": timezone.localtime(level.created).strftime('%Y-%m-%d %H:%M:%S')
         })
     
     response = {
@@ -216,7 +216,7 @@ def level_question_list(request,pk):
             "hint": question.hint if question.hint else "N/A",
             "options": options_str,
             "right_answers": right_answers_str,
-            "created": question.created.strftime('%Y-%m-%d %H:%M')
+             "created": timezone.localtime(question.created).strftime('%Y-%m-%d %H:%M:%S')
         })
     
     response = {

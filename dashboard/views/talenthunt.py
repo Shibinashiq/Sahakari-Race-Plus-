@@ -58,7 +58,8 @@ def list(request):
             "id": talenthunt.id,
             "title":talenthunt.title if  talenthunt.title else "N/A",
             "course": talenthunt.course.course_name if talenthunt.course.course_name else "N/A",
-            "created": talenthunt.created.strftime('%Y-%m-%d %H:%M')
+            # "created": talenthunt.created.strftime('%Y-%m-%d %I:%M %p')
+            "created": timezone.localtime(talenthunt.created).strftime('%Y-%m-%d %H:%M:%S')
         })
     
     response = {

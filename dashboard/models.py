@@ -103,12 +103,12 @@ class Batch(models.Model):
 
 class Subscription(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
+    batch = models.ManyToManyField(Batch)
     created = models.DateTimeField(default=timezone.now)
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Subscription of {self.user.name} to batch {self.batch.batch_expiry}"
+        return f"Subscription of {self.user.name} "
 
 class Course(models.Model):
     course_name = models.CharField(max_length=200)
@@ -238,7 +238,7 @@ class Level(models.Model):
 
 class Exam(models.Model):
     title = models.CharField(max_length=255, blank=True, null=True)
-    duration = models.TimeField(null=True, blank=True)
+    duration = models.DurationField(null=True, blank=True) 
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)

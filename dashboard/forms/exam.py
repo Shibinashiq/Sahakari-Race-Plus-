@@ -1,16 +1,18 @@
 from django import forms
 from dashboard.models import Exam, Subject,Question
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
+from datetime import timedelta
 class ExamForm(forms.ModelForm):
     subject = forms.ModelChoiceField(
         queryset=Subject.objects.all(),
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 
-    duration = forms.TimeField(
-        widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'})
+    duration = forms.DurationField(
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter duration in HH:MM:SS'}),
+        initial=timedelta(minutes=60),  
+        help_text="Format: HH:MM:SS"
     )
-    
     class Meta:
         model = Exam
         fields = ['title', 'subject', 'duration']

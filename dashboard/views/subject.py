@@ -56,7 +56,7 @@ def list(request):
                 "subject_name": subject.subject_name,
                 "course": subject.course.course_name,
                 "description": subject.description,
-                "created": subject.created.strftime('%Y-%m-%d %H:%M')
+                "created": timezone.localtime(subject.created).strftime('%Y-%m-%d %H:%M:%S')
             })
         
         response = {

@@ -66,7 +66,7 @@ def list(request):
             "exam": question.exam.title if question.exam else "N/A",
             "options": options_str,
             "right_answers": right_answers_str,
-            "created": question.created.strftime('%Y-%m-%d %H:%M')
+           "created": timezone.localtime(question.created).strftime('%Y-%m-%d %H:%M:%S')
         })
     
     response = {

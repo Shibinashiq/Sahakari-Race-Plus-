@@ -4,11 +4,12 @@ class CustomerForm(forms.ModelForm):
     batches = forms.ModelMultipleChoiceField(
         queryset=Batch.objects.filter(is_deleted=False),
         widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
-        required = False,
+        required=False,
     )
+
     class Meta:
         model = CustomUser
-        fields = ['name', 'email', 'phone_number', 'district']
+        fields = ['name', 'email', 'phone_number', 'district', 'batches']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'required': True}),
@@ -19,16 +20,21 @@ class CustomerForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.instance = kwargs.get('instance')
         super().__init__(*args, **kwargs)
+        
+        # Set field requirements
         self.fields['name'].required = True
         self.fields['email'].required = True
         self.fields['phone_number'].required = True
         self.fields['district'].required = True
+        
+        # Set district choices
         self.fields['district'].widget.choices = CustomUser.DISTRICT_CHOICES
-        if self.instance and not self.instance.pk:
-            self.fields['batches'].initial = []
-        elif self.instance:
-            subscriptions = Subscription.objects.filter(user=self.instance)
-            self.fields['batches'].initial = [sub.batch for sub in subscriptions]
+
+        # Set initial batches if editing
+        if self.instance and self.instance.pk:
+            subscriptions = Subscription.objects.filter(user=self.instance, is_deleted=False).prefetch_related('batch')
+            selected_batches = [batch for subscription in subscriptions for batch in subscription.batch.all()]
+            self.fields['batches'].initial = selected_batches
 
     def clean_name(self):
         name = self.cleaned_data.get('name')
@@ -50,6 +56,18 @@ class CustomerForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit=False)
+        
+        # Save CustomUser instance first
         if commit:
             instance.save()
+
+        selected_batches = self.cleaned_data.get('batches')
+        
+        Subscription.objects.filter(user=instance).delete()
+
+        if selected_batches:
+            for batch in selected_batches:
+                subscription = Subscription.objects.create(user=instance)
+                subscription.batch.add(batch)
+
         return instance

@@ -6,6 +6,7 @@ from django.core.paginator import Paginator
 from dashboard.models import CustomUser
 from dashboard.forms.batch import BatchForm
 from django.db.models import Q
+from django.utils import timezone
 
 
 
@@ -21,7 +22,9 @@ def list(request):
     order_column = int(request.GET.get("order[0][column]", 0))
     order_dir = request.GET.get("order[0][dir]", "desc")
     
-    batches = Batch.objects.filter(is_deleted=False)
+
+    batches = Batch.objects.filter(is_deleted=False, batch_expiry__gte=timezone.now().date())
+
     
     order_columns = {
         0: 'id',
@@ -80,18 +83,18 @@ def add(request):
             customer = form.save(commit=False)
             customer.save()
 
-            messages.success(request, "Customer added successfully!")
+            messages.success(request, "Batch added successfully!")
             return redirect('dashboard-batch')
         else:
             context = {
-                "title": "Add Customer | Dashboard",
+                "title": "Add Batch | Dashboard",
                 "form": form,
             }
             return render(request, "dashboard/webpages/batch/add.html", context)
     else:
         form = BatchForm()  
         context = {
-            "title": "Add Customer",
+            "title": "Add Batch",
             "form": form,
         }
         return render(request, "dashboard/webpages/batch/add.html", context)

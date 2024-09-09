@@ -57,7 +57,7 @@ def list(request):
                 "lesson_name": lesson.lesson_name,
                 "chapter": lesson.chapter.chapter_name,
                 "description": lesson.description,
-                "created": lesson.created.strftime('%Y-%m-%d %H:%M')
+                "created": timezone.localtime(lesson.created).strftime('%Y-%m-%d %H:%M:%S')
             })
         
         response = {

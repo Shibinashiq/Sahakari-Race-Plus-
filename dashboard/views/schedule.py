@@ -58,7 +58,9 @@ def list(request):
             "title": schedule.title if schedule.title else "N/A",
             "lesson": schedule.lesson.lesson_name if schedule.lesson else "N/A",
             "exam": schedule.exam.title if schedule.exam else "N/A",
-            "date": schedule.date.strftime('%Y-%m-%d %H:%M')
+            "date":timezone.localtime(schedule.created).strftime('%Y-%m-%d %H:%M:%S')
+             
+            
         })
     
     response = {

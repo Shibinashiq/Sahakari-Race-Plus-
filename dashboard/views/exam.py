@@ -60,9 +60,9 @@ def list(request):
         data.append({
             "id": exam.id,
             "title": exam.title if exam.title else "N/A",
-             "subject": exam.subject.subject_name if exam.subject.subject_name else "N/A",
+            "subject": exam.subject.subject_name if exam.subject else "N/A",
             "duration": exam.duration if exam.duration else "N/A",
-            "created": exam.created.strftime('%Y-%m-%d %H:%M')
+            "created": timezone.localtime(exam.created).strftime('%Y-%m-%d %H:%M:%S')
         })
     
     response = {

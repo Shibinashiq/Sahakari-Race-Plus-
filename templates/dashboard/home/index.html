@@ -42,7 +42,7 @@
                                     <div class="col-12">
                                         <div class="d-flex align-items-lg-center flex-lg-row flex-column">
                                             <div class="flex-grow-1">
-                                                <h4 class="fs-16 mb-1">Hello, {{user.user_name}}!</h4>
+                                                <h4 class="fs-16 mb-1">Hello, {{user}}!</h4>
                                                 <!-- <h4 class="fs-16 mb-1">{{greeting}}, {{user.name}}!</h4> -->
                                             </div>
 
@@ -77,16 +77,16 @@
                                             <div class="card-body">
                                                 <div class="d-flex align-items-center">
                                                     <div class="flex-grow-1 overflow-hidden">
-                                                        <p class="text-uppercase fw-bold text-white-50 text-truncate mb-0">Total Students</p>
+                                                        <p class="text-uppercase fw-bold text-white-50 text-truncate mb-0">Total Customers</p>
                                                     </div>
                                                     
                                                 </div>
                                                 <div class="d-flex align-items-end justify-content-between mt-4">
                                                     <div>
                                                         <h4 class="fs-22 fw-bold ff-secondary text-white mb-4">
-                                                            <span class="counter-value" data-target="">0</span>
+                                                            <span class="counter-value" data-target="{{ customers }}">{{customers}}</span>
                                                         </h4>
-                                                        <a href="" class="text-decoration-underline text-white-50">View all Students</a>
+                                                        <a href="{% url 'dashboard-customer' %}" class="text-decoration-underline text-white-50">View all customers</a>
                                                     </div>
                                                     <div class="avatar-sm flex-shrink-0">
                                                         <span class="avatar-title bg-soft-light rounded fs-3">
@@ -99,8 +99,66 @@
                                         </div><!-- end card -->
                                     </div><!-- end col -->
 
+                                    <div class="col-xl-3 col-md-6">
+                                        <!-- card -->
+                                        <div class="card card-animate bg-secondary">
+                                            <div class="card-body">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="flex-grow-1 overflow-hidden">
+                                                        <p class="text-uppercase fw-bold text-white-50 text-truncate mb-0">Total course</p>
+                                                    </div>
+                                                    <!-- <div class="flex-shrink-0">
+                                                        <h5 class="text-white fs-14 mb-0">
+                                                            <i class="ri-arrow-right-down-line fs-13 align-middle"></i> -3.57 %
+                                                        </h5>
+                                                    </div> -->
+                                                </div>
+                                                <div class="d-flex align-items-end justify-content-between mt-4">
+                                                    <div>
+                                                        <h4 class="fs-22 fw-bold ff-secondary text-white mb-4"><span class="counter-value" data-target="{{course}}">{{course}}</span></h4>
+                                                     <a href="{% url 'dashboard-course' %}" class="text-decoration-underline text-white-50">View all users</a>
+                                                    </div>
+                                                    <div class="avatar-sm flex-shrink-0">
+                                                        <span class="avatar-title bg-soft-light rounded fs-3">
+                                                            <i data-feather="users"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div><!-- end card body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col -->
+
+                                    <div class="col-xl-3 col-md-6">
+                                        <!-- card -->
+                                        <div class="card card-animate bg-success">
+                                            <div class="card-body">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="flex-grow-1 overflow-hidden">
+                                                        <p class="text-uppercase fw-bold text-white-50 text-truncate mb-0">Total subscription</p>
+                                                    </div>
+                                                    <!-- <div class="flex-shrink-0">
+                                                        <h5 class="text-white fs-14 mb-0">
+                                                            <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +29.08 %
+                                                        </h5>
+                                                    </div> -->
+                                                </div>
+                                                <div class="d-flex align-items-end justify-content-between mt-4">
+                                                    <div>
+                                                        <h4 class="fs-22 fw-bold ff-secondary text-white mb-4"><span class="counter-value" data-target="{{subscription}}">{{subscription}}</span></h4>
+                                                        <a href="" class="text-decoration-underline text-white-50">View all subscription</a>
+                                                    </div>
+                                                    <div class="avatar-sm flex-shrink-0">
+                                                        <span class="avatar-title bg-soft-light rounded fs-3">
+                                                            <i data-feather="truck"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div><!-- end card body -->
+                                        </div><!-- end card -->
+                                    </div><!-- end col -->
+
                                     
-                                </div> <!-- end row-->
+                                </div> 
 
                             </div> <!-- end .h-100-->
 

@@ -147,7 +147,7 @@ def course_detail_subject(request, course_id):
                 "image": subject.image.url if subject.image else None,
                 "subject_name": subject.subject_name,
                 "description": subject.description,
-                "created": subject.created.strftime('%Y-%m-%d %H:%M')
+                "created": timezone.localtime(subject.created).strftime('%Y-%m-%d %H:%M:%S')
             })
         
         response = {
@@ -289,7 +289,7 @@ def subject_detail_chapter(request, pk):
             "image": chapter.image.url if chapter.image else None,
             "chapter_name": chapter.chapter_name,
             "description": chapter.description,
-            "created": chapter.created.strftime('%Y-%m-%d %H:%M')
+             "created": timezone.localtime(chapter.created).strftime('%Y-%m-%d %H:%M:%S')
         })
     
     response = {
@@ -444,7 +444,7 @@ def chapter_detail_lesson(request, pk):
             "videos": video_data,
             "pdfs": pdf_data,
             "description": lesson.description,
-            "created": lesson.created.strftime('%Y-%m-%d %H:%M')
+              "created": timezone.localtime(lesson.created).strftime('%Y-%m-%d %H:%M:%S')
         })
     
     response = {
@@ -660,7 +660,7 @@ def chapter_detail_question(request,pk):
             "hint": question.hint if question.hint else "N/A",
             "options": options_str,
             "right_answers": right_answers_str,
-            "created": question.created.strftime('%Y-%m-%d %H:%M')
+            "created": timezone.localtime(question.created).strftime('%Y-%m-%d %H:%M:%S')
         })
     
     response = {
@@ -751,4 +751,4 @@ def chapter_question_delete(request, chapter_id, question_id):
         return redirect('dashboard-chapter-question-list', chapter_id=chapter_id)
     messages.error(request, "Failed to delete question.")
     return redirect('dashboard-chapter-question-list', chapter_id=chapter_id)
-    pass
+    

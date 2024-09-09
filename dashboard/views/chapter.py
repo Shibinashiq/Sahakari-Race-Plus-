@@ -59,7 +59,8 @@ def list(request):
             "chapter_name": chapter.chapter_name,
             "subject": chapter.subject.subject_name,
             "description": chapter.description,
-            "created": chapter.created.strftime('%Y-%m-%d %H:%M')
+            "created": timezone.localtime(chapter.created).strftime('%Y-%m-%d %H:%M:%S')
+
         })
     
     response = {

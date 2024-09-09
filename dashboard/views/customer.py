@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.core.paginator import Paginator
 from dashboard.models import CustomUser
 from dashboard.forms.customer import CustomerForm
-from django.db.models import Q
+from django.db.models import Q ,Prefetch
 
 
 
@@ -13,28 +13,31 @@ from django.db.models import Q
 def manager(request):
     return render(request, "dashboard/webpages/customer/manager.html")
 
+
+
+
 def list(request):
     draw = int(request.GET.get("draw", 1))
     start = int(request.GET.get("start", 0))
-    length = int(request.GET.get("length", 10))  
+    length = int(request.GET.get("length", 10))
     search_value = request.GET.get("search[value]", "").strip()
     order_column = int(request.GET.get("order[0][column]", 0))
     order_dir = request.GET.get("order[0][dir]", "desc")
-    
+
     users = CustomUser.objects.filter(is_deleted=False)
-    
+
     order_columns = {
         0: 'id',
-        1: 'username',  
-        2: 'email',  
-        3: 'district', 
+        1: 'username',
+        2: 'email',
+        3: 'district',
         4: 'phone_number',
     }
-    
+
     order_field = order_columns.get(order_column, 'id')
     if order_dir == 'desc':
         order_field = '-' + order_field
-    
+
     if search_value:
         users = users.filter(
             Q(name__icontains=search_value) |
@@ -42,10 +45,12 @@ def list(request):
             Q(district__icontains=search_value) |
             Q(email__icontains=search_value)
         )
-    
+
     total_records = users.count()
 
-    users = users.order_by(order_field)
+    users = users.order_by(order_field).prefetch_related(
+        Prefetch('subscription_set', queryset=Subscription.objects.filter(is_deleted=False).prefetch_related('batch__course'))
+    )
 
     paginator = Paginator(users, length)
     page_number = (start // length) + 1
@@ -53,22 +58,32 @@ def list(request):
 
     data = []
     for user in page_obj:
-        subscriptions = Subscription.objects.filter(user=user)
-        subscription_details = [
-            f'<span style="color: blue;">{subscription.batch.course.course_name}</span> (<span style="color: green;">Start: {subscription.batch.start_date.strftime("%d-%m-%Y")}, <span style="color: red;">Expiry: {subscription.batch.batch_expiry.strftime("%d-%m-%Y")}</span>)'
-            for subscription in subscriptions
-        ]
+        subscriptions = user.subscription_set.all()
+        subscription_details = []
+
+        for subscription in subscriptions:
+            for batch in subscription.batch.all():
+                course_name = getattr(batch.course, "course_name", "N/A")
+                start_date = batch.start_date.strftime("%d-%m-%Y") if batch.start_date else "N/A"
+                expiry_date = batch.batch_expiry.strftime("%d-%m-%Y") if batch.batch_expiry else "N/A"
+                subscription_details.append(
+                    f'<span style="color: blue;">{course_name}</span> '
+                    f'(<span style="color: green;">Start: {start_date}, '
+                    f'<span style="color: red;">Expiry: {expiry_date}</span>)'
+                )
+
         subscriptions_display = '<br>'.join(subscription_details) if subscription_details else "N/A"
+
         data.append({
             "id": user.id,
             "username": user.name if user.name else "N/A",
             "email": user.email if user.email else "N/A",
-            "district": user.get_district_display() if user.district else "N/A", 
+            "district": user.get_district_display() if user.district else "N/A",
             "phone_number": user.phone_number if user.phone_number else "N/A",
-            "batch_names_display":subscriptions_display,
-            "created": user.created.strftime("%d-%m-%Y %H:%M:%S"),
+            "batch_names_display": subscriptions_display,
+           "created": timezone.localtime(user.created).strftime('%Y-%m-%d %H:%M:%S')
         })
-    
+
     response = {
         "draw": draw,
         "recordsTotal": total_records,
@@ -82,7 +97,6 @@ def list(request):
 
 
 
-
 def add(request):
     if request.method == "POST":
         form = CustomerForm(request.POST, request.FILES)
@@ -90,10 +104,9 @@ def add(request):
             customer = form.save(commit=False)
             customer.save()
             batches = form.cleaned_data.get('batches')
-            Subscription.objects.filter(user=customer).delete() 
-            for batch in batches:
-                Subscription.objects.create(user=customer, batch=batch)
-           
+            subscription = Subscription.objects.create(user=customer)  
+            subscription.batch.set(batches)  
+            subscription.save()
 
             
 
@@ -114,19 +127,21 @@ def add(request):
         return render(request, "dashboard/webpages/customer/add.html", context)
 
 
+
+
+
 def update(request, pk):
     customer = get_object_or_404(CustomUser, pk=pk)
     if request.method == "POST":
         form = CustomerForm(request.POST, request.FILES, instance=customer)
         if form.is_valid():
             updated_customer = form.save(commit=False)
-            batch = form.cleaned_data.get('batch')
             updated_customer.save()
 
-            Subscription.objects.update_or_create(
-                user=updated_customer,
-                defaults={'batch': batch}
-            )
+            batches = form.cleaned_data.get('batches')
+            subscription = Subscription.objects.get(user=updated_customer)
+            subscription.batch  .set(batches)  
+            subscription.save()
 
             messages.success(request, "Customer updated successfully!")
             return redirect('dashboard-customer')
@@ -157,6 +172,9 @@ def delete(request,pk):
     else:
         messages.error(request, "Invalid request .")
         return redirect('dashboard-customer')
+    
+
+
     
 
 def detail(request, pk):
