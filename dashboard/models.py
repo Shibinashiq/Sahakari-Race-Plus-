@@ -238,7 +238,7 @@ class Level(models.Model):
 
 class Exam(models.Model):
     title = models.CharField(max_length=255, blank=True, null=True)
-    duration = models.DurationField(null=True, blank=True) 
+    duration = models.TimeField(null=True, blank=True)
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)

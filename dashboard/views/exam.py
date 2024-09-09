@@ -54,9 +54,6 @@ def list(request):
 
     data = []
     for exam in page_obj:
-        
-        
-        
         data.append({
             "id": exam.id,
             "title": exam.title if exam.title else "N/A",

@@ -45,6 +45,9 @@ urlpatterns = [
     path("batch/update/<int:pk>/", batch.update, name="dashboard-batch-update"),
     path("batch/delete/<int:pk>/", batch.delete, name="dashboard-batch-delete"),
 
+    path("batch/subscription/<int:pk>/", batch.subscription_view, name="dashboard-batch-subscripton-manager"),
+    path("batch/subscription/list/<int:pk>/", batch.subscription, name="dashboard-batch-subscripton-list"),
+
 
 
     # ==================================== Course ============================================= #

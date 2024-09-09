@@ -47,12 +47,12 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0">Batch Manager</h4>
+                        <h4 class="mb-sm-0">Customer Manager</h4>
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="/" class="text-primary">Admin</a></li>
-                                <li class="breadcrumb-item"><a href="" class="text-primary">Batch</a></li>
+                                <li class="breadcrumb-item"><a href="" class="text-primary">Customer</a></li>
                                 <li class="breadcrumb-item active">Manage</li>
                             </ol>
                         </div>
@@ -87,23 +87,25 @@
                                     <div class="card-header d-flex justify-content-end align-items-center">
                                         <div class="col-auto">
                                            
-                                            <a href="{% url 'dashboard-batch-add' %}" class="btn btn-success btn-label waves-effect waves-light">
-                                                <i class="mdi mdi-plus-thick label-icon align-middle fs-16 me-2"></i> Add Batch
+                                            <a href="{% url 'dashboard-customer-add'  %}" class="btn btn-success btn-label waves-effect waves-light">
+                                                <i class="mdi mdi-plus-thick label-icon align-middle fs-16 me-2"></i> Add Customer
                                             </a>
                                         </div>
                                     </div>
                                     
                                     <div class="card-body">
-                                        <table id="productDatatable" class="table table-sm w-100">
+                                        <table id="customerDatatable" class="table table-sm w-100">
                                             <thead class="bg-light">
-                                            <tr class="text-uppercase">
-                                                <th class="align-middle">#</th>
-                                                <th class="align-middle">Course</th>
-                                                <th class="align-middle">price</th>
-                                                <th class="align-middle">start date</th>
-                                                <th class="align-middle">end date</th>
-                                                <th class="align-middle">actions</th>
-                                            </tr>
+                                                <tr class="text-uppercase">
+                                                    <th class="align-middle">#</th>
+                                                    <th class="align-middle">Name</th>
+                                                    <th class="align-middle">Email</th>
+                                                    <th class="align-middle">phone</th>
+                                                    <th class="align-middle">district</th>
+                                                    <th class="align-middle">subscription</th>
+                                                    <th class="align-middle">Created</th>
+                                                    <th class="align-middle">Actions</th>
+                                                </tr>
                                             </thead>
                                             <tbody>
                                             </tbody>
@@ -121,15 +123,16 @@
                     </div> <!-- end .h-100-->
                 </div> <!-- end col -->
             </div>
+            <input type="hidden" id="courseId" value="{{ course.id }}">
 
             <!-- Add Modals -->
            
 
-            {% comment %} {% include 'dashboard/includes/modals/add.html' with title="Subject" %} {% endcomment %}
+            {% comment %} {% include 'dashboard/includes/modals/add.html' with title="Customer" %} {% endcomment %}
 
-            {% comment %} {% include "dashboard/includes/modals/update.html" with title="Subject" %} {% endcomment %}
+            {% comment %} {% include "dashboard/includes/modals/update.html" with title="Customer" %} {% endcomment %}
 
-            {% include "dashboard/includes/modals/delete.html" with title1="a Subject" title2="Subject" %}
+            {% include "dashboard/includes/modals/delete.html" with title1="a Customer" title2="Customer" %}
             
 
 {% endblock content %}
@@ -145,11 +148,12 @@
 {% block script %}
 <script>
     $(document).ready(function () {
-        var dataTable = $('#productDatatable').DataTable({
+        var pk = "{{ pk }}";
+        var dataTable = $('#customerDatatable').DataTable({
             "processing": true,
             "serverSide": true,
             "ajax": {
-                "url": "{% url 'dashboard-batch-list' %}",
+                "url": "{% url 'dashboard-batch-subscripton-list'  pk='0' %}".replace('0', pk),
                 "type": "GET",
                 "data": function (d) {
                     d.search = {
@@ -162,63 +166,72 @@
                 },
             },
             "columns": [
-            {
+                {
                     "data": "id",
                     "render": function (data, type, full, meta) {
-                        return '<td class="align-middle">' + data + '</td>';
+                        return data;
                     }
                 },
                 {
-                        "data": "course",
-                        "render": function (data, type, full, meta) {
-                            var courseUrl = '/batch/subscription/' + full.id +'/'; 
-                            return '<td class="align-middle"><a href="' + courseUrl + '" target="_blank">' + data + '</a></td>';
-                        }
-                    },
-
+                    "data": "username",
+                    "render": function (data, type, full, meta) {
+                        return data;
+                    }
+                }
+                ,
+                
+                {
+                    "data": "email",
+                    "render": function (data, type, full, meta) {
+                        return data;
+                    }
+                },
                
                 {
-                "data": "price",
-                "render": function (data, type, full, meta) {
-                    return '<td class="align-middle">' + data + '</td>';
-                   
-                }
-            }
-                ,
-                {
-                    "data": "start_date",
+                    "data": "phone_number",
                     "render": function (data, type, full, meta) {
-                        return '<td class="align-middle">' + data + '</td>';
+                        return data;
+                    }
+                },
+                 {
+                    "data": "district",
+                    "render": function (data, type, full, meta) {
+                        return data;
                     }
                 },
                 {
-                    "data": "end_date",
+                    "data": "batch_names_display",
                     "render": function (data, type, full, meta) {
-                        return '<td class="align-middle">' + data + '</td>';
+                        return data;
                     }
                 },
                 {
-                    
-                "data": "id",
+                    "data": "created",
+                    "render": function (data, type, full, meta) {
+                        return data;
+                    }
+                },
+                {
+                    "data": "id",
                     "render": function (data, type, row, meta) {
-                        var editUrl = "{% url 'dashboard-batch-update' pk='0' %}".replace('0', data);
-                        var deleteUrl = "{% url 'dashboard-batch-delete' pk='0' %}".replace('0', data);
+                        var editUrl = "{% url 'dashboard-customer-update' pk='0' %}".replace('0', data);
+                        var deleteUrl = "{% url 'dashboard-customer-delete' pk='0' %}".replace('0', data);
                         return `
                             <a href="${editUrl}" class="btn-update" data-bs-toggle="tooltip" data-bs-trigger="hover"
                                data-bs-placement="top" title="Edit">
                                 <i class="mdi mdi-pencil"></i>
                             </a>
-                           <a href="" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
-                                class="text-danger d-inline-block deleteConfirmModalClass" data-id="${data}"
-                                data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
-                                title="Remove">
-                                <i class="mdi mdi-delete fs-16"></i>
-                            </a>
+                              <a href="" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
+                       class="text-danger d-inline-block deleteConfirmModalClass" data-id="${data}"
+                       data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
+                       title="Remove">
+                       <i class="mdi mdi-delete fs-16"></i>
+                    </a>
                         `;
                     }
                 }
             ],
-            "order": [[5,'desc']],
+            "order": [[6,'desc']],
             "lengthMenu": [
                 [25, 50, 100],
                 [25, 50, 100]
@@ -230,11 +243,11 @@
             "scrollCollapse": true,
             "ordering": true,
             "language": {
-                "searchPlaceholder": "Search batche",
+                "searchPlaceholder": "Search customer",
                 "lengthMenu": "Show _MENU_",
                 "zeroRecords": `<span class="text-danger">No data found</span>`,
                 "info": "Showing page _PAGE_ of _PAGES_ (Total records: _TOTAL_)",
-                "infoEmpty": "No records available",
+                "infoEmpty": "No Customers available",
                 "infoFiltered": "(filtered from _MAX_ total records)",
                 "infoTotal": "Total records: _TOTAL_",
                 "paginate": {
@@ -246,18 +259,26 @@
             }
         });
     
+        });
+    
        
+        $(document).ready(function () {
+        var chapterId = "{{ chapter }}"; 
 
         $(document).on('click', '.deleteConfirmModalClass', function () {
-            var batch_id = $(this).data('id');
-            $('#delete-record').data('batch-id', batch_id); 
+            var lesson_id = $(this).data('id');
+            $('#delete-record').data('chapter-id', chapterId);
+            $('#delete-record').data('lesson-id', lesson_id); 
         });
 
         $('#delete-record').click(function () {
-            var batch_id = $('#delete-record').data('batch-id'); 
+            var chapterId = $(this).data('chapter-id');
+            var lesson_id = $(this).data('lesson-id'); 
+
+            console.log("Deleting Chapter ID: " + chapterId + " Lesson ID: " + lesson_id);
 
             $.ajax({
-                url: '/batch/delete/' + batch_id + '/', 
+                url: '/customer/delete/' + lesson_id +  '/', 
                 type: 'POST',
                 data: {
                     csrfmiddlewaretoken: '{{ csrf_token }}',
@@ -267,12 +288,17 @@
                     window.location.reload(); 
                 },
                 error: function(xhr, status, error) {
-                    console.error("Error deleting batch:", error);
+                    console.error("Error deleting lesson:", error);
                 }
             });
         });
     });
+
+        
+        
+        
 </script>
+        
 <script>
     $(document).ready(function () {
         $('.noty-tost').click();
