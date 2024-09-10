@@ -169,13 +169,12 @@
                     }
                 },
                 {
-                        "data": "course",
-                        "render": function (data, type, full, meta) {
-                            var courseUrl = '/batch/subscription/' + full.id +'/'; 
-                            return '<td class="align-middle"><a href="' + courseUrl + '" target="_blank">' + data + '</a></td>';
-                        }
-                    },
-
+                    "data": "course",
+                    "render": function (data, type, full, meta) {
+                        var detailUrl = "/batch/subscription/" + full.id + "/"; 
+                        return '<td class="align-middle"><a href="' + detailUrl + '" class="btn btn-link">' + data + '</a></td>';
+                    }
+                },
                
                 {
                 "data": "price",

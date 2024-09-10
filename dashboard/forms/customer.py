@@ -21,16 +21,13 @@ class CustomerForm(forms.ModelForm):
         self.instance = kwargs.get('instance')
         super().__init__(*args, **kwargs)
         
-        # Set field requirements
         self.fields['name'].required = True
         self.fields['email'].required = True
         self.fields['phone_number'].required = True
         self.fields['district'].required = True
         
-        # Set district choices
         self.fields['district'].widget.choices = CustomUser.DISTRICT_CHOICES
 
-        # Set initial batches if editing
         if self.instance and self.instance.pk:
             subscriptions = Subscription.objects.filter(user=self.instance, is_deleted=False).prefetch_related('batch')
             selected_batches = [batch for subscription in subscriptions for batch in subscription.batch.all()]
@@ -38,36 +35,33 @@ class CustomerForm(forms.ModelForm):
 
     def clean_name(self):
         name = self.cleaned_data.get('name')
-        if CustomUser.objects.exclude(id=self.instance.id).filter(name=name).exists():
+        if CustomUser.objects.exclude(id=self.instance.id).filter(name=name,is_deleted=False).exists():
             raise forms.ValidationError("A user with this name already exists.")
         return name
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        if CustomUser.objects.exclude(id=self.instance.id).filter(email=email).exists():
+        if CustomUser.objects.exclude(id=self.instance.id).filter(email=email,is_deleted=False).exists():
             raise forms.ValidationError("A user with this email already exists.")
         return email
 
     def clean_phone_number(self):
         phone_number = self.cleaned_data.get('phone_number')
-        if CustomUser.objects.exclude(id=self.instance.id).filter(phone_number=phone_number).exists():
+        if CustomUser.objects.exclude(id=self.instance.id).filter(phone_number=phone_number,is_deleted=False).exists():
             raise forms.ValidationError("A user with this phone number already exists.")
         return phone_number
 
     def save(self, commit=True):
-        instance = super().save(commit=False)
-        
-        # Save CustomUser instance first
-        if commit:
-            instance.save()
+        instance = super().save(commit=False)  
+
+        instance.save()  
 
         selected_batches = self.cleaned_data.get('batches')
-        
+
         Subscription.objects.filter(user=instance).delete()
 
         if selected_batches:
-            for batch in selected_batches:
-                subscription = Subscription.objects.create(user=instance)
-                subscription.batch.add(batch)
+            subscription = Subscription.objects.create(user=instance) 
+            subscription.batch.add(*selected_batches)  
 
         return instance

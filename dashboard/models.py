@@ -48,7 +48,7 @@ class CustomUser(AbstractBaseUser):
         ('13', 'Kasargode'),
     ]
 
-    email = models.EmailField(unique=True)
+    email = models.EmailField(null=True,blank=True)
     name = models.CharField(max_length=100, blank=True, null=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     district = models.CharField(max_length=2, choices=DISTRICT_CHOICES)

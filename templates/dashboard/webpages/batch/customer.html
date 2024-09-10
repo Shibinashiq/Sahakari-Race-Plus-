@@ -52,6 +52,7 @@
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="/" class="text-primary">Admin</a></li>
+                                <li class="breadcrumb-item"><a href="" class="text-primary">Batch</a></li>
                                 <li class="breadcrumb-item"><a href="" class="text-primary">Customer</a></li>
                                 <li class="breadcrumb-item active">Manage</li>
                             </ol>
@@ -87,7 +88,7 @@
                                     <div class="card-header d-flex justify-content-end align-items-center">
                                         <div class="col-auto">
                                            
-                                            <a href="{% url 'dashboard-customer-add'  %}" class="btn btn-success btn-label waves-effect waves-light">
+                                            <a href="{% url 'dashboard-batch-subscripton-add' batch_id=pk  %}" class="btn btn-success btn-label waves-effect waves-light">
                                                 <i class="mdi mdi-plus-thick label-icon align-middle fs-16 me-2"></i> Add Customer
                                             </a>
                                         </div>
@@ -102,7 +103,6 @@
                                                     <th class="align-middle">Email</th>
                                                     <th class="align-middle">phone</th>
                                                     <th class="align-middle">district</th>
-                                                    <th class="align-middle">subscription</th>
                                                     <th class="align-middle">Created</th>
                                                     <th class="align-middle">Actions</th>
                                                 </tr>
@@ -123,7 +123,7 @@
                     </div> <!-- end .h-100-->
                 </div> <!-- end col -->
             </div>
-            <input type="hidden" id="courseId" value="{{ course.id }}">
+            <input type="hidden" id="BatchId" value="{{ pk}}">
 
             <!-- Add Modals -->
            
@@ -149,11 +149,13 @@
 <script>
     $(document).ready(function () {
         var pk = "{{ pk }}";
+        console.log(pk);
+        console.log("hwllooo");
         var dataTable = $('#customerDatatable').DataTable({
             "processing": true,
             "serverSide": true,
             "ajax": {
-                "url": "{% url 'dashboard-batch-subscripton-list'  pk='0' %}".replace('0', pk),
+                "url": "{% url 'dashboard-batch-subscripton-list' pk=pk %}",
                 "type": "GET",
                 "data": function (d) {
                     d.search = {
@@ -199,12 +201,7 @@
                         return data;
                     }
                 },
-                {
-                    "data": "batch_names_display",
-                    "render": function (data, type, full, meta) {
-                        return data;
-                    }
-                },
+               
                 {
                     "data": "created",
                     "render": function (data, type, full, meta) {
@@ -212,9 +209,10 @@
                     }
                 },
                 {
+                    
                     "data": "id",
                     "render": function (data, type, row, meta) {
-                        var editUrl = "{% url 'dashboard-customer-update' pk='0' %}".replace('0', data);
+                        var editUrl = "{% url 'dashboard-batch-subscripton-update' batch_id='0' customer_id='0' %}".replace('0', pk).replace('0', data);
                         var deleteUrl = "{% url 'dashboard-customer-delete' pk='0' %}".replace('0', data);
                         return `
                             <a href="${editUrl}" class="btn-update" data-bs-toggle="tooltip" data-bs-trigger="hover"

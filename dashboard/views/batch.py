@@ -4,10 +4,11 @@ from django.contrib import  messages
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from dashboard.models import CustomUser
-from dashboard.forms.batch import BatchForm
+from dashboard.forms.batch import BatchForm ,BatchCustomerForm
 from django.db.models import Q
 from django.utils import timezone
 from django.db.models import Q ,Prefetch
+from dashboard.forms.customer import CustomerForm
 
 
 def manager(request):
@@ -140,10 +141,13 @@ def delete(request, pk):
 
 def subscription_view(request,pk):
     context={
-        pk:"pk"
+        "pk": pk 
     }
     return render(request, "dashboard/webpages/batch/customer.html",context)
-def subscription(request, pk):
+
+
+
+def subscription(request, pk): 
     draw = int(request.GET.get("draw", 1))
     start = int(request.GET.get("start", 0))
     length = int(request.GET.get("length", 10))
@@ -151,21 +155,21 @@ def subscription(request, pk):
     order_column = int(request.GET.get("order[0][column]", 0))
     order_dir = request.GET.get("order[0][dir]", "desc")
 
-    subscription_instance = get_object_or_404(Subscription, pk=pk, is_deleted=False)
+    subscriptions = Subscription.objects.filter(batch__id=pk, is_deleted=False)
 
     users = CustomUser.objects.filter(
-        subscription__id=subscription_instance.id,
+        subscription__in=subscriptions,  
         is_deleted=False
     )
 
     order_columns = {
         0: 'id',
-        1: 'name',  
+        1: 'name',
         2: 'email',
         3: 'district',
         4: 'phone_number',
     }
-
+    
     order_field = order_columns.get(order_column, 'id')
     if order_dir == 'desc':
         order_field = '-' + order_field
@@ -193,10 +197,10 @@ def subscription(request, pk):
 
     data = []
     for user in page_obj:
-        subscriptions = user.subscription_set.filter(id=subscription_instance.id)  
-        subscription_details = []
+        user_subscriptions = user.subscription_set.filter(batch__id=pk)
 
-        for subscription in subscriptions:
+        subscription_details = []
+        for subscription in user_subscriptions:
             for batch in subscription.batch.all():
                 course_name = getattr(batch.course, "course_name", "N/A")
                 start_date = batch.start_date.strftime("%d-%m-%Y") if batch.start_date else "N/A"
@@ -227,3 +231,85 @@ def subscription(request, pk):
     }
 
     return JsonResponse(response)
+
+
+
+
+def add_customer(request, batch_id):
+    if request.method == "POST":
+        form = BatchCustomerForm(request.POST, request.FILES)
+        if form.is_valid():
+            customer = form.save(commit=False)
+            customer.save()
+
+            batch = Batch.objects.get(id=batch_id)
+            subscription = Subscription.objects.create(user=customer)
+          
+            subscription.batch.add(batch) 
+            subscription.save()
+
+            messages.success(request, "Customer added successfully!")
+            return redirect('dashboard-batch-subscripton-manager', pk=batch_id)
+        else:
+            context = {
+                "title": "Add Customer | Dashboard",
+                "form": form,
+                "batch_id":batch_id
+            }
+            return render(request, "dashboard/webpages/batch/customer_add .html", context)
+    else:
+        form = BatchCustomerForm()  
+        context = {
+            "title": "Add Customer",
+            "form": form,
+             "batch_id":batch_id
+        }
+        return render(request, "dashboard/webpages/batch/customer_add .html", context)
+
+
+
+
+
+def update_customer(request, batch_id,customer_id):
+    customer = get_object_or_404(CustomUser, pk=customer_id)
+    if request.method == "POST":
+        form = CustomerForm(request.POST, request.FILES, instance=customer)
+        if form.is_valid():
+            updated_customer = form.save(commit=False)
+            updated_customer.save()
+
+            batches = form.cleaned_data.get('batches')
+            subscription = Subscription.objects.get(user=updated_customer)
+            subscription.batch .set(batches)  
+            subscription.save()
+
+            messages.success(request, "Customer updated successfully!")
+            return redirect('dashboard-batch-subscripton-manager',pk=batch_id)
+        else:
+            context = {
+                "title": "Update Customer | Dashboard",
+                "form": form,
+            }
+            return render(request, "dashboard/webpages/batch/customer_update.html", context)
+    else:
+        form = CustomerForm(instance=customer)
+        context = {
+            "title": "Update Customer",
+            "form": form,
+        }
+        return render(request, "dashboard/webpages/batch/customer_update.html", context)
+    
+
+
+
+def delete_customer(request, customer_id,batch_id):
+    if request.method == "POST":
+        customer = get_object_or_404(CustomUser, pk=customer_id)
+        customer.is_deleted = True
+        customer.save()
+        messages.success(request, "Customer deleted successfully!")
+        return redirect('dashboard-batch-subscripton-manager',pk=batch_id)
+    else:
+        messages.error(request, "Invalid request .")
+        return redirect('dashboard-batch-subscripton-manager',pk=batch_id)
+    

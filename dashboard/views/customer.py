@@ -103,10 +103,10 @@ def add(request):
         if form.is_valid():
             customer = form.save(commit=False)
             customer.save()
-            batches = form.cleaned_data.get('batches')
-            subscription = Subscription.objects.create(user=customer)  
-            subscription.batch.set(batches)  
-            subscription.save()
+            # batches = form.cleaned_data.get('batches')
+            # subscription = Subscription.objects.create(user=customer)  
+            # subscription.batch.set(batches)  
+            # subscription.save()
 
             
 
