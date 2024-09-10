@@ -22,7 +22,7 @@ coverage.xml
 
 # Django
 media/
-staticfiles/
+# staticfiles/
 assets/
 course_images/
 uploads/
