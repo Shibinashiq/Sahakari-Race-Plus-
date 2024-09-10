@@ -20,7 +20,7 @@ def manager(request):
             courses = Course.objects.filter(is_deleted=False).order_by('course_name')
         else:
             courses = Course.objects.filter(course_name__icontains=search, is_deleted=False).order_by('course_name')
-        batches = Batch.objects.filter(course__in=courses, is_deleted=False)
+        batches = Batch.objects.filter(course__in=courses, is_deleted=False,batch_expiry__gte=timezone.now().date())
 
         context = {
             "title": " Courses ",

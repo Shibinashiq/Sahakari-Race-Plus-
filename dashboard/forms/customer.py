@@ -1,8 +1,9 @@
 from django import forms
 from dashboard.models import CustomUser ,Batch ,Subscription
+from django.utils import timezone
 class CustomerForm(forms.ModelForm):
     batches = forms.ModelMultipleChoiceField(
-        queryset=Batch.objects.filter(is_deleted=False),
+        queryset=Batch.objects.filter(is_deleted=False, batch_expiry__gte=timezone.now().date()),
         widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
         required=False,
     )
