@@ -48,9 +48,22 @@ def list(request):
 
     total_records = users.count()
 
-    users = users.order_by(order_field).prefetch_related(
-        Prefetch('subscription_set', queryset=Subscription.objects.filter(is_deleted=False).prefetch_related('batch__course'))
+    active_batches_prefetch = Prefetch(
+      'subscription_set', 
+     queryset=Subscription.objects.filter(
+        is_deleted=False
+     ).prefetch_related(
+        Prefetch(
+            'batch',
+            queryset=Batch.objects.filter(
+                batch_expiry__gte=timezone.now().date(),
+                is_deleted=False
+            ).select_related('course')
+        )
     )
+    ) 
+
+    users = users.order_by(order_field).prefetch_related(active_batches_prefetch)
 
     paginator = Paginator(users, length)
     page_number = (start // length) + 1
