@@ -1,6 +1,6 @@
 from django import forms
-from dashboard.models import Batch, Course ,CustomUser ,Subscription
-
+from dashboard.views.imports import *
+from dashboard.models import *
 class BatchForm(forms.ModelForm):
     class Meta:
         model = Batch

@@ -1,12 +1,9 @@
-from django.shortcuts import redirect, render
+from dashboard.views.imports import *
 from dashboard.models import *
-from django.contrib.auth.decorators import login_required
-
 
 @login_required(login_url='dashboard-login')
 def home(request):
     user=request.user
-    print(user)
     customers = CustomUser.objects.filter(is_deleted=False).exclude(id=user.id).count()
     course=Course.objects.filter(is_deleted=False).count()
     subscription = Subscription.objects.filter(is_deleted=False).count()

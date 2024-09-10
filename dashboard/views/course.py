@@ -1,16 +1,6 @@
-from django.shortcuts import redirect, render , get_object_or_404
-from dashboard.models import *
-from dashboard.forms.content.course import AddForm
-from dashboard.forms.content.subject import SubjectForm
-from dashboard.forms.content.chapter import ChapterForm
-from dashboard.forms.content.lesson import LessonForm
-from dashboard.forms.content.question import QuestionForm
-from django.contrib import auth, messages
-from django.http import JsonResponse
-from django.core.paginator import Paginator
-from django.db.models import Q
-from django.contrib.auth.decorators import login_required
 
+from dashboard.views.imports import *
+from dashboard.models import *
 
 #course management
 @login_required(login_url='dashboard-login')

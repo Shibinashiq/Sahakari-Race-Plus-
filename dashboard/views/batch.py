@@ -1,18 +1,5 @@
-from django.shortcuts import redirect, render , get_object_or_404
+from dashboard.views.imports import *
 from dashboard.models import *
-from django.contrib import  messages
-from django.http import JsonResponse
-from django.core.paginator import Paginator
-from dashboard.models import CustomUser
-from dashboard.forms.batch import BatchForm ,BatchCustomerForm
-from django.db.models import Q
-from django.utils import timezone
-from django.db.models import Q ,Prefetch
-from dashboard.forms.customer import CustomerForm
-from django.contrib.auth.decorators import login_required
-
-
-
 
 @login_required(login_url='dashboard-login')
 def manager(request):
@@ -139,8 +126,8 @@ def update(request, pk):
         return render(request, "dashboard/webpages/batch/update.html", context)
 
 
-  
-    
+
+
 @login_required(login_url='dashboard-login')
 def delete(request, pk):
     if request.method == "POST":
@@ -294,7 +281,7 @@ def update_customer(request, batch_id,customer_id):
             updated_customer = form.save(commit=False)
             updated_customer.save()
 
-            batches = form.cleaned_data.get('batches')
+            batches = form.cleaned_data.get('batches',None)
             subscription = Subscription.objects.get(user=updated_customer)
             subscription.batch .set(batches)  
             subscription.save()

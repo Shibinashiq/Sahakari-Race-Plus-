@@ -1,13 +1,6 @@
-from django.shortcuts import redirect, render , get_object_or_404
-from dashboard.models import *
-from django.contrib import  messages
-from django.http import JsonResponse
-from django.core.paginator import Paginator
-from dashboard.models import CustomUser
-from dashboard.forms.schedule import ScheduleForm
-from django.db.models import Q
-from django.contrib.auth.decorators import login_required
 
+from dashboard.views.imports import *
+from dashboard.models import *
 
 @login_required(login_url='dashboard-login')
 def manager(request):
