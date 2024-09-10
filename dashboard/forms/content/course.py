@@ -9,7 +9,6 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field
 
 class AddForm(forms.ModelForm):
-   
     class Meta:
         model = Course
         fields = ['course_name', 'image', 'description']
@@ -18,12 +17,26 @@ class AddForm(forms.ModelForm):
             'image': forms.FileInput(attrs={'class': 'form-control', 'type': 'file'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'cols': 40}),
         }
-    
+        error_messages = {
+            'course_name': {
+                'required': "Course name is required.",
+            },
+            'image': {
+                'required': "An image is required.",
+            },
+            'description': {
+                'required': "A description is required.",
+            },
+        }
 
+    def __init__(self, *args, **kwargs):
+        super(AddForm, self).__init__(*args, **kwargs)
+        self.fields['course_name'].required = True
+        self.fields['image'].required = True
+        self.fields['description'].required = True
 
     def save(self, commit=True):
         instance = super().save(commit=False)
         if commit:
             instance.save()
-            
         return instance

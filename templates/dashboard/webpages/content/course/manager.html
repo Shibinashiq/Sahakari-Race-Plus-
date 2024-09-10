@@ -83,49 +83,52 @@
                                     </div>
                                     <div class="row">
                                         {% if courses %}
-                                        {% for course in courses %}
-                                            <div class="col-md-3">
-                                                <div class="card shadow-lg m-2">
-                                                    <img class="card-img-top" src="{{ course.image.url }}" style="height: 10rem; object-fit: contain;" alt="Course Image">
-                                                    <div class="card-body">
-                                                        <h5 class="card-title">
-                                                            <a href="{% url 'dashboard-course-subjects-list' course.id %}">
-                                                                {{ course.course_name }}
-                                                            </a>
-                                                            {% for batch in batches %}
-                                                           
-                                                        </h5>
-                                                        <h6>    
-                                                                
-                                                          
-                                                    {% endfor %}</h5>
-                                                        
-                                                        
-                                                        <p class="card-text">{{ course.description }}</p>
-                                                       
-                                                        <div class="row">
-                                                            <div class="col-6">
-                                                                <button class="w-100 btn btn-outline-primary btn-sm btn-update me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" data-id="{{ course.id }}">
-                                                                    <i class="mdi mdi-pencil"></i>
-                                                                </button>
-                                                            </div>
-                                                            <div class="col-6">
-                                                                <button class="w-100 btn btn-outline-danger btn-sm deleteConfirmModalClass" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" data-value="{{ course.id }}" data-name="{{ course.course_name }}">
-                                                                    <i class="mdi mdi-trash-can"></i>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        {% endfor %}
-                                    {% else %}
-                                        <div class="col-12">
-                                            <div class="text-center text-danger">
-                                                <p>No courses found!</p>
-                                            </div>
-                                        </div>
-                                    {% endif %}
+    {% for course in courses %}
+        <div class="col-md-3">
+            <div class="card shadow-lg m-2">
+                {% if course.image %}
+                    <img class="card-img-top" 
+                         src="{{ course.image.url }}" 
+                         style="height: 10rem; object-fit: contain;" 
+                         alt="{{ course.course_name|default:'N/A' }}">
+                {% else %}
+                    <img class="card-img-top" 
+                         src="https://via.placeholder.com/150" 
+                         style="height: 10rem; object-fit: contain;" 
+                         alt="Placeholder Image">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{% url 'dashboard-course-subjects-list' course.id %}">
+                            {{ course.course_name|default:'N/A' }}
+                        </a>
+                    </h5>
+                    <p class="card-text">{{ course.description|default:'N/A' }}</p>
+                    <div class="row">
+                        <div class="col-6">
+                            <button class="w-100 btn btn-outline-primary btn-sm btn-update me-2" 
+                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" 
+                                    data-id="{{ course.id }}">
+                                <i class="mdi mdi-pencil"></i>
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button class="w-100 btn btn-outline-danger btn-sm deleteConfirmModalClass" 
+                                    data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" 
+                                    data-value="{{ course.id }}" data-name="{{ course.course_name }}">
+                                <i class="mdi mdi-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <p class="text-muted">No courses available. N/A</p>
+{% endif %}
+                                    
+                                      
                                     
                                     </div>
                                 </div>
