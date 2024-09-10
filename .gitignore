@@ -29,6 +29,10 @@ uploads/
 pdf_notes/
 static/
 subject_images/
+chapter_images/
+lesson_images/
+
+
 
 # Environment Files
 .env
