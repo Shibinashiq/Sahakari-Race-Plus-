@@ -48,12 +48,8 @@
 									<div class="row row-cols-md-3 row-cols-1">
 										<div class="col col-lg border-end">
 											<div class="py-4 px-3">
-												<h5 class="text-muted text-uppercase fs-13">Total Number of Orders 
-													{% if total_number_orders >= 1 %}
-													<i class="ri-arrow-up-circle-line text-success fs-18 float-end align-middle"></i>
-													{% else %}
-													<i class="ri-arrow-down-circle-line text-danger fs-18 float-end align-middle"></i>
-													{% endif %}
+												<h5 class="text-muted text-uppercase fs-13">Number of Subscription
+													
 												</h5>
 												<div class="d-flex align-items-center">
 													<div class="flex-shrink-0">
@@ -194,14 +190,11 @@
 											<div class="card-body">
 												<div class="d-flex justify-content-between mb-3">
 													
-												<a href=""
-													class="btn btn-soft-success">
-													<i class="mdi mdi-eye fs-16"></i>
-													View Orders
-											   </a> 
-											   <a href="" 
-												  data-value="{{ sub.id }}" 
+												
+											   <a href="{% url 'dashboard-subscription-customer-update' pk=customer.id%}" 
+											     data-value="{{ customer.id }}" 
 												  class="btn btn-soft-success"
+												 
 												  >
 												  <i class="fas fa-edit"></i> Edit Customer
 											   </a>
@@ -262,115 +255,7 @@
 										</div>
 										
 										<!-- end card -->
-										<div class="card">
-											<div
-													class="card-header" style="
-                                                display: flex;align-content: center;justify-content: space-between;
-                                                align-items: center;"
-											>
-												<h5 class="card-title mb-0">Address</h5>
-												<a
-														href="#"
-														class="text-primary text-decoration-none"
-												>
-													<!-- <i class="mdi mdi-eye"></i>&nbsp;View all -->
-												</a>
-											</div>
-											<div class="card-body">
-												{% if default_address != None %}
-													<div class="card bg-soft-light">
-														<div class="card-body">
-															<div class="table-responsive">
-																<table class="table table-sm">
-																	<tr>
-																		<th class="text-uppercase">name</th>
-																		<td>{{ default_address.address.name }}</td>
-																	</tr>
-																	<tr>
-																		<th class="text-uppercase">residence type</th>
-																		<td>
-																			{{ default_address.address.get_residence_type_display }}
-																		</td>
-																	</tr>
-																	{% if default_address.address.residence_type == 1 %}
-																		<tr>
-																			<th class="text-uppercase">lift available
-																			</th>
-																			<td>
-																				{% if default_address.address.lift_available %}
-																					Yes
-																				{% else %}
-																					No
-																				{% endif %}
-																			</td>
-																		</tr>
-																		<tr>
-																			<th class="text-uppercase">floor number</th>
-																			<td>{{ default_address.address.floor_number }}</td>
-																		</tr>
-																	{% endif %}
-																	<tr>
-																		<th class="text-uppercase">house number</th>
-																		<td>{{ default_address.address.house_number }}</td>
-																	</tr>
-																	<tr>
-																		<th class="text-uppercase">address line</th>
-																		<td>{{ default_address.address.address_line }}</td>
-																	</tr>
-																	<tr>
-																		<th class="text-uppercase">landmark</th>
-																		<td>{{ default_address.address.landmark }}</td>
-																	</tr>
-																	<tr>
-																		<th class="text-uppercase">locality</th>
-																		<td>{{ default_address.address.locality }}</td>
-																	</tr>
-																	<tr>
-																		<th class="text-uppercase">ZIPCODE</th>
-																		<td>{{ default_address.address.zip_code }}</td>
-																	</tr>
-																	
-																	{% comment %} <tr>
-																		<th class="text-uppercase">Save as</th>
-																		<td>{{ default_address.address.get_save_as_display }}</td>
-																	</tr> {% endcomment %}
-																	{% comment %} <tr>
-																		<th class="text-uppercase">Other(Save as)</th>
-																		<td>
-																			{% if default_address.address.save_as == 3 %}
-																				{{ default_address.address.others }}
-																			{% else %}
-																				Nil
-																			{% endif %}
-																		</td>
-																	</tr> {% endcomment %}
-																	{% comment %} <tr>
-																		<th class="text-uppercase">Areas</th>
-																		<td>
-																			{% if areas %}
-																				<a
-																						href="{% url 'dashboard-fetch-whole-area-map' default_address.address.id %}"
-																						class="btn btn-sm btn-outline-primary">View
-																				                                               Map</a>
-																			{% else %}
-																				<p class="text-muted">No Maps!</p>
-																			{% endif %}
-																		</td>
-																	</tr> {% endcomment %}
-
-																</table>
-															</div>
-														</div>
-													</div>
-												{% else %}
-													<div class="card">
-														<div class="card-body">
-															<h5>Nil</h5>
-														</div>
-													</div>
-												{% endif %}
-											</div><!-- end card body -->
-										</div>
+										
 										
 									</div>
 									
@@ -390,61 +275,40 @@
 												
 											</div>
 											<div class="card-body">
-												<table class="table w-100 dataTableClass table-sm" id="userJarDatatable">
+												<table class="table w-100 dataTableClass table-sm">
 													<thead>
 														<tr>
-															<th class="bg-light align-middle text-uppercase">id</th>
-															<th class="bg-light align-middle text-uppercase" style="min-width: 150px;">address</th>
-															<th class="bg-light align-middle text-uppercase">product</th>
-															<th class="bg-light align-middle text-uppercase">Jar Amount</th>	
-															<th class="bg-light align-middle text-uppercase">last delivery time</th>
-															<th class="bg-light align-middle text-uppercase"> created</th>
-															<th class="bg-light align-middle text-uppercase">action</th>
+															<th class="bg-light align-middle text-uppercase"  style="width: 200px; max-width: 100px;">ID</th>
+															<th class="bg-light align-middle text-uppercase" >
+																Course
+															</th>
+															<th class="bg-light align-middle text-uppercase">Start Date</th>
+															<th class="bg-light align-middle text-uppercase">Expiry Date</th>
+															<th class="bg-light align-middle text-uppercase">Amount</th>
+															<th class="bg-light align-middle text-uppercase">Created</th>
+															<th class="bg-light align-middle text-uppercase">Action</th>
 														</tr>
 													</thead>
 													<tbody>
-														{% for sub in water_subs %}
+														{% for sub in subscriptions %}
+														{% for batch in sub.batch.all %}
 														<tr>
 															<td class="align-middle">{{ sub.id }}</td>
-															<td class="align-middle">
-																{{ sub.address.house_number }},
-																{{ sub.address.locality }},
-																{{ sub.address.address_line }} <br> {{ sub.get_residence_type_display }} 
+															<td class="align-middle">{{ batch.course.course_name }}</td>
+															<td class="align-middle">{{ batch.start_date }}</td>
+															<td class="align-middle" style="color: red;">
+																{{ batch.batch_expiry }}
 															</td>
-															<td class="align-middle">
-																{% if subscription_products %}
-																<table class="w-100">
-																	{% comment %} {% for product in subscription_products %} {% endcomment %}
-																	<tr>
-																		<td colspan="2">{{ subscription_products.product.name }}</td>
-																	</tr>
-																	<tr>
-																		<td><span class="badge bg-primary" style="font-size:12px;">Total jars: {{ subscription_products.quantity }} </span>
-																		<span class="badge bg-danger" style="font-size:12px;">Return jars: {{ sub.jars_to_be_returned }}</span></td>
-																	</tr>
-																	{% if not forloop.last %}
-																	<tr>
-																		<td colspan="2"><hr></td>
-																	</tr>
-																	{% endif %}
-																	{% comment %} {% endfor %} {% endcomment %}
-																</table>
-																{% else %}
-																<p>No products associated</p>
-																{% endif %}
-															</td>
-															<td class="align-middle">{{ subscription_products.selling_price }}</td>
-															
-															<td class="align-middle">{{ sub.last_delivery_time }}</td>
+															<td class="align-middle">{{ batch.batch_price }}</td>
 															<td class="align-middle">{{ sub.created }}</td>
 															<td class="align-middle">
-																<a href="{% url 'dashboard-customer-update-subscription' sub.id %}" class="d-inline-block btn-update custom-btn" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
+																<a href="" class="d-inline-block btn-update custom-btn" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
 																	<i class="mdi mdi-pencil"></i>
 																</a>
 																<a href="" class="text-danger d-inline-block deleteConfirmModalClass" 
 																	data-bs-toggle="modal" 
 																	data-bs-target="#deleteConfirmModal" 
-																	data-delete-url="{% url 'dashboard-customer-delete-subscription' sub.id %}" 
+																	data-delete-url="" 
 																	data-value="{{ sub.id }}" 
 																	data-bs-toggle="tooltip" 
 																	data-bs-trigger="hover" 
@@ -452,17 +316,18 @@
 																	title="Remove">
 																	<i class="mdi mdi-delete fs-16"></i>
 																</a>
-
-																
 															</td>
+														</tr>
+														{% endfor %}
+														{% empty %}
+														<tr>
+															<td colspan="7" class="text-center">No subscriptions found.</td>
 														</tr>
 														{% endfor %}
 													</tbody>
 												</table>
-												
-												
-												
 											</div>
+											
 										</div>
 										
 
@@ -472,9 +337,9 @@
 												<h5
 														class="card-title m-0 d-flex align-middle align-items-center align-content-center"
 												>
-													 Coupon Booklets</h5>
+													 Progress Card</h5>
 													<a href="" class="btn btn-soft-success">
-														<i class="mdi mdi-plus-thick"></i> Add  Coupon Booklet
+														<i class="mdi mdi-plus-thick"></i> Add details
 													</a>
 											</div>
 											<div class="card-body">
@@ -484,11 +349,12 @@
 												>
 													<thead>
 													<tr class="bg-light text-uppercase">
-														<th class="align-middle">price</th>
-														<th class="align-middle">salesman</th>
-														<th class="align-middle">coupon booklet</th>
+														<th class="align-middle">Exam</th>
+														<th class="align-middle">mark</th>
+														<th class="align-middle">time taken</th>
+														<th class="align-middle">Mxm time</th>
 														<th class="align-middle">created</th>
-														<th>Action</th>
+														<th>status</th>
 													</tr>
 													</thead>
 													{% for coupon in customer_coupons %}
@@ -529,10 +395,11 @@
 			
 
 			
-			{% include "dashboard/includes/modals/delete.html" with title1="" title2="" %}
+			{% include "dashboard/includes/modals/update.html" with title1="" title2="" %}
+			{% include "dashboard/includes/modals/delete.html" with title1="this Customer" title2="customer" %}
 			{% include "dashboard/includes/modals/delete.html" with title1="this Customer" title2="customer" %}
 
-		</div><!-- container-fluid -->
+		</div>
 	</div>
 
 
@@ -551,65 +418,7 @@
 
 
 
-<script>$(document).ready(function() {
-    $('.dataTableClass').DataTable({
-        "lengthMenu": [
-            [25, 50, 100],
-            [25, 50, 100]
-        ],
-        "pageLength": 25,
-        "responsive": true,
-        "scrollX": true,
-        "scrollY": "25vh",
-        "scrollCollapse": true,
-        "ordering": true,
-    });
 
-    $('.dataTableClass').on('click', '.deleteConfirmModalClass', function (e) {
-        e.preventDefault();
-        var deleteUrl = $(this).data('delete-url'); 
-        var record_id = $(this).data('value');
-        var recordType = $(this).data('record-type'); 
-
-        console.log("Clicked to delete " + recordType + " with ID: " + record_id);
-
-        $('#delete-record').data('delete-url', deleteUrl);
-        $('#delete-record').data('value', record_id);
-        $('#delete-record').data('record-type', recordType);
-        $('#deleteConfirmModal').modal('show');
-    });
-
-    $('#delete-record').click(function (e) {
-        e.preventDefault(); 
-
-        var record_id = $(this).data('value');
-        var deleteUrl = $(this).data('delete-url');
-        var recordType = $(this).data('record-type');
-
-        console.log("Deleting " + recordType + " with ID: " + record_id);
-
-        $.ajax({
-            url: deleteUrl,
-            type: 'POST',
-            data: {
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-            },
-            success: function (data) {
-                console.log(recordType + " deleted successfully");
-                if (recordType === 'customer') {
-                    window.location.href = "";
-                } else {
-                    window.location.reload();
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error("Error deleting " + recordType + ":", error);
-            }
-        });
-    });
-});
-
-</script>
 
 <script>
     $(document).ready(function () {

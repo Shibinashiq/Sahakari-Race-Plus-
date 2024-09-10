@@ -95,7 +95,6 @@ class Batch(models.Model):
     batch_expiry = models.DateField()
     batch_price = models.DecimalField(max_digits=10, decimal_places=2)
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
-    
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
@@ -255,6 +254,9 @@ class Question(models.Model):
     question_type = models.PositiveIntegerField(choices=QUESTION_TYPES, default=1)
     question_description = RichTextField()
     hint = models.TextField(null=True, blank=True)
+    start_time = models.DateTimeField(default=timezone.now)
+    end_time = models.DateTimeField(null=True, blank=True)
+    is_completed = models.BooleanField(default=False)
     options = models.JSONField(default=list, null=True, blank=True)
     right_answers = models.JSONField(default=list, null=True, blank=True)  
     master_question = models.IntegerField(null=True, blank=True)

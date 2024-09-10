@@ -53,7 +53,11 @@ class BatchForm(forms.ModelForm):
         if start_date and batch_expiry:
             if start_date > batch_expiry:
                 raise forms.ValidationError({
-                    'start_date': 'The start date cannot be later than the expiry date.',
+                    self.add_error('batch_expiry', 'The expiry date cannot be earlier than the start date.')
+                })
+            if start_date == batch_expiry:
+                raise forms.ValidationError({
+                    self.add_error('batch_expiry', 'The expiry date cannot be equals the start date.')
                 })
 
         return cleaned_data

@@ -116,10 +116,7 @@ def add(request):
         if form.is_valid():
             customer = form.save(commit=False)
             customer.save()
-            # batches = form.cleaned_data.get('batches')
-            # subscription = Subscription.objects.create(user=customer)  
-            # subscription.batch.set(batches)  
-            # subscription.save()
+           
 
             
 
@@ -192,9 +189,11 @@ def delete(request,pk):
 @login_required(login_url='dashboard-login')
 def detail(request, pk):
     customer = get_object_or_404(CustomUser, pk=pk)
+    subscriptions = Subscription.objects.filter(user=customer, is_deleted=False).prefetch_related('batch')
     context = {
         "title": "Customer Detail",
         "customer": customer,
+        "subscriptions": subscriptions,
     }
     return render (request,"dashboard/webpages/customer/detail.html",context)
     
@@ -205,5 +204,33 @@ def detail(request, pk):
 
 
 
+@login_required(login_url='dashboard-login')
+def subscription_customer_update(request,pk):
+    customer = get_object_or_404(CustomUser, pk=pk)
+    if request.method == "POST":
+        form = CustomerForm(request.POST, request.FILES, instance=customer)
+        if form.is_valid():
+            updated_customer = form.save(commit=False)
+            updated_customer.save()
 
+            batches = form.cleaned_data.get('batches')
+            subscription = Subscription.objects.get(user=updated_customer)
+            subscription.batch  .set(batches)  
+            subscription.save()
 
+            messages.success(request, "Customer updated successfully!")
+            return redirect('dashboard-user-detail',pk)
+        else:
+            context = {
+                "title": "Update Customer | Dashboard",
+                "form": form,
+            }
+            return render(request, "dashboard/webpages/customer/update.html", context)
+    else:
+        form = CustomerForm(instance=customer)
+        context = {
+            "title": "Update Customer",
+            "form": form,
+        }
+        return render(request, "dashboard/webpages/customer/update.html", context)
+    
