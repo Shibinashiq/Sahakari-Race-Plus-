@@ -251,7 +251,8 @@
 <script>
     $(document).ready(function () {
     
-        {% comment %} $('#addModalForm').submit(function (event) {
+        {% comment %} 
+        $('#addModalForm').submit(function (event) {
             event.preventDefault();
             var formData = new FormData(this);
     
@@ -270,7 +271,8 @@
                     alert('An error occurred while adding the Course. Please try again.');
                 }
             });
-        });  {% endcomment %}
+        });  
+        {% endcomment %}
     
         $('.btn-update').click(function () {
             var courseID = $(this).data('id');

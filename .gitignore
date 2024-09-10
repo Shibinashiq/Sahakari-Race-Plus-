@@ -1,0 +1,53 @@
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.sqlite3
+*.db
+*.log
+*.env
+*.venv
+*.idea/
+*.vscode/
+*.pytest_cache/
+*.coverage
+*.tox/
+*.nox/
+*.hypothesis/
+.coverage
+nosetests.xml
+test_*.xml
+coverage.xml
+
+# Django
+media/
+staticfiles/
+assets/
+course_images/
+uploads/
+pdf_notes/
+static/
+subject_images/
+
+# Environment Files
+.env
+.env.*
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv/
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
