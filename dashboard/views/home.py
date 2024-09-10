@@ -1,6 +1,9 @@
 from django.shortcuts import redirect, render
 from dashboard.models import *
+from django.contrib.auth.decorators import login_required
 
+
+@login_required(login_url='dashboard-login')
 def home(request):
     user=request.user
     print(user)

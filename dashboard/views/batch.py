@@ -9,12 +9,19 @@ from django.db.models import Q
 from django.utils import timezone
 from django.db.models import Q ,Prefetch
 from dashboard.forms.customer import CustomerForm
+from django.contrib.auth.decorators import login_required
 
 
+
+
+@login_required(login_url='dashboard-login')
 def manager(request):
     return render(request, "dashboard/webpages/batch/manager.html")
 
 
+
+
+@login_required(login_url='dashboard-login')
 def list(request):
     draw = int(request.GET.get("draw", 1))
     start = int(request.GET.get("start", 0))
@@ -77,6 +84,8 @@ def list(request):
 
 
 
+
+@login_required(login_url='dashboard-login')
 def add(request):
     if request.method == "POST":
         form = BatchForm(request.POST, request.FILES)
@@ -101,6 +110,9 @@ def add(request):
         return render(request, "dashboard/webpages/batch/add.html", context)
 
 
+
+
+@login_required(login_url='dashboard-login')
 def update(request, pk):
     batch = get_object_or_404(Batch, pk=pk, is_deleted=False)
     
@@ -126,6 +138,10 @@ def update(request, pk):
         }
         return render(request, "dashboard/webpages/batch/update.html", context)
 
+
+  
+    
+@login_required(login_url='dashboard-login')
 def delete(request, pk):
     if request.method == "POST":
         batch = get_object_or_404(Batch, pk=pk)
@@ -138,7 +154,7 @@ def delete(request, pk):
         return redirect('dashboard-batch')
     
 
-
+@login_required(login_url='dashboard-login')
 def subscription_view(request,pk):
     context={
         "pk": pk 
@@ -146,7 +162,7 @@ def subscription_view(request,pk):
     return render(request, "dashboard/webpages/batch/customer.html",context)
 
 
-
+@login_required(login_url='dashboard-login')
 def subscription(request, pk): 
     draw = int(request.GET.get("draw", 1))
     start = int(request.GET.get("start", 0))
@@ -234,7 +250,7 @@ def subscription(request, pk):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def add_customer(request, batch_id):
     if request.method == "POST":
         form = BatchCustomerForm(request.POST, request.FILES)
@@ -269,7 +285,7 @@ def add_customer(request, batch_id):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def update_customer(request, batch_id,customer_id):
     customer = get_object_or_404(CustomUser, pk=customer_id)
     if request.method == "POST":
@@ -301,7 +317,7 @@ def update_customer(request, batch_id,customer_id):
     
 
 
-
+@login_required(login_url='dashboard-login')
 def delete_customer(request, customer_id,batch_id):
     if request.method == "POST":
         customer = get_object_or_404(CustomUser, pk=customer_id)

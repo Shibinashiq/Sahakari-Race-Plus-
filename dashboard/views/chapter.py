@@ -5,14 +5,16 @@ from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.db.models import Q
 from dashboard.forms.chapter import ChapterForm
+from django.contrib.auth.decorators import login_required
 
+@login_required(login_url='dashboard-login')
 def manager(request):
     return render(request, "dashboard/webpages/chapter/manager.html")
 
 
 
 
-
+@login_required(login_url='dashboard-login')
 def list(request):
     draw = int(request.GET.get("draw", 1))
     start = int(request.GET.get("start", 0))
@@ -75,7 +77,7 @@ def list(request):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def add(request):
     if request.method == "POST":
             form = ChapterForm(request.POST, request.FILES)
@@ -102,7 +104,7 @@ def add(request):
             }
             return render(request, "dashboard/webpages/chapter/add.html", context)
 
-
+@login_required(login_url='dashboard-login')
 def update(request, pk):
     chapter = get_object_or_404(Chapter, pk=pk)
     
@@ -130,7 +132,7 @@ def update(request, pk):
             "form": form,
         }
         return render(request, "dashboard/webpages/subject/update.html", context)
-
+@login_required(login_url='dashboard-login')
 def delete(request,pk):
     if request.method == "POST":
             chapter = get_object_or_404(Chapter, id=pk)

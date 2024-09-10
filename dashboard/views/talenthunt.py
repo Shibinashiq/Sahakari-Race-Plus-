@@ -6,13 +6,17 @@ from django.core.paginator import Paginator
 from dashboard.models import CustomUser
 from dashboard.forms.talenthunt import TalentHuntForm
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
 
+
+
+@login_required(login_url='dashboard-login')
 def manager(request):
     return render (request,'dashboard/webpages/talenthunt/manager.html')
 
 
-
+@login_required(login_url='dashboard-login')
 def list(request):
     
     draw = int(request.GET.get("draw", 1))
@@ -72,7 +76,7 @@ def list(request):
     return JsonResponse(response)
 
 
-
+@login_required(login_url='dashboard-login')
 def add(request):
     if request.method == "POST":
         form = TalentHuntForm(request.POST, request.FILES)
@@ -99,7 +103,11 @@ def add(request):
                 "form": form,
             }
             return render(request, "dashboard/webpages/talenthunt/add.html", context)
+    
 
+
+
+@login_required(login_url='dashboard-login')
 def update(request, pk):
     talenthunt = get_object_or_404(TalentHunt, pk=pk, is_deleted=False)
 
@@ -130,7 +138,7 @@ def update(request, pk):
         }
         return render(request, "dashboard/webpages/talenthunt/update.html", context)
 
-
+@login_required(login_url='dashboard-login')
 def delete(request, pk):
     if request.method == "POST":
         talenthunt = get_object_or_404(TalentHunt, pk=pk, is_deleted=False)
@@ -149,7 +157,7 @@ def delete(request, pk):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def fetch_course_subjects(request):
     course_id = request.GET.get('course_id')
     if course_id:

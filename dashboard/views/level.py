@@ -7,7 +7,13 @@ from django.core.paginator import Paginator
 from dashboard.models import CustomUser
 from dashboard.forms.level import LevelForm ,QuestionForm
 from django.db.models import Q
+import json
+from django.core.exceptions import ObjectDoesNotExist
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
+
+@login_required(login_url='dashboard-login')
 def manager(request,pk):
     context={
          'pk':pk
@@ -16,7 +22,7 @@ def manager(request,pk):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def list(request,pk):
 
     draw = int(request.GET.get("draw", 1))
@@ -72,7 +78,7 @@ def list(request,pk):
     return JsonResponse(response)
 
 
-
+@login_required(login_url='dashboard-login')
 def add(request,pk):
     if request.method == "POST":
         talenthuntsubject= TalentHuntSubject.objects.get(id=pk)
@@ -105,7 +111,7 @@ def add(request,pk):
     
 
 
-
+@login_required(login_url='dashboard-login')
 def update(request, pk, level_id):
     talenthuntsubject = get_object_or_404(TalentHuntSubject, id=pk)
     level = get_object_or_404(Level, id=level_id, talenthuntsubject=talenthuntsubject)
@@ -136,7 +142,7 @@ def update(request, pk, level_id):
         return render(request, "dashboard/webpages/level/update.html", context)
     
 
-
+@login_required(login_url='dashboard-login')
 def delete(request, pk):
     print("hiiiiii")
     level = get_object_or_404(Level, id=pk)
@@ -156,7 +162,7 @@ def delete(request, pk):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def level_question_manager(request,pk):
     context={
          'pk':pk
@@ -164,7 +170,7 @@ def level_question_manager(request,pk):
     return render(request, 'dashboard/webpages/level/question_manager.html',context)
 
 
-
+@login_required(login_url='dashboard-login')
 def level_question_list(request,pk):
     draw = int(request.GET.get("draw", 1))
     start = int(request.GET.get("start", 0))
@@ -228,6 +234,9 @@ def level_question_list(request,pk):
 
     return JsonResponse(response)
 
+
+
+@login_required(login_url='dashboard-login')
 def level_question_add(request,pk):
     if request.method == 'POST':
         form = QuestionForm(request.POST)  
@@ -261,6 +270,9 @@ def level_question_add(request,pk):
 
     return render(request, 'dashboard/webpages/level/question_add.html', {'form': form ,'pk':pk})
 
+
+
+@login_required(login_url='dashboard-login')
 def level_question_update(request,pk):
     question = get_object_or_404(Question, id=pk)
     
@@ -307,6 +319,8 @@ def level_question_update(request,pk):
         'answers': question.right_answers
     })
 
+
+@login_required(login_url='dashboard-login')
 def level_question_delete(request,pk):
     question = get_object_or_404(Question, id=pk)
 
@@ -319,18 +333,14 @@ def level_question_delete(request,pk):
     return redirect('dashboard-level-question-manager',pk=question.level.id)  
 
 
-from django.http import JsonResponse
-import json
-from django.core.exceptions import ObjectDoesNotExist
-from django.views.decorators.csrf import csrf_exempt
 
-@csrf_exempt  # Allow CSRF for AJAX POST
+@login_required(login_url='dashboard-login')
+@csrf_exempt  
 def paste(request):
     if request.method == 'POST':
         ids_json = request.POST.get('ids')
         level_id = request.POST.get('level_id')
         
-        # Debugging print
         print(ids_json, level_id)
 
         try:
@@ -338,13 +348,11 @@ def paste(request):
         except Level.DoesNotExist:
             return JsonResponse({'error': 'Level does not exist.'}, status=404)
 
-        # Parse the list of IDs
         try:
             ids = json.loads(ids_json) if ids_json else []
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid IDs format. Must be valid JSON.'}, status=400)
 
-        # Check if all IDs are numeric
         if not all(str(i).isdigit() for i in ids):
             return JsonResponse({'error': 'All IDs must be numeric.'}, status=400)
 
@@ -352,19 +360,16 @@ def paste(request):
         error_messages = []
         already_exists = []
 
-        # Process each ID
         for i in ids:
             try:
                 master_question = Question.objects.get(id=i)
                 
-                # Check if the question already exists in this level
                 if Question.objects.filter(level=level, master_question=i, is_deleted=False).exists() or \
                    Question.objects.filter(level=level, id=master_question.master_question, is_deleted=False).exists() or \
                    Question.objects.filter(level=level, id=i, is_deleted=False).exists():
                     already_exists.append(i)
                     continue
 
-                # Create a new question for this level
                 question = Question.objects.create(
                     question_type=master_question.question_type,
                     question_description=master_question.question_description,
@@ -383,7 +388,6 @@ def paste(request):
             except Exception as e:
                 error_messages.append(f"Error creating question with ID {i}: {str(e)}")
 
-        # Prepare the response data
         if success_count == 0 and not already_exists:
             return JsonResponse({'message': 'No questions were created.', 'errors': error_messages}, status=400)
 

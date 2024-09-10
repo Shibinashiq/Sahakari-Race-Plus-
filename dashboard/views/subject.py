@@ -5,11 +5,16 @@ from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.db.models import Q
 from dashboard.forms.subject import SubjectForm
+from django.contrib.auth.decorators import login_required
 
+
+@login_required(login_url='dashboard-login')
 def manager (request):
     return render(request, "dashboard/webpages/subject/manager.html")
 
 
+
+@login_required(login_url='dashboard-login')
 def list(request):
         draw = int(request.GET.get("draw", 1))
         start = int(request.GET.get("start", 0))
@@ -24,7 +29,6 @@ def list(request):
             1: 'subject_name',
             2: 'description',
             3:'course',
-            # 4: 'created',
         }
         
         order_field = order_columns.get(order_column, 'id')
@@ -73,7 +77,7 @@ def list(request):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def add(request):
     if request.method == "POST":
             form = SubjectForm(request.POST, request.FILES)
@@ -104,6 +108,9 @@ def add(request):
             return render(request, "dashboard/webpages/subject/add.html", context)
 
 
+
+
+@login_required(login_url='dashboard-login')
 def update(request, pk):
     subject = get_object_or_404(Subject, pk=pk)
     
@@ -131,7 +138,10 @@ def update(request, pk):
             "form": form,
         }
         return render(request, "dashboard/webpages/subject/update.html", context)
+    
 
+
+@login_required(login_url='dashboard-login')
 def delete(request,pk):
     if request.method == "POST":
             subject = get_object_or_404(Subject, id=pk)

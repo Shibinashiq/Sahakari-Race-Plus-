@@ -45,6 +45,19 @@ class BatchForm(forms.ModelForm):
             raise forms.ValidationError("This field is required.")
         return start_date
 
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get('start_date')
+        batch_expiry = cleaned_data.get('batch_expiry')
+
+        if start_date and batch_expiry:
+            if start_date > batch_expiry:
+                raise forms.ValidationError({
+                    'start_date': 'The start date cannot be later than the expiry date.',
+                })
+
+        return cleaned_data
+
     def save(self, commit=True):
         instance = super().save(commit=False)
         if commit:

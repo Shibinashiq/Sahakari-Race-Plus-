@@ -6,13 +6,16 @@ from django.core.paginator import Paginator
 from dashboard.models import CustomUser
 from dashboard.forms.question import QuestionForm
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
-
-
-
+@login_required(login_url='dashboard-login')
 def manager(request):
     return render(request, 'dashboard/webpages/question/manager.html')
 
+
+
+
+@login_required(login_url='dashboard-login')
 def list(request):
     draw = int(request.GET.get("draw", 1))
     start = int(request.GET.get("start", 0))
@@ -78,6 +81,10 @@ def list(request):
 
     return JsonResponse(response)
 
+
+
+
+@login_required(login_url='dashboard-login')
 def add(request):
     if request.method == 'POST':
         form = QuestionForm(request.POST)  
@@ -133,6 +140,8 @@ def add(request):
     return render(request, 'dashboard/webpages/question/add.html', {'form': form})
 
 
+
+@login_required(login_url='dashboard-login')
 def update(request, pk):
     question = get_object_or_404(Question, pk=pk)
     
@@ -174,6 +183,8 @@ def update(request, pk):
 
 
 
+
+@login_required(login_url='dashboard-login')
 def delete(request, pk):
     if request.method == 'POST':
         question = get_object_or_404(Question, pk=pk)

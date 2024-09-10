@@ -5,12 +5,12 @@ from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.db.models import Q
 from dashboard.forms.lesson import LessonForm
-
-
+from django.contrib.auth.decorators import login_required
+@login_required(login_url='dashboard-login')
 def manager(request):
 
     return render(request, "dashboard/webpages/lesson/manager.html")
-
+@login_required(login_url='dashboard-login')
 def list(request):
         draw = int(request.GET.get("draw", 1))
         start = int(request.GET.get("start", 0))
@@ -68,7 +68,7 @@ def list(request):
         }
 
         return JsonResponse(response)
-
+@login_required(login_url='dashboard-login')
 def add(request):
     if request.method == "POST":
             form = LessonForm(request.POST, request.FILES)
@@ -125,7 +125,7 @@ def add(request):
                 "form": form,
             }
             return render(request, "dashboard/webpages/lesson/add.html", context)
-    
+@login_required(login_url='dashboard-login')    
 def update(request, pk):
     lesson = get_object_or_404(Lesson, pk=pk)
     
@@ -175,7 +175,7 @@ def update(request, pk):
         return render(request, "dashboard/webpages/lesson/update.html", context)
     
 
-    
+@login_required(login_url='dashboard-login')    
 def delete(request, pk):
     if request.method == "POST":
             lesson = get_object_or_404(Lesson, id=pk)

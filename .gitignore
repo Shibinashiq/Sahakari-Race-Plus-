@@ -21,8 +21,7 @@ test_*.xml
 coverage.xml
 
 # Django
-media/
-assets/
+# media/
 course_images/
 uploads/
 pdf_notes/

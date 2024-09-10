@@ -7,14 +7,14 @@ from django.db.models import Q
 from django.http import JsonResponse
 import json
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
 
-
-
+@login_required(login_url='dashboard-login')
 def manager(request):
 
     return render(request, "dashboard/webpages/exam/manager.html")
 
-
+@login_required(login_url='dashboard-login')
 def list(request):
     draw = int(request.GET.get("draw", 1))
     start = int(request.GET.get("start", 0))
@@ -73,7 +73,7 @@ def list(request):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def add(request):
     if request.method == 'POST':
         form = ExamForm(request.POST)  
@@ -92,7 +92,7 @@ def add(request):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def update(request, pk):
     exam = get_object_or_404(Exam, pk=pk)
 
@@ -112,7 +112,7 @@ def update(request, pk):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def delete(request, pk):
     exam = get_object_or_404(Exam, pk=pk)
 
@@ -133,14 +133,14 @@ def delete(request, pk):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def exam_question_manager(request, exam_id):
     exam = get_object_or_404(Exam, pk=exam_id)
     return render(request, 'dashboard/webpages/exam/exam_question_manager.html', {'exam': exam.id})
 
 
 
-
+@login_required(login_url='dashboard-login')
 def exam_question_list(request,exam_id):
     draw = int(request.GET.get("draw", 1))
     start = int(request.GET.get("start", 0))
@@ -206,7 +206,7 @@ def exam_question_list(request,exam_id):
     return JsonResponse(response)
 
 
-
+@login_required(login_url='dashboard-login')
 def exam_question_add(request, exam_id):
     exam=Exam.objects.get(id=exam_id,is_deleted=False)
     
@@ -239,7 +239,7 @@ def exam_question_add(request, exam_id):
     return render(request, 'dashboard/webpages/exam/question_add.html', {'form': form ,'exam':exam_id})
 
 
-
+@login_required(login_url='dashboard-login')
 def exam_question_update(request,exam_id,question_id):
     question = get_object_or_404(Question, pk=question_id)
     exam = Exam.objects.get(id=exam_id)
@@ -294,7 +294,7 @@ def exam_question_update(request,exam_id,question_id):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def exam_question_delete(request,exam_id,question_id):
     if request.method == 'POST':
         question = get_object_or_404(Question, pk=question_id)
@@ -307,7 +307,7 @@ def exam_question_delete(request,exam_id,question_id):
    
 
 
-
+@login_required(login_url='dashboard-login')
 def paste(request):
     
     if request.method == 'POST':

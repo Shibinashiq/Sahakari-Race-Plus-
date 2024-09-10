@@ -6,16 +6,16 @@ from django.core.paginator import Paginator
 from dashboard.models import CustomUser
 from dashboard.forms.customer import CustomerForm
 from django.db.models import Q ,Prefetch
+from django.contrib.auth.decorators import login_required
 
 
-
-
+@login_required(login_url='dashboard-login')
 def manager(request):
     return render(request, "dashboard/webpages/customer/manager.html")
 
 
 
-
+@login_required(login_url='dashboard-login')
 def list(request):
     draw = int(request.GET.get("draw", 1))
     start = int(request.GET.get("start", 0))
@@ -96,7 +96,7 @@ def list(request):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def add(request):
     if request.method == "POST":
         form = CustomerForm(request.POST, request.FILES)
@@ -129,7 +129,7 @@ def add(request):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def update(request, pk):
     customer = get_object_or_404(CustomUser, pk=pk)
     if request.method == "POST":
@@ -161,7 +161,7 @@ def update(request, pk):
     
 
 
-
+@login_required(login_url='dashboard-login')
 def delete(request,pk):
     if request.method == "POST":
         customer = get_object_or_404(CustomUser, pk=pk)
@@ -176,7 +176,7 @@ def delete(request,pk):
 
 
     
-
+@login_required(login_url='dashboard-login')
 def detail(request, pk):
     customer = get_object_or_404(CustomUser, pk=pk)
     context = {

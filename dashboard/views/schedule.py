@@ -6,13 +6,16 @@ from django.core.paginator import Paginator
 from dashboard.models import CustomUser
 from dashboard.forms.schedule import ScheduleForm
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
 
-
-
+@login_required(login_url='dashboard-login')
 def manager(request):
     return render(request, 'dashboard/webpages/schedule/manager.html')
 
+
+
+@login_required(login_url='dashboard-login')
 def list(request):
     draw = int(request.GET.get("draw", 1))
     start = int(request.GET.get("start", 0))
@@ -72,6 +75,8 @@ def list(request):
 
     return JsonResponse(response)
 
+
+@login_required(login_url='dashboard-login')
 def add(request):
     if request.method == 'POST':
         form = ScheduleForm(request.POST)  
@@ -89,6 +94,8 @@ def add(request):
     return render(request, 'dashboard/webpages/schedule/add.html', {'form': form})
 
 
+
+@login_required(login_url='dashboard-login')
 def update(request, pk):
     schedule = get_object_or_404(Schedule, pk=pk)
     
@@ -107,6 +114,8 @@ def update(request, pk):
 
     return render(request, 'dashboard/webpages/schedule/update.html', {'form': form})
 
+
+@login_required(login_url='dashboard-login')
 def delete(request, pk):
     if request.method == 'POST':
         schedule = get_object_or_404(Schedule, pk=pk)

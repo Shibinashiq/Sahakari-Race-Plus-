@@ -9,8 +9,11 @@ from django.contrib import auth, messages
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.db.models import Q
-#course management
+from django.contrib.auth.decorators import login_required
 
+
+#course management
+@login_required(login_url='dashboard-login')
 def manager(request):
         search = request.GET.get("search", '')
         if search == '':
@@ -28,7 +31,7 @@ def manager(request):
         return render(request, "dashboard/webpages/content/course/manager.html", context)
    
 
-
+@login_required(login_url='dashboard-login')
 def add(request):
         if request.method == "POST":
             form = AddForm(request.POST, request.FILES)
@@ -56,7 +59,7 @@ def add(request):
             return render(request, "dashboard/webpages/content/course/manager.html", context)
 
 
-
+@login_required(login_url='dashboard-login')
 def update(request, pk):
     course = Course.objects.get(id=pk, is_deleted=False)
     if not course:
@@ -87,7 +90,7 @@ def update(request, pk):
         "course_id": course.id,
     }
     return render(request, "dashboard/includes/modals/update_in_modal.html", context)
-
+@login_required(login_url='dashboard-login')
 def delete(request, pk):
 		course = Course.objects.get(id = pk, is_deleted=False)
 		course.is_deleted = True
@@ -97,7 +100,7 @@ def delete(request, pk):
 
 
 #subjects in course management
-
+@login_required(login_url='dashboard-login')
 def course_subjects_list(request,pk):
      context = {
          "title": "Subjects",
@@ -105,7 +108,7 @@ def course_subjects_list(request,pk):
      }
      return render(request,'dashboard/webpages/content/subject/manager.html',context)
 
-
+@login_required(login_url='dashboard-login')
 def course_detail_subject(request, course_id):
         draw = int(request.GET.get("draw", 1))
         start = int(request.GET.get("start", 0))
@@ -160,7 +163,7 @@ def course_detail_subject(request, course_id):
 
         return JsonResponse(response)
 
-
+@login_required(login_url='dashboard-login')
 def course_subject_add(request, course_id):
     try:
         course = Course.objects.get(id=course_id, is_deleted=False)
@@ -186,7 +189,7 @@ def course_subject_add(request, course_id):
     return render(request, "dashboard/webpages/content/subject/add.html",context)
 
 
-
+@login_required(login_url='dashboard-login')
 def course_subject_update(request, course_id, subject_id):
     try:
         course = Course.objects.get(id=course_id, is_deleted=False)
@@ -221,7 +224,7 @@ def course_subject_update(request, course_id, subject_id):
     return render(request, "dashboard/webpages/content/subject/update.html", context)
     
 
-
+@login_required(login_url='dashboard-login')
 def course_subject_delete(request, pk):
     try:
         subject = Subject.objects.get(id=pk, is_deleted=False)
@@ -237,7 +240,7 @@ def course_subject_delete(request, pk):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def course_subject_chapters_list(request, subject_id):
     context = {
         "title": "Chapters",
@@ -248,7 +251,7 @@ def course_subject_chapters_list(request, subject_id):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def subject_detail_chapter(request, pk):
     draw = int(request.GET.get("draw", 1))
     start = int(request.GET.get("start", 0))
@@ -304,7 +307,7 @@ def subject_detail_chapter(request, pk):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def subject_chapter_add(request, pk):
     try:
         subject = Subject.objects.get(id=pk, is_deleted=False)
@@ -331,7 +334,7 @@ def subject_chapter_add(request, pk):
     return render(request, "dashboard/webpages/content/chapter/add.html",context)
 
 
-
+@login_required(login_url='dashboard-login')
 def subject_chapter_update(request, chapter_id, subject_id):
     subject = get_object_or_404(Subject, id=subject_id, is_deleted=False)
     chapter = get_object_or_404(Chapter, id=chapter_id, subject=subject)
@@ -358,7 +361,7 @@ def subject_chapter_update(request, chapter_id, subject_id):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def subject_chapter_delete(request,chapter_id, subject_id):
     try:
         subject = Chapter.objects.get(id=chapter_id, is_deleted=False)
@@ -375,7 +378,7 @@ def subject_chapter_delete(request,chapter_id, subject_id):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def chapter_lesson_list(request,chapter_id):
     context = {
         "title": "Lessons",
@@ -383,7 +386,7 @@ def chapter_lesson_list(request,chapter_id):
     }
     return render(request,'dashboard/webpages/content/lesson/manager.html',context)
 
-
+@login_required(login_url='dashboard-login')
 def chapter_detail_lesson(request, pk):
     draw = int(request.GET.get("draw", 1))
     start = int(request.GET.get("start", 0))
@@ -466,7 +469,7 @@ def chapter_detail_lesson(request, pk):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def chapter_lesson_add(request,pk):
     try:
         chapter = Chapter.objects.get(id=pk, is_deleted=False)
@@ -528,7 +531,7 @@ def chapter_lesson_add(request,pk):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def chapter_lesson_update(request, chapter_id, lesson_id):
     
     chapter = get_object_or_404(Chapter, id=chapter_id, is_deleted=False)
@@ -590,7 +593,7 @@ def chapter_lesson_update(request, chapter_id, lesson_id):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def chapter_lesson_delete(request,chapter_id,lesson_id):
     lesson = get_object_or_404(Lesson, id=lesson_id)
     lesson.is_deleted = True
@@ -601,7 +604,7 @@ def chapter_lesson_delete(request,chapter_id,lesson_id):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def chapter_question_list (request,chapter_id):
     context={
         'chapter':chapter_id
@@ -609,7 +612,7 @@ def chapter_question_list (request,chapter_id):
     return render (request,'dashboard/webpages/content/lesson/lesson_question_manager.html',context )
 
 
-
+@login_required(login_url='dashboard-login')
 def chapter_detail_question(request,pk):
     draw = int(request.GET.get("draw", 1))
     start = int(request.GET.get("start", 0))
@@ -674,7 +677,7 @@ def chapter_detail_question(request,pk):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def chapter_question_add(request, pk):
     chapter=Chapter.objects.get(id=pk,is_deleted=False)
     
@@ -709,7 +712,7 @@ def chapter_question_add(request, pk):
 
 
 
-
+@login_required(login_url='dashboard-login')
 def chapter_question_update(request, chapter_id,question_id):
     question = get_object_or_404(Question, id=question_id)
     chapter = Chapter.objects.get(id=chapter_id,is_deleted=False)
@@ -741,7 +744,7 @@ def chapter_question_update(request, chapter_id,question_id):
 
     return render(request, 'dashboard/webpages/content/lesson/lesson_question_update.html', {'form': form, 'question': question})
 
-
+@login_required(login_url='dashboard-login')
 def chapter_question_delete(request, chapter_id, question_id):
     if request.method == 'POST':
         question = get_object_or_404(Question, id=question_id)
