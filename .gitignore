@@ -22,12 +22,10 @@ coverage.xml
 
 # Django
 media/
-# staticfiles/
 assets/
 course_images/
 uploads/
 pdf_notes/
-static/
 subject_images/
 chapter_images/
 lesson_images/
