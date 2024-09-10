@@ -4,6 +4,8 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Group,
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password
 from ckeditor.fields import RichTextField
+
+
 class MyUserManager(BaseUserManager):
     def _create_user(self, email, name, phone_number, district,  **extra_fields):
         if not email:
