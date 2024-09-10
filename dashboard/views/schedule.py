@@ -1,6 +1,5 @@
 
 from dashboard.views.imports import *
-from dashboard.models import *
 
 @login_required(login_url='dashboard-login')
 def manager(request):

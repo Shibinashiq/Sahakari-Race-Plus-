@@ -1,5 +1,4 @@
 
-from dashboard.models import *
 
 from dashboard.views.imports import *
 
