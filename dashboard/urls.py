@@ -204,7 +204,7 @@ urlpatterns = [
     path("staff/list/", staff.list, name="dashboard-staff-list"),
     path("staff/add/", staff.add, name="dashboard-staff-add"),
     path("staff/update/<int:pk>/", staff.update, name="dashboard-staff-update"),
-    path("staff/disable/", staff.disable, name="dashboard-staff-disable"),
+    path("staff/disable/<int:pk>/", staff.disable, name="dashboard-staff-disable"),
     path("staff/password/<int:pk>/", staff.set_password, name="dashboard-staff-password-set"),
 
     

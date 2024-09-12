@@ -52,7 +52,8 @@ def list(request):
             "id": user.id,
             "username": user.name if user.name else "N/A",
             "phone_number": user.phone_number if user.phone_number else "N/A",
-            "created": timezone.localtime(user.created).strftime('%Y-%m-%d %H:%M:%S')
+            "created": timezone.localtime(user.created).strftime('%Y-%m-%d %H:%M:%S'),
+            "is_disabled": user.is_active 
         })
 
     response = {
@@ -129,15 +130,20 @@ def update(request, pk):
 
 @login_required(login_url='dashboard-login')
 def disable(request,pk):
-    if request.method == "POST":
+    if request.method == "GET":
         customer = get_object_or_404(CustomUser, pk=pk)
-        customer.is_deleted = True
+        if customer.is_active == False:
+            customer.is_active = True
+            messages.success(request, "Staff activated successfully!")
+        else:
+            customer.is_active = False
+            messages.success(request, "Staff disabled successfully!")
         customer.save()
-        messages.success(request, "Customer deleted successfully!")
-        return redirect('dashboard-customer')
+      
+        return redirect('dashboard-staff-manager')
     else:
         messages.error(request, "Invalid request .")
-        return redirect('dashboard-customer')
+        return redirect('dashboard-staff-manager')
 
 
 
@@ -150,7 +156,7 @@ def set_password(request, pk):
         if form.is_valid():
             form.save(user)
             messages.success(request, 'Password successfully updated!')
-            return redirect('dashboard-customer')
+            return redirect('dashboard-staff-manager')
     else:
         form = PasswordSettingForm(user_id=pk)
 

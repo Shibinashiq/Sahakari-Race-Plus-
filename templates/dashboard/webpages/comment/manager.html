@@ -198,10 +198,6 @@
                         var editUrl = "{% url 'dashboard-staff-update' pk='0' %}".replace('0', data);
                         var deleteUrl = "{% url 'dashboard-customer-delete' pk='0' %}".replace('0', data);
                         var passwordUrl = "{% url 'dashboard-staff-password-set' pk='0' %}".replace('0', data);
-                        var disableUrl = "{% url 'dashboard-staff-disable' pk='0' %}".replace('0', data);
-        
-                        var disableClass = row.is_disabled ?  'text-info' :'text-danger'; 
-
                        
                         return `
                             <a href="${editUrl}" class="btn-update" data-bs-toggle="tooltip" data-bs-trigger="hover"
@@ -212,10 +208,6 @@
                                 data-change-url="">
                                 <i class="mdi mdi-key"></i>
                                 </a>
-                              <a href="${disableUrl}" class="${disableClass} d-inline-block changePasswordClass" data-bs-toggle="tooltip" data-bs-placement="top"
-                                    data-change-url="">
-                                        <i class="mdi mdi-toggle-switch-off"></i>
-                                    </a>
                               <a href="" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
                        class="text-danger d-inline-block deleteConfirmModalClass" data-id="${data}"
                        data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
