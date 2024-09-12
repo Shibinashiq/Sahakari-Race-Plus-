@@ -133,7 +133,6 @@ def update(request, pk, level_id):
 
 @login_required(login_url='dashboard-login')
 def delete(request, pk):
-    print("hiiiiii")
     level = get_object_or_404(Level, id=pk)
 
     if request.method == "POST":

@@ -272,7 +272,6 @@ def subscription_add(request, pk):
 @login_required(login_url='dashboard-login')
 def subscription_delete(request,pk):
     if request.method == 'POST':
-        print("hiiiiiiiiiii")
         subscription= Subscription.objects.get(id=pk)
         user_id=subscription.user.id
         subscription.is_deleted = True

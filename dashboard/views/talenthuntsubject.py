@@ -144,7 +144,6 @@ def update(request, pk):
 
 @login_required(login_url='dashboard-login')
 def delete(request, pk):
-    print("hiiiiiiiii")
     if request.method == "POST":
         talenthuntsubject = get_object_or_404(TalentHuntSubject, pk=pk, is_deleted=False)
 

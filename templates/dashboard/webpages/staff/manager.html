@@ -171,8 +171,7 @@
                 {
                     "data": "username",
                     "render": function (data, type, full, meta) {
-                        var userDetailUrl = "{% url 'dashboard-user-detail' 0 %}".replace('0', full.id);
-                        return '<a href="' + userDetailUrl + '">' + data + '</a>';
+                        return data;
                     }
                 }
                 ,

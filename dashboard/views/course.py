@@ -174,7 +174,6 @@ def course_subject_add(request, course_id):
     if request.method == 'POST':
         form = SubjectForm(request.POST, request.FILES)
         if form.is_valid():
-            print("Course ID:", course_id)
             subject = form.save(commit=False)
             subject.course = course  
             subject.save()
