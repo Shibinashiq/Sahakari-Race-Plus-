@@ -107,10 +107,6 @@ def add(request):
         if form.is_valid():
             customer = form.save(commit=False)
             customer.save()
-           
-
-            
-
             messages.success(request, "Customer added successfully!")
             return redirect('dashboard-customer')
         else:
@@ -175,17 +171,20 @@ def delete(request,pk):
         return redirect('dashboard-customer')
     
 
-
+from django.db.models import Count
     
 @login_required(login_url='dashboard-login')
 def detail(request, pk):
     customer = get_object_or_404(CustomUser, pk=pk)
     subscriptions = Subscription.objects.filter(user=customer, is_deleted=False).prefetch_related('batch')
+    unique_batches_count = subscriptions.aggregate(
+        total_batches=Count('batch', distinct=True)
+    )['total_batches']
     context = {
         "title": "Customer Detail",
         "customer": customer,
         "subscriptions": subscriptions,
-        "sub_count": subscriptions.count()
+        "sub_count":unique_batches_count
     }
     return render (request,"dashboard/webpages/customer/detail.html",context)
     
