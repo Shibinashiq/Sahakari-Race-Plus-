@@ -15,7 +15,7 @@ def list(request):
     order_column = int(request.GET.get("order[0][column]", 0))
     order_dir = request.GET.get("order[0][dir]", "desc")
 
-    users = CustomUser.objects.filter(is_deleted=False)
+    users = CustomUser.objects.filter(is_deleted=False,is_staff=False)
 
     order_columns = {
         0: 'id',
@@ -185,6 +185,7 @@ def detail(request, pk):
         "title": "Customer Detail",
         "customer": customer,
         "subscriptions": subscriptions,
+        "sub_count": subscriptions.count()
     }
     return render (request,"dashboard/webpages/customer/detail.html",context)
     
@@ -231,36 +232,40 @@ def subscription_customer_update(request,pk):
 
 
 @login_required(login_url='dashboard-login')
-def subscription_add(request,pk):
-    if request.method == "POST":
-        form = SubscriptionCustomerForm(request.POST, request.FILES)
-        if form.is_valid():
-            customer = form.save(commit=False)
-            batch=form.cleaned_data.get('batch')
-            customer= CustomUser.objects.get(id=pk,is_deleted=False)
-            
-            subscription = Subscription.objects.create(user=customer) 
-            if batch:
-                subscription.batch.add(batch)
-            customer.save()
+def subscription_add(request, pk):
+    customer = CustomUser.objects.get(id=pk, is_deleted=False)
 
-            messages.success(request, "Course added successfully!")
-            return redirect('dashboard-user-detail',pk)
+    if request.method == "POST":
+        form = SubscriptionCustomerForm(request.POST, request.FILES, customer=customer)
+        if form.is_valid():
+            batch = form.cleaned_data.get('batch')
+
+            # Create or get existing subscription
+            subscription, created = Subscription.objects.get_or_create(user=customer,is_deleted=False)
+            
+            if batch:
+                if subscription.batch.filter(id=batch.id).exists():
+                    messages.error(request, "This batch is already added to the subscription.")
+                else:
+                    subscription.batch.add(batch)
+                    messages.success(request, "Subscription added successfully!")
+            
+            subscription.save()
+            return redirect('dashboard-user-detail', pk)
         else:
             context = {
                 "form": form,
-                 "pk":pk
+                "pk": pk
             }
             return render(request, "dashboard/webpages/customer/batch_add.html", context)
     else:
-        form = SubscriptionCustomerForm()  
+        form = SubscriptionCustomerForm(customer=customer)
         context = {
             "title": "Add Batch",
             "form": form,
-            "pk":pk
+            "pk": pk
         }
         return render(request, "dashboard/webpages/customer/batch_add.html", context)
-    
 
 
 

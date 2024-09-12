@@ -309,9 +309,10 @@ def delete_customer(request, customer_id,batch_id):
         customer = get_object_or_404(CustomUser, pk=customer_id)
         customer.is_deleted = True
         customer.save()
-        messages.success(request, "Customer deleted successfully!")
+        messages.success(request, " deleted successfully!")
         return redirect('dashboard-batch-subscripton-manager',pk=batch_id)
     else:
         messages.error(request, "Invalid request .")
         return redirect('dashboard-batch-subscripton-manager',pk=batch_id)
     
+

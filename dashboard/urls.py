@@ -24,6 +24,7 @@ from dashboard.views import (
    level,
    talenthuntsubject,
    schedule,
+   staff
 )
 
 urlpatterns = [
@@ -91,8 +92,8 @@ urlpatterns = [
     path("chapter/question/detail/<int:pk>/", course.chapter_detail_question, name="dashboard-chapter-question-detail"),
     path("chapter/question/add/<int:pk>/", course.chapter_question_add, name="dashboard-chapter-question-add"),  
 
-    path("chapter/question/update/<int:chapter_id>/<int:question_id>/", course.chapter_question_update, name="dashboard-chapter-question-update"),
-    path("chapter/question/delete/<int:chapter_id>/<int:question_id>/", course.chapter_question_delete, name="dashboard-chapter-question-delete"),
+    path("chapter/question/update/<int:question_id>/<int:chapter_id>/", course.chapter_question_update, name="dashboard-chapter-question-update"),
+    path("chapter/question/delete/<int:question_id>/<int:chapter_id>/", course.chapter_question_delete, name="dashboard-chapter-question-delete"),
     # ==================================== Subject Management ============================================= #
 
     path("subject/", subject.manager, name="dashboard-subject"),
@@ -197,6 +198,14 @@ urlpatterns = [
     path("schedule/update/<int:pk>/", schedule.update, name="dashboard-schedule-update"),
     path("schedule/delete/<int:pk>/", schedule.delete, name="dashboard-schedule-delete"),
 
+
+ # ==================================== Staff Management ============================================= #
+    path("staff/", staff.manager, name="dashboard-staff-manager"),
+    path("staff/list/", staff.list, name="dashboard-staff-list"),
+    path("staff/add/", staff.add, name="dashboard-staff-add"),
+    path("staff/update/<int:pk>/", staff.update, name="dashboard-staff-update"),
+    path("staff/disable/", staff.disable, name="dashboard-staff-disable"),
+    path("staff/password/<int:pk>/", staff.set_password, name="dashboard-staff-password-set"),
 
     
 ]

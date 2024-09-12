@@ -57,7 +57,7 @@
 
 													</div>
 													<div class="flex-grow-1 ms-3">
-														<h2 class="mb-0"><span class="counter-value" data-target="{{ sub_count }}">{{ sub_count }}</span></h2>
+														<h2 class="mb-0"><span class="counter-value" data-target="{{ total_number_orders }}">{{ total_number_orders }}</span></h2>
 													</div>
 												</div>
 											</div>
@@ -66,24 +66,26 @@
 										</div>
 										<div class="col col-lg border-end">
 											<div class="py-4 px-3">
-												<h5 class="text-muted text-uppercase fs-13">Recent Exam mark
-													
+												<h5 class="text-muted text-uppercase fs-13">Total Due Amount 
+													{% if total_due_amount > 100 %}
+													<i class="ri-arrow-up-circle-line text-danger fs-18 float-end align-middle"></i>
+														
+													{% elif total_due_amount < 100 %}
+													<i class="ri-arrow-down-circle-line text-success fs-18 float-end align-middle"></i>
+													{% endif %}
 												</h5>
 												<div class="d-flex align-items-center">
 													<div class="flex-shrink-0">
-														<i class="ri-pencil-line display-6 text-muted"></i>
-
-
-
+														<i class="ri-exchange-dollar-line display-6 text-muted"></i>
 													</div>
 													<div class="flex-grow-1 ms-3">
-														<h2 class="mb-0"><span class="counter-value" data-target="{{ total_due_amount }}">{{ total_due_amount }}</span> </h2>
+														<h2 class="mb-0"><span class="counter-value" data-target="{{ total_due_amount }}">{{ total_due_amount }}</span> AED</h2>
 													</div>
 												</div>
 											</div>
 										</div>
 										
-										<!-- <div class="col col-lg border-end">
+										<div class="col col-lg border-end">
 											<div class="mt-3 mt-md-0 py-4 px-3">
 												<h5 class="text-muted text-uppercase fs-13"> LTV
 													{% if total_ltv is not None %}
@@ -105,17 +107,20 @@
 													</div>
 												</div>
 											</div>
-										</div> -->
+										</div>
 										
 										<div class="col col-lg border-end">
 											<div class="mt-3 mt-lg-0 py-4 px-3">
-												<h5 class="text-muted text-uppercase fs-13">Attended exams
-													
+												<h5 class="text-muted text-uppercase fs-13">Total Return Jar
+													{% if total_return_jar is not None and total_return_jar >= 2 %}
+														<i class="ri-arrow-up-circle-line text-danger fs-18 float-end align-middle"></i>
+													{% else %}
+														<i class="ri-arrow-up-circle-line text-muted fs-18 float-end align-middle"></i>
+													{% endif %}
 												</h5>
 												<div class="d-flex align-items-center">
 													<div class="flex-shrink-0">
-														<i class="ri-check-line display-6 text-muted"></i>
-
+														<i class="ri-drop-line display-6 text-muted"></i>
 													</div>
 													<div class="flex-grow-1 ms-3">
 														<h2 class="mb-0"><span class="counter-value" data-target="{{ total_return_jar|default_if_none:"0" }}">{{ total_return_jar|default_if_none:"0" }}</span></h2>
@@ -124,9 +129,9 @@
 											</div>
 										</div>
 										
-										<!-- <div class="col col-lg">
+										<div class="col col-lg">
 											<div class="mt-3 mt-lg-0 py-4 px-3">
-												<h5 class="text-muted text-uppercase fs-13">average order days
+												<h5 class="text-muted text-uppercase fs-13">average order days<i class="ri-arrow-down-circle-line text-danger fs-18 float-end align-middle"></i>
 												</h5>
 												<div class="d-flex align-items-center">
 													<div class="flex-shrink-0">
@@ -137,7 +142,7 @@
 													</div>
 												</div>
 											</div>
-										</div> -->
+										</div>
 									</div>
 								</div>
 							</div>
@@ -219,7 +224,7 @@
 																<td class="text-muted">{{ customer.email }}</td>
 															</tr>
 															<tr>
-																<th class="ps-0 text-uppercase" scope="row">Joined</th>
+																<th class="ps-0 text-uppercase" scope="row">Created</th>
 																<td class="text-muted">{{ customer.created }}</td>
 															</tr>
 														</tbody>

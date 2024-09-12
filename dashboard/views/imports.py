@@ -125,3 +125,4 @@ from django.utils import timezone
 from django.contrib.auth.hashers import make_password
 from ckeditor.fields import RichTextField
 
+from dashboard.forms.staff import StaffForm,PasswordSettingForm

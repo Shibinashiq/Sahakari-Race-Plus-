@@ -42,12 +42,12 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                            <h4 class="mb-sm-0">Update Staff</h4>
+                            <h4 class="mb-sm-0">Update Subject</h4>
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="/" class="text-primary">Admin</a></li>
                                 <li class="breadcrumb-item"><a href=""
-                                                               class="text-primary">Staff</a></li>
+                                                               class="text-primary">Subject</a></li>
                                     <li class="breadcrumb-item active">Update</li>
                             </ol>
                         </div>
@@ -82,39 +82,32 @@
                                 </div>
                                 <div class="card">
                                     <div class="card-header">
-                                        <h5 class="card-title">Add Staff</h5>
+                                        <h5 class="card-title">Add Customer</h5>
                                     </div>
                                     <div class="card-body">
                                         <form method="POST" enctype="multipart/form-data" >
                                             {% csrf_token %}
                                             <div class="row">
-                                                <div class="col-md-6">
+                                                <div class="col-md-4">
                                                     <div class="form-group">
                                                         {{ form.name|as_crispy_field }}
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6">
+                                                <div class="col-md-4">
                                                     <div class="form-group">
-                                                        {{ form.email|as_crispy_field }}
+                                                        {{ form.phone_number|as_crispy_field }}
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        {{ form.password|as_crispy_field }}
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        {{ form.phone_number|as_crispy_field }}
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        {{ form.district|as_crispy_field }}
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        {{ form.batches|as_crispy_field }}
-                                                    </div>
-                                                </div>
+                                                
+                                                
                                             </div>
                                             <div class="form-group">
                                                 <button type="submit" class="btn btn-primary mt-2">Submit</button>

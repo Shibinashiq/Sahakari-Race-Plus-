@@ -66,7 +66,8 @@ class CustomUser(AbstractBaseUser):
     REQUIRED_FIELDS = ['name', 'phone_number', 'district']
 
     def __str__(self):
-        return self.email
+        return self.name or "No name"
+
 
     def save(self, *args, **kwargs):
         if self.password and not self.password.startswith(('pbkdf2_sha256$', 'bcrypt$', 'argon2')):

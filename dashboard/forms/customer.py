@@ -47,7 +47,13 @@ class CustomerForm(forms.ModelForm):
 
     def clean_phone_number(self):
         phone_number = self.cleaned_data.get('phone_number')
-        if CustomUser.objects.exclude(id=self.instance.id).filter(phone_number=phone_number,is_deleted=False).exists():
+        if not phone_number.isdigit():
+            raise forms.ValidationError("Phone number must contain only digits.")
+        if len(phone_number) != 10:
+            raise forms.ValidationError("Phone number must be exactly 10 digits.")
+        if CustomUser.objects.exclude(id=self.instance.id if self.instance else None).filter(
+            phone_number=phone_number, is_deleted=False
+        ).exists():
             raise forms.ValidationError("A user with this phone number already exists.")
         return phone_number
 
@@ -67,23 +73,22 @@ class CustomerForm(forms.ModelForm):
         return instance
     
 
-from django import forms
-
 class SubscriptionCustomerForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        customer = kwargs.pop('customer', None)  
+        super().__init__(*args, **kwargs)
+
+        if customer:
+            subscribed_batches = Subscription.objects.filter(user=customer,is_deleted=False).values_list('batch', flat=True)
+            self.fields['batch'].queryset = Batch.objects.filter(is_deleted=False).exclude(id__in=subscribed_batches)
+        else:
+            self.fields['batch'].queryset = Batch.objects.filter(is_deleted=False)
+
     batch = forms.ModelChoiceField(
-        queryset=Batch.objects.filter(is_deleted=False),
+        queryset=Batch.objects.none(), 
         required=True,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 
-    # No need to redefine queryset again here if it's already done in field declaration
-    def save(self, commit=True):
-        # Since this is a non-ModelForm form, 'super().save' doesn't apply
-        # You'll need to manage the saving logic depending on your use case
-        batch = self.cleaned_data.get('batch')
-        
-        # Handle instance saving or return
-        if commit:
-            # Perform any save logic, if necessary, related to 'batch'
-            pass
-        return batch
+
+

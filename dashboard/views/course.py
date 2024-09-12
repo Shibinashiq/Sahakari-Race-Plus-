@@ -1,6 +1,15 @@
-
-from dashboard.views.imports import *
-
+from django.shortcuts import redirect, render , get_object_or_404
+from dashboard.models import *
+from dashboard.forms.content.course import AddForm
+from dashboard.forms.content.subject import SubjectForm
+from dashboard.forms.content.chapter import ChapterForm
+from dashboard.forms.content.lesson import LessonForm
+from dashboard.forms.content.question import QuestionForm
+from django.contrib import auth, messages
+from django.http import JsonResponse
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 #course management
 @login_required(login_url='dashboard-login')
 def manager(request):
@@ -152,9 +161,11 @@ def course_detail_subject(request, course_id):
 
         return JsonResponse(response)
 
+
 @login_required(login_url='dashboard-login')
 def course_subject_add(request, course_id):
     try:
+        
         course = Course.objects.get(id=course_id, is_deleted=False)
     except Course.DoesNotExist:
         messages.error(request, "Course not found.")
@@ -163,6 +174,7 @@ def course_subject_add(request, course_id):
     if request.method == 'POST':
         form = SubjectForm(request.POST, request.FILES)
         if form.is_valid():
+            print("Course ID:", course_id)
             subject = form.save(commit=False)
             subject.course = course  
             subject.save()
@@ -702,7 +714,7 @@ def chapter_question_add(request, pk):
 
 
 @login_required(login_url='dashboard-login')
-def chapter_question_update(request, chapter_id,question_id):
+def chapter_question_update(request,question_id,chapter_id):
     question = get_object_or_404(Question, id=question_id)
     chapter = Chapter.objects.get(id=chapter_id,is_deleted=False)
     
@@ -726,15 +738,24 @@ def chapter_question_update(request, chapter_id,question_id):
             messages.success(request, "Question updated successfully.")
             return redirect('dashboard-chapter-question-list', chapter_id=chapter.id)  
         else:
-            return render(request, 'dashboard/webpages/content/lesson/lesson_question_update.html', {'form': form, 'question': question})
+            return render(request, 'dashboard/webpages/content/lesson/lesson_question_update.html', { 'form': form,
+        'question': question,
+        'options': question.options,
+        'answers': question.right_answers})
 
     else:
         form = QuestionForm(instance=question)  
 
-    return render(request, 'dashboard/webpages/content/lesson/lesson_question_update.html', {'form': form, 'question': question})
+    return render(request, 'dashboard/webpages/content/lesson/lesson_question_update.html', {'form': form,
+        'question': question,
+        'options': question.options,
+        'answers': question.right_answers})
+
+
+
 
 @login_required(login_url='dashboard-login')
-def chapter_question_delete(request, chapter_id, question_id):
+def chapter_question_delete(request,question_id, chapter_id):
     if request.method == 'POST':
         question = get_object_or_404(Question, id=question_id)
         question.is_deleted = True
