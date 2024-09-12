@@ -1,6 +1,5 @@
 from django import forms
-from dashboard.models import CustomUser ,Batch ,Subscription
-from django.utils import timezone
+from dashboard.views.imports import *
 class CustomerForm(forms.ModelForm):
     batches = forms.ModelMultipleChoiceField(
         queryset=Batch.objects.filter(is_deleted=False, batch_expiry__gte=timezone.now().date()),
@@ -59,10 +58,32 @@ class CustomerForm(forms.ModelForm):
 
         selected_batches = self.cleaned_data.get('batches')
 
-        Subscription.objects.filter(user=instance).delete()
+        # Subscription.objects.filter(user=instance).delete()
 
         if selected_batches:
             subscription = Subscription.objects.create(user=instance) 
             subscription.batch.add(*selected_batches)  
 
         return instance
+    
+
+from django import forms
+
+class SubscriptionCustomerForm(forms.Form):
+    batch = forms.ModelChoiceField(
+        queryset=Batch.objects.filter(is_deleted=False),
+        required=True,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+    # No need to redefine queryset again here if it's already done in field declaration
+    def save(self, commit=True):
+        # Since this is a non-ModelForm form, 'super().save' doesn't apply
+        # You'll need to manage the saving logic depending on your use case
+        batch = self.cleaned_data.get('batch')
+        
+        # Handle instance saving or return
+        if commit:
+            # Perform any save logic, if necessary, related to 'batch'
+            pass
+        return batch

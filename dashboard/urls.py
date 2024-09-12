@@ -124,7 +124,9 @@ urlpatterns = [
     path("customer/update/<int:pk>/", customer.update, name="dashboard-customer-update"),
     path("customer/delete/<int:pk>/", customer.delete, name="dashboard-customer-delete"),
     path("customer/detail/<int:pk>/", customer.detail, name="dashboard-user-detail"),
-    path("ssubscription/customer/update/<int:pk>/", customer.subscription_customer_update, name="dashboard-subscription-customer-update"),
+    path("subscription/customer/update/<int:pk>/", customer.subscription_customer_update, name="dashboard-subscription-customer-update"),
+    path("customer/subscription/add/<int:pk>/", customer.subscription_add, name="dashboard-customer-subscription-add"),
+    path("customer/subscription/delete/<int:pk>/", customer.subscription_delete, name="dashboard-customer-subscription-delete"),
 
     # ==================================== Exam Management ============================================= #
    

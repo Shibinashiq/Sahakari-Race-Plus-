@@ -8,9 +8,9 @@ from dashboard.forms.batch import BatchForm ,BatchCustomerForm
 from django.db.models import Q
 from django.utils import timezone
 from django.db.models import Q ,Prefetch
-from dashboard.forms.customer import CustomerForm
+from dashboard.forms.customer import CustomerForm ,SubscriptionCustomerForm
 from django.contrib.auth.decorators import login_required
-
+from django import forms    
 from django.shortcuts import redirect, render , get_object_or_404
 from dashboard.models import *
 from django.contrib import auth, messages

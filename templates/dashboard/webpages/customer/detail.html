@@ -267,7 +267,7 @@
 														class="card-title m-0 d-flex align-middle align-items-center
                                                 align-content-center">
 													Subscribed Course</h5>
-												<a href="">
+												<a href="{% url 'dashboard-customer-subscription-add' pk=customer.id%}">
 													<button class="btn btn-soft-success">
 														<i class="mdi mdi-plus-thick"></i> Add Subscription
 													</button>
@@ -302,18 +302,18 @@
 															<td class="align-middle">{{ batch.batch_price }}</td>
 															<td class="align-middle">{{ sub.created }}</td>
 															<td class="align-middle">
-																<a href="" class="d-inline-block btn-update custom-btn" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
+																<!-- <a href="" class="d-inline-block btn-update custom-btn" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
 																	<i class="mdi mdi-pencil"></i>
-																</a>
-																<a href="" class="text-danger d-inline-block deleteConfirmModalClass" 
-																	data-bs-toggle="modal" 
-																	data-bs-target="#deleteConfirmModal" 
-																	data-delete-url="" 
-																	data-value="{{ sub.id }}" 
-																	data-bs-toggle="tooltip" 
-																	data-bs-trigger="hover" 
-																	data-bs-placement="top" 
-																	title="Remove">
+																</a> -->
+																<a href="#" class="text-danger d-inline-block deleteConfirmModalClass"
+																data-bs-toggle="modal"
+																data-bs-target="#deleteConfirmModal"
+																data-delete-url="{% url 'dashboard-customer-subscription-delete' pk=sub.id %}"
+																data-value="{{ sub.id }}"
+																data-bs-toggle="tooltip"
+																data-bs-trigger="hover"
+																data-bs-placement="top"
+																title="Remove">
 																	<i class="mdi mdi-delete fs-16"></i>
 																</a>
 															</td>
@@ -396,8 +396,7 @@
 
 			
 			{% include "dashboard/includes/modals/update.html" with title1="" title2="" %}
-			{% include "dashboard/includes/modals/delete.html" with title1="this Customer" title2="customer" %}
-			{% include "dashboard/includes/modals/delete.html" with title1="this Customer" title2="customer" %}
+			{% include "dashboard/includes/modals/delete.html" with title1="" title2="" %}
 
 		</div>
 	</div>
@@ -427,5 +426,30 @@
 </script>
 
 
+
+<script>
+$(document).on('click', '.deleteConfirmModalClass', function () {
+    var deleteUrl = $(this).data('delete-url');
+    $('#delete-record').data('delete-url', deleteUrl); 
+});
+
+$('#delete-record').click(function () {
+    var deleteUrl = $(this).data('delete-url');
+
+    $.ajax({
+        url: deleteUrl,
+        type: 'POST',
+        data: {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+        },
+        success: function (data) {
+            window.location.reload(); 
+        },
+        error: function(xhr, status, error) {
+        }
+    });
+});
+
+</script>
 
 {% endblock script %}

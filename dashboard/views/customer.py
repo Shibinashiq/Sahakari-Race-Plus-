@@ -225,3 +225,56 @@ def subscription_customer_update(request,pk):
         }
         return render(request, "dashboard/webpages/customer/update.html", context)
     
+
+
+
+
+
+@login_required(login_url='dashboard-login')
+def subscription_add(request,pk):
+    if request.method == "POST":
+        form = SubscriptionCustomerForm(request.POST, request.FILES)
+        if form.is_valid():
+            customer = form.save(commit=False)
+            batch=form.cleaned_data.get('batch')
+            customer= CustomUser.objects.get(id=pk,is_deleted=False)
+            
+            subscription = Subscription.objects.create(user=customer) 
+            if batch:
+                subscription.batch.add(batch)
+            customer.save()
+
+            messages.success(request, "Course added successfully!")
+            return redirect('dashboard-user-detail',pk)
+        else:
+            context = {
+                "form": form,
+                 "pk":pk
+            }
+            return render(request, "dashboard/webpages/customer/batch_add.html", context)
+    else:
+        form = SubscriptionCustomerForm()  
+        context = {
+            "title": "Add Batch",
+            "form": form,
+            "pk":pk
+        }
+        return render(request, "dashboard/webpages/customer/batch_add.html", context)
+    
+
+
+
+
+@login_required(login_url='dashboard-login')
+def subscription_delete(request,pk):
+    if request.method == 'POST':
+        print("hiiiiiiiiiii")
+        subscription= Subscription.objects.get(id=pk)
+        user_id=subscription.user.id
+        subscription.is_deleted = True
+        subscription.save()
+        messages.success(request, " deleted successfully!")
+        return redirect('dashboard-user-detail',pk=user_id)
+    else:
+        messages.success(request, " Action denied!")
+        return redirect('dashboard-user-detail',pk=user_id)
