@@ -137,7 +137,7 @@ def update(request, pk):
 
             batches = form.cleaned_data.get('batches')
             subscription = Subscription.objects.get(user=updated_customer)
-            subscription.batch  .set(batches)  
+            subscription.batch .set(batches)  
             subscription.save()
 
             messages.success(request, "Customer updated successfully!")
