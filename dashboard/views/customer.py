@@ -15,7 +15,7 @@ def list(request):
     order_column = int(request.GET.get("order[0][column]", 0))
     order_dir = request.GET.get("order[0][dir]", "desc")
 
-    users = CustomUser.objects.filter(is_deleted=False,is_staff=False)
+    users = CustomUser.objects.filter(is_deleted=False,is_staff=False,is_superuser=False)
 
     order_columns = {
         0: 'id',
@@ -125,7 +125,6 @@ def add(request):
 
 
 
-
 @login_required(login_url='dashboard-login')
 def update(request, pk):
     customer = get_object_or_404(CustomUser, pk=pk)
@@ -136,8 +135,19 @@ def update(request, pk):
             updated_customer.save()
 
             batches = form.cleaned_data.get('batches')
-            subscription = Subscription.objects.get(user=updated_customer)
-            subscription.batch .set(batches)  
+
+            subscriptions = Subscription.objects.filter(user=updated_customer, is_deleted=False)
+
+            if subscriptions.exists():
+                subscription = subscriptions.first()
+                subscription.batch.set(batches)
+                
+                subscriptions.exclude(id=subscription.id).delete()
+
+            else:
+                subscription = Subscription.objects.create(user=updated_customer)
+                subscription.batch.add(*batches)
+
             subscription.save()
 
             messages.success(request, "Customer updated successfully!")
@@ -155,7 +165,7 @@ def update(request, pk):
             "form": form,
         }
         return render(request, "dashboard/webpages/customer/update.html", context)
-    
+
 
 
 @login_required(login_url='dashboard-login')
