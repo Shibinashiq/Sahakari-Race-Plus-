@@ -39,7 +39,6 @@ from django.core.paginator import Paginator
 from dashboard.models import CustomUser
 from dashboard.forms.customer import CustomerForm
 from django.db.models import Q ,Prefetch
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render , get_object_or_404
 from dashboard.models import *
 from django.contrib import  messages
@@ -49,10 +48,8 @@ from django.db.models import Q
 from django.http import JsonResponse
 import json
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from dashboard.models import *
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render , get_object_or_404
 from dashboard.models import *
 from django.contrib import auth, messages
@@ -126,3 +123,4 @@ from django.contrib.auth.hashers import make_password
 from ckeditor.fields import RichTextField
 
 from dashboard.forms.staff import StaffForm,PasswordSettingForm
+from django.contrib.auth import authenticate, login as auth_login
