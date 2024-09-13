@@ -100,6 +100,7 @@
                                                     <th class="align-middle">#</th>
                                                     <th class="align-middle">Name</th>
                                                     <th class="align-middle">phone</th>
+                                                    <th class="align-middle">status</th>
                                                     <th class="align-middle">Created</th>
                                                     <th class="align-middle">Actions</th>
                                                 </tr>
@@ -184,6 +185,18 @@
                         return data;
                     }
                 },
+                {
+                "data": "is_disabled",
+                "render": function (data, type, full, meta) {
+                    if (data === true) {
+                        return '<span style="color: green;">Active</span>';
+                       
+                    } else {
+                        return '<span style="color: red;">Not Active</span>';
+                      
+                    }
+                }
+            },
                  
                 {
                     "data": "created",
