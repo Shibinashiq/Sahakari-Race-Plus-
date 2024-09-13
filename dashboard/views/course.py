@@ -74,7 +74,7 @@ def update(request, pk):
             course.save()
 
            
-
+            messages.success(request, "Course updated successfully!")
             return redirect('dashboard-course')
         else:
             messages.error(request, 'Please correct the errors below.')
