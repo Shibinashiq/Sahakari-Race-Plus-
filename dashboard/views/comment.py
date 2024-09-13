@@ -40,27 +40,25 @@ def list(request):
 
     data = []
     for comment in page_obj:
-        # Collect video information if it exists
         video_data = {
             "video_url": comment.video.url if comment.video and comment.video.url else "N/A",
             "video_title": comment.video.title if comment.video and comment.video.title else "N/A",
             "video_is_free": comment.video.is_free if comment.video else False
         } if comment.video else None
 
-        # Collect PDF note information if it exists
         pdf_note_data = {
             "pdf_title": comment.pdf_note.title if comment.pdf_note and comment.pdf_note.title else "N/A",
             "pdf_is_free": comment.pdf_note.is_free if comment.pdf_note else False,
             "pdf_file_url": comment.pdf_note.file.url if comment.pdf_note and comment.pdf_note.file else "N/A"
         } if comment.pdf_note else None
 
-        # Add comment and related data
         data.append({
             "id": comment.id,
             "user": comment.user.name if comment.user.name else "N/A",
+            "customer_id": comment.user.id, 
             "content": comment.content,
-            "video": video_data,  # Include video data
-            "pdf_note": pdf_note_data,  # Include PDF note data
+            "video": video_data,  
+            "pdf_note": pdf_note_data, 
             "created": timezone.localtime(comment.created).strftime('%Y-%m-%d %H:%M:%S'),
         })
 

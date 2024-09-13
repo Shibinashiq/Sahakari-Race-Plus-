@@ -162,77 +162,80 @@
                 },
             },
             "columns": [
-    {
-        "data": "id",
-        "render": function (data, type, full, meta) {
-            return data;
-        }
-    },
-    {
-        "data": "user",
-        "render": function (data, type, full, meta) {
-            return data;
-        }
-    },
-    {
-        "data": "content",
-        "render": function (data, type, full, meta) {
-            return data;
-        }
-    },
-    {
-        "data": "video",
-        "render": function (data, type, row, meta) {
-            var videoHtml = '';
-            if (data) {  // Check if video data exists
-                videoHtml += '<div><strong>Title:</strong> ' + data.video_title + '<br>';
-                videoHtml += '<strong>URL:</strong> ' + (data.video_url !== 'N/A' ? '<a href="' + data.video_url + '">Watch</a>' : 'N/A') + '<br>';
-                videoHtml += '<strong>Free:</strong> ' + (data.video_is_free ? 'Yes' : 'No') + '</div>';
-            } else {
-                videoHtml = 'No videos available';
-            }
-            return videoHtml;
-        }
-    },
-    {
-        "data": "pdf_note",
-        "render": function (data, type, row, meta) {
-            var pdfHtml = '';
-            if (data) {  // Check if PDF note data exists
-                pdfHtml += '<div><strong>Title:</strong> ' + data.pdf_title + '<br>';
-                
-                var fileLink = data.pdf_file_url !== 'N/A' ? '<a href="' + data.pdf_file_url + '" target="_blank">View</a>' : 'N/A';
-                pdfHtml += '<strong>File:</strong> ' + fileLink + '<br>';
-                
-                pdfHtml += '<strong>Free:</strong> ' + (data.pdf_is_free ? 'Yes' : 'No') + '</div>';
-            } else {
-                pdfHtml = 'No PDFs available';
-            }
-            return pdfHtml;
-        }
-    },
-    {
-        "data": "created",
-        "render": function (data, type, full, meta) {
-            return data;
-        }
-    },
-    {
-        "data": "id",
-        "render": function (data, type, row, meta) {
-            var deleteUrl = "{% url 'dashboard-comment-delete' pk='0' %}".replace('0', data);
-            return `
-                <a href="" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
-                   class="text-danger d-inline-block deleteConfirmModalClass" data-id="${data}"
-                   data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
-                   title="Remove">
-                   <i class="mdi mdi-delete fs-16"></i>
-                </a>
-            `;
-        }
-    }
-]
-,
+                        {
+                            "data": "id",
+                            "render": function (data, type, full, meta) {
+                                return data;
+                            }
+                        },
+                        {
+                        "data": "user",
+                        "render": function (data, type, full, meta) {
+                            return '<a href="/customer/detail/' + full.customer_id + '/">' + data + '</a>';
+                        }
+                    },
+
+
+
+                        {
+                            "data": "content",
+                            "render": function (data, type, full, meta) {
+                                return data;
+                            }
+                        },
+                        {
+                            "data": "video",
+                            "render": function (data, type, row, meta) {
+                                var videoHtml = '';
+                                if (data) {  
+                                    videoHtml += '<div><strong>Title:</strong> ' + data.video_title + '<br>';
+                                    videoHtml += '<strong>URL:</strong> ' + (data.video_url !== 'N/A' ? '<a href="' + data.video_url + '">Watch</a>' : 'N/A') + '<br>';
+                                    videoHtml += '<strong>Free:</strong> ' + (data.video_is_free ? 'Yes' : 'No') + '</div>';
+                                } else {
+                                    videoHtml = 'No videos available';
+                                }
+                                return videoHtml;
+                            }
+                        },
+                        {
+                            "data": "pdf_note",
+                            "render": function (data, type, row, meta) {
+                                var pdfHtml = '';
+                                if (data) {  
+                                    pdfHtml += '<div><strong>Title:</strong> ' + data.pdf_title + '<br>';
+                                    
+                                    var fileLink = data.pdf_file_url !== 'N/A' ? '<a href="' + data.pdf_file_url + '" target="_blank">View</a>' : 'N/A';
+                                    pdfHtml += '<strong>File:</strong> ' + fileLink + '<br>';
+                                    
+                                    pdfHtml += '<strong>Free:</strong> ' + (data.pdf_is_free ? 'Yes' : 'No') + '</div>';
+                                } else {
+                                    pdfHtml = 'No PDFs available';
+                                }
+                                return pdfHtml;
+                            }
+                        },
+                        {
+                            "data": "created",
+                            "render": function (data, type, full, meta) {
+                                return data;
+                            }
+                        },
+                        {
+                            "data": "id",
+                            "render": function (data, type, row, meta) {
+                                var deleteUrl = "{% url 'dashboard-comment-delete' pk='0' %}".replace('0', data);
+                                return `
+                                    <a href="" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
+                                    class="text-danger d-inline-block deleteConfirmModalClass" data-id="${data}"
+                                    data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
+                                    title="Remove">
+                                    <i class="mdi mdi-delete fs-16"></i>
+                                    </a>
+                                `;
+                            }
+                        }
+                    ]
+                    ,
             "order": [[2,'desc']],
             "lengthMenu": [
                 [25, 50, 100],
