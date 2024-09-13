@@ -24,7 +24,8 @@ from dashboard.views import (
    level,
    talenthuntsubject,
    schedule,
-   staff
+   staff,
+   comment
 )
 
 urlpatterns = [
@@ -207,5 +208,8 @@ urlpatterns = [
     path("staff/disable/<int:pk>/", staff.disable, name="dashboard-staff-disable"),
     path("staff/password/<int:pk>/", staff.set_password, name="dashboard-staff-password-set"),
 
-    
+  # ==================================== Comment Management ============================================= #
+    path("comment/", comment.manager, name="dashboard-comment-manager"),
+    path("comment/list/", comment.list, name="dashboard-comment-list"),
+    path("comment/delete/<int:pk>/", comment.delete, name="dashboard-comment-delete"),
 ]
