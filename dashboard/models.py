@@ -284,3 +284,28 @@ class Schedule(models.Model):
 
     def __str__(self):
         return self.title or 'No title'
+    
+
+
+# class Banner(models.Model):
+#     course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True, blank=True)
+#     title = models.CharField(max_length=100)
+#     image = models.ImageField(upload_to='banners/')
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     is_deleted = models.BooleanField(default=False)
+
+#     def __str__(self):
+#         return self.title or 'No title'
+
+#     class Meta:
+#         ordering = [ '-created_at']
+
+
+class SuccessStory(models.Model):
+    image = models.ImageField(upload_to='banners/')
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.created_at or 'No title'
+

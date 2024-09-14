@@ -25,7 +25,9 @@ from dashboard.views import (
    talenthuntsubject,
    schedule,
    staff,
-   comment
+   comment,
+   banner,
+   success_stories
 )
 
 urlpatterns = [
@@ -190,7 +192,7 @@ urlpatterns = [
     path("level/question/delete/<int:pk>/", level.level_question_delete, name="dashboard-level-question-delete"),
 
 
- # ==================================== Schedule Management ============================================= #
+   # ==================================== Schedule Management ============================================= #
 
 
     path("schedule/", schedule.manager, name="dashboard-schedule-manager"),
@@ -200,7 +202,7 @@ urlpatterns = [
     path("schedule/delete/<int:pk>/", schedule.delete, name="dashboard-schedule-delete"),
 
 
- # ==================================== Staff Management ============================================= #
+  # ==================================== Staff Management ============================================= #
     path("staff/", staff.manager, name="dashboard-staff-manager"),
     path("staff/list/", staff.list, name="dashboard-staff-list"),
     path("staff/add/", staff.add, name="dashboard-staff-add"),
@@ -208,8 +210,25 @@ urlpatterns = [
     path("staff/disable/<int:pk>/", staff.disable, name="dashboard-staff-disable"),
     path("staff/password/<int:pk>/", staff.set_password, name="dashboard-staff-password-set"),
 
-  # ==================================== Comment Management ============================================= #
+   # ==================================== Comment Management ============================================= #
     path("comment/", comment.manager, name="dashboard-comment-manager"),
     path("comment/list/", comment.list, name="dashboard-comment-list"),
     path("comment/delete/<int:pk>/", comment.delete, name="dashboard-comment-delete"),
+   # ==================================== Staff Management ============================================= #
+    path("banner/", banner.manager, name="dashboard-banner-manager"),
+    path("banner/list/", banner.list, name="dashboard-banner-list"),
+    path("banner/add/", banner.add, name="dashboard-banner-add"),
+    path("banner/update/<int:pk>/", banner.update, name="dashboard-banner-update"),
+    path("banner/delete/<int:pk>/", banner.delete, name="dashboard-banner-delete"),
+
+   # ==================================== Staff Management ============================================= #
+    path("success-stories/", success_stories.manager, name="dashboard-success-stories-manager"),
+    path("success-stories/list/", success_stories.list, name="dashboard-success-stories-list"),
+    path("success-stories/add/", success_stories.add, name="dashboard-success-stories-add"),
+    path("success-stories/update/<int:pk>/", success_stories.update, name="dashboard-success-stories-update"),
+    path("success-stories/delete/<int:pk>/", success_stories.delete, name="dashboard-success-stories-delete"),
+
+
+
+
 ]

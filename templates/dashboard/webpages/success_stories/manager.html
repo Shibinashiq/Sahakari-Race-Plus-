@@ -13,11 +13,6 @@
     <link href="{% static 'dashboard/assets/libs/swiper/swiper-bundle.min.css' %}" rel="stylesheet" type="text/css"/>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Add this script in the <head> or before the closing </body> tag -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" async></script> -->
-
-
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
 <!-- Bootstrap Bundle with Popper -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
@@ -52,12 +47,12 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0">Question Manager</h4>
+                        <h4 class="mb-sm-0">Success-Story Manager</h4>
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="/" class="text-primary">Admin</a></li>
-                                <li class="breadcrumb-item"><a href="" class="text-primary">Question</a></li>
+                                <li class="breadcrumb-item"><a href="" class="text-primary">Success-Story</a></li>
                                 <li class="breadcrumb-item active">Manage</li>
                             </ol>
                         </div>
@@ -92,30 +87,26 @@
                                     <div class="card-header d-flex justify-content-end align-items-center">
                                         <div class="col-auto">
                                            
-                                            <a href="{% url 'dashboard-question-add' %}" class="btn btn-success btn-label waves-effect waves-light">
-                                                <i class="mdi mdi-plus-thick label-icon align-middle fs-16 me-2"></i> Add Question
+                                            <a href="{% url 'dashboard-success-stories-add'  %}" class="btn btn-success btn-label waves-effect waves-light">
+                                                <i class="mdi mdi-plus-thick label-icon align-middle fs-16 me-2"></i> Add Success-Story
                                             </a>
                                         </div>
                                     </div>
                                     
                                     <div class="card-body">
-                                        <table id="productDatatable" class="table table-sm w-100">
+                                        <table id="customerDatatable" class="table table-sm w-100">
                                             <thead class="bg-light">
                                                 <tr class="text-uppercase">
                                                     <th class="align-middle">#</th>
-                                                    <th class="align-middle">Question Description</th>
-                                                    <th class="align-middle">Hint</th>
-                                                    <th class="align-middle">Exam</th>
-                                                    <th class="align-middle">Options</th>
-                                                    <th class="align-middle">Right Answers</th>
+                                                    <th class="align-middle">image</th>
                                                     <th class="align-middle">Created</th>
                                                     <th class="align-middle">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                             </tbody>
+                                           
                                         </table>
-                                        
                                     </div>
                                 </div>
 
@@ -128,15 +119,16 @@
                     </div> <!-- end .h-100-->
                 </div> <!-- end col -->
             </div>
+            <input type="hidden" id="courseId" value="{{ course.id }}">
 
             <!-- Add Modals -->
            
 
-            {% comment %} {% include 'dashboard/includes/modals/add.html' with title="Question" %} {% endcomment %}
+            {% comment %} {% include 'dashboard/includes/modals/add.html' with title="Success-Story" %} {% endcomment %}
 
-            {% comment %} {% include "dashboard/includes/modals/update.html" with title="Question" %} {% endcomment %}
+            {% comment %} {% include "dashboard/includes/modals/update.html" with title="Success-Story" %} {% endcomment %}
 
-            {% include "dashboard/includes/modals/delete.html" with title1="a Question" title2="Question" %}
+            {% include "dashboard/includes/modals/delete.html" with title1="a Success-Story" title2="Success-Story" %}
             
 
 {% endblock content %}
@@ -152,17 +144,17 @@
 {% block script %}
 <script>
     $(document).ready(function () {
-        var dataTable = $('#productDatatable').DataTable({
+        var dataTable = $('#customerDatatable').DataTable({
             "processing": true,
             "serverSide": true,
             "ajax": {
-                "url": "{% url 'dashboard-question-list' %}",
+                "url": "{% url 'dashboard-success-stories-list' %}",
                 "type": "GET",
                 "data": function (d) {
-                    d.search = {
-                        "value": $('input[type="search"]').val(),
-                        "regex": false
-                    };
+                    // d.search = {
+                    //     "value": $('input[type="search"]').val(),
+                    //     "regex": false
+                    // };
                     d.page = (d.start / d.length) + 1;
                     d.page_size = d.length;
                     return d;
@@ -176,64 +168,48 @@
                     }
                 },
                 {
-                    "data": "question_description",
-                    "render": function (data, type, full, meta) {
-                         return `<div class="latex-content">
-                                    ${data}
-                                </div>`;
+                "data": "image",
+                "render": function (data, type, full, meta) {
+                    if (data) {
+                        return '<td><img src="' + data + '" alt="chapter" style="width: 4rem; height: 4rem; object-fit: contain"></td>';
+                    } else {
+                        return '<td>No  image</td>';
                     }
-                },
+                }
+            },
+                 
                 {
-                    "data": "hint",
-                    "render": function (data, type, full, meta) {
-                        return '<div class="latex-content">' + data + '</div>';
-                    }
-                },
-                {
-                    "data": "exam",
+                    "data": "created",
                     "render": function (data, type, full, meta) {
                         return data;
                     }
                 },
                 {
-                    "data": "options",
-                    "render": function (data, type, full, meta) {
-                        return '<div>' + data + '</div>';
-                    }
-                },
-                {
-                    "data": "right_answers",
-                    "render": function (data, type, full, meta) {
-                        return '<div>' + data + '</div>';
-                    }
-                },
-                {
-                    "data": "created",
-                    "render": function (data, type, full, meta) {
-                        return data; // Date formatting is handled in the backend
-                    }
-                },
-                {
                     "data": "id",
                     "render": function (data, type, row, meta) {
-                        var editUrl = "{% url 'dashboard-question-update' pk='0' %}".replace('0', data);
-                        var deleteUrl = "{% url 'dashboard-batch-delete' pk='0' %}".replace('0', data);
+                        var editUrl = "{% url 'dashboard-success-stories-update' pk='0' %}".replace('0', data);
+                        var deleteUrl = "{% url 'dashboard-success-stories-delete' pk='0' %}".replace('0', data);
+        
+
+                       
                         return `
                             <a href="${editUrl}" class="btn-update" data-bs-toggle="tooltip" data-bs-trigger="hover"
                                data-bs-placement="top" title="Edit">
                                 <i class="mdi mdi-pencil"></i>
                             </a>
-                           <a href="" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
-                                class="text-danger d-inline-block deleteConfirmModalClass" data-id="${data}"
-                                data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
-                                title="Remove">
-                                <i class="mdi mdi-delete fs-16"></i>
-                            </a>
+                            
+                              
+                              <a href="" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
+                       class="text-danger d-inline-block deleteConfirmModalClass" data-id="${data}"
+                       data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
+                       title="Remove">
+                       <i class="mdi mdi-delete fs-16"></i>
+                    </a>
                         `;
                     }
                 }
             ],
-            "order": [[6, 'desc']],
+            "order": [[1,'desc']],
             "lengthMenu": [
                 [25, 50, 100],
                 [25, 50, 100]
@@ -244,12 +220,13 @@
             "scrollY": "50vh",
             "scrollCollapse": true,
             "ordering": true,
+            "searching": false, 
             "language": {
-                "searchPlaceholder": "Search question",
+                "searchPlaceholder": "Search story",
                 "lengthMenu": "Show _MENU_",
                 "zeroRecords": `<span class="text-danger">No data found</span>`,
                 "info": "Showing page _PAGE_ of _PAGES_ (Total records: _TOTAL_)",
-                ""infoEmpty": "No data available",": "No records available",
+                "infoEmpty": "No data available" ,
                 "infoFiltered": "(filtered from _MAX_ total records)",
                 "infoTotal": "Total records: _TOTAL_",
                 "paginate": {
@@ -260,38 +237,49 @@
                 }
             }
         });
-
-        dataTable.on('draw', function () {
-        MathJax.Hub.Typeset();
+    
+        });
+    
+       
+        $(document).ready(function () {
+    // Trigger modal open event and store lesson ID
+    $(document).on('click', '.deleteConfirmModalClass', function () {
+        var lesson_id = $(this).data('id'); // Get the ID of the lesson
+        $('#delete-record').data('lesson-id', lesson_id); // Store lesson ID in delete button
     });
 
-        $(document).on('click', '.deleteConfirmModalClass', function () {
-            var batch_id = $(this).data('id');
-            $('#delete-record').data('batch-id', batch_id); 
-        });
+    // Handle the delete confirmation button click
+    $('#delete-record').click(function () {
+        var lesson_id = $(this).data('lesson-id'); // Get the lesson ID stored in the delete button
 
-        $('#delete-record').click(function () {
-            var batch_id = $('#delete-record').data('batch-id'); 
-
+        // Ensure that the lesson_id is valid
+        if (lesson_id) {
             $.ajax({
-                url: '/question/delete/' + batch_id + '/', 
+                url: '/success-stories/delete/' + lesson_id + '/', // Construct the delete URL
                 type: 'POST',
                 data: {
-                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    csrfmiddlewaretoken: '{{ csrf_token }}', // CSRF token should be dynamically populated by Django
                 },
                 success: function (data) {
                     console.log("Deleted successfully");
-                    window.location.reload(); 
+                    window.location.reload(); // Reload the page to reflect the changes
                 },
-                error: function(xhr, status, error) {
-                    console.error("Error deleting batch:", error);
+                error: function (xhr, status, error) {
+                    console.error("Error deleting lesson:", error); // Log any error during the deletion process
                 }
             });
-        });
+        } else {
+            console.error("Invalid lesson ID. Unable to delete.");
+        }
     });
+});
+
+
+        
+        
+        
 </script>
-
-
+        
 <script>
     $(document).ready(function () {
         $('.noty-tost').click();

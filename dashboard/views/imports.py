@@ -124,3 +124,6 @@ from ckeditor.fields import RichTextField
 
 from dashboard.forms.staff import StaffForm,PasswordSettingForm
 from django.contrib.auth import authenticate, login as auth_login
+
+
+from dashboard.forms.success_stories import SuccessStoriesForm
