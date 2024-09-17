@@ -52,6 +52,9 @@
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="/" class="text-primary">Admin</a></li>
+                                <li class="breadcrumb-item"><a href="{% url 'dashboard-course' %}" class="text-primary">Course</a></li>
+                                <li class="breadcrumb-item"><a href="{% url 'dashboard-course-subjects-list' pk=obj_chapter.subject.course.id %}" class="text-primary">Subject</a></li>
+                                <li class="breadcrumb-item"><a href="{% url 'subject-chapters-list' subject_id=obj_chapter.subject.id %}" class="text-primary">Chapter</a></li>
                                 <li class="breadcrumb-item"><a href="" class="text-primary">Lesson</a></li>
                                 <li class="breadcrumb-item active">Manage</li>
                             </ol>

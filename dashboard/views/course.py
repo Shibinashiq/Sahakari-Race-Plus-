@@ -100,9 +100,11 @@ def delete(request, pk):
 #subjects in course management
 @login_required(login_url='dashboard-login')
 def course_subjects_list(request,pk):
+     course = Course.objects.get(id=pk, is_deleted=False)
      context = {
          "title": "Subjects",
          "course": pk,
+         "course_name": course.course_name
      }
      return render(request,'dashboard/webpages/content/subject/manager.html',context)
 
@@ -242,9 +244,12 @@ def course_subject_delete(request, pk):
 
 @login_required(login_url='dashboard-login')
 def course_subject_chapters_list(request, subject_id):
+    subject = Subject.objects.get(id=subject_id, is_deleted=False)
     context = {
         "title": "Chapters",
         "subject": subject_id,
+        "subject_name": subject.subject_name,
+        "course": subject.course.id,
     }
 
     return render(request,'dashboard/webpages/content/chapter/manager.html',context)
@@ -380,9 +385,11 @@ def subject_chapter_delete(request,chapter_id, subject_id):
 
 @login_required(login_url='dashboard-login')
 def chapter_lesson_list(request,chapter_id):
+    chapter = Chapter.objects.get(id=chapter_id)
     context = {
         "title": "Lessons",
         "chapter": chapter_id,
+        "obj_chapter": chapter,
     }
     return render(request,'dashboard/webpages/content/lesson/manager.html',context)
 

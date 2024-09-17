@@ -141,7 +141,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{% url 'dashboard-success-stories-manager'%}" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="fas fa-comments"></i>
+                        <i class="fas fa-medal"></i>
 
                         <span data-key="t-dashboards">Sucess-Story</span>
                     </a>
@@ -156,15 +156,27 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.nav-link').forEach(function(link) {
-            link.addEventListener('click', function(event) {
-                if (link.getAttribute('href') === "#" || link.getAttribute('href') === "") {
-                    event.preventDefault();
-                }
+        const scrollbar = document.getElementById('scrollbar');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        // Restore the scroll position from sessionStorage if available
+        const savedScrollPosition = sessionStorage.getItem('scrollPosition');
+        if (savedScrollPosition) {
+            scrollbar.scrollTop = savedScrollPosition;
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Store current scroll position before navigating
+                sessionStorage.setItem('scrollPosition', scrollbar.scrollTop);
             });
         });
     });
-</script>
 
+    window.addEventListener('beforeunload', function() {
+        // Optionally: Keep scroll position or clear sessionStorage on page unload
+        sessionStorage.removeItem('scrollPosition');
+    });
+</script>
 
 
