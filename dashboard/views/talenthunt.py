@@ -34,8 +34,7 @@ def list(request):
     
     if search_value:
         talenthunt = talenthunt.filter(
-            Q(subject_name__icontains=search_value)|
-            Q(description__icontains=search_value)|
+            Q(title__icontains=search_value)|
             Q(course__course_name__icontains=search_value)|
             Q(created__icontains=search_value)
         )

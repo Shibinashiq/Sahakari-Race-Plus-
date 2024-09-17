@@ -263,6 +263,10 @@ class Question(models.Model):
     options = models.JSONField(default=list, null=True, blank=True)
     right_answers = models.JSONField(default=list, null=True, blank=True)  
     master_question = models.IntegerField(null=True, blank=True)
+    mark = models.IntegerField(null=True, blank=True)
+    negative_mark = models.IntegerField(null=True, blank=True)
+
+
     exam = models.ForeignKey(Exam, on_delete=models.SET_NULL, null=True, blank=True)
     chapter = models.ForeignKey(Chapter, on_delete=models.SET_NULL, null=True, blank=True)
     talenthunt = models.ForeignKey(TalentHunt, on_delete=models.SET_NULL, null=True, blank=True)
@@ -309,3 +313,17 @@ class SuccessStory(models.Model):
     def __str__(self):
         return self.created_at or 'No title'
 
+
+class StudentProgress(models.Model):
+    student = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='progress')
+    exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name='student_exams')
+    marks_obtained = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    total_marks = models.DecimalField(max_digits=5, decimal_places=2)
+    passed = models.BooleanField(default=False)
+    completed_on = models.DateTimeField(default=timezone.now)
+    
+    class Meta:
+        unique_together = ('student', 'exam')
+
+    def __str__(self):
+        return f"{self.student.name}'s progress for {self.exam.title}"
