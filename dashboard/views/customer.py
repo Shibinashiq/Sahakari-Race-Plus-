@@ -2,7 +2,7 @@ from dashboard.views.imports import *
 
 @login_required(login_url='dashboard-login')
 def manager(request):
-    return render(request, "dashboard/webpages/customer/manager.html")
+    return render(request, "ci/template/public/student/student_grid.html")
 
 
 

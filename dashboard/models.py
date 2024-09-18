@@ -19,11 +19,9 @@ class MyUserManager(BaseUserManager):
     def create_user(self, email, name, phone_number, district, **extra_fields):
         return self._create_user(email, name, phone_number, district, **extra_fields)
 
-    def create_superuser(self, email, name, phone_number, district,  **extra_fields):
+    def create_superuser(self, email, name, phone_number, district, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
-        extra_fields.setdefault("is_superuser", True)
-        extra_fields.setdefault("is_staff", True)
 
         if extra_fields.get("is_staff") is not True:
             raise ValueError(_("Superuser must have is_staff=True."))
@@ -31,6 +29,7 @@ class MyUserManager(BaseUserManager):
             raise ValueError(_("Superuser must have is_superuser=True."))
 
         return self._create_user(email, name, phone_number, district, **extra_fields)
+
 
 class CustomUser(AbstractBaseUser):
     DISTRICT_CHOICES = [
