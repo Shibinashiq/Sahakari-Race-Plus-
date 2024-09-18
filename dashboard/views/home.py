@@ -18,4 +18,4 @@ def home(request):
 
     }
 
-    return render(request, "dashboard/home/index.html",context)
+    return render(request, "ci/template/public/index.html",context)

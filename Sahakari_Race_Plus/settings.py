@@ -62,7 +62,7 @@ ROOT_URLCONF = 'Sahakari_Race_Plus.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        "DIRS": [BASE_DIR / "templates" ],
+        "DIRS": [BASE_DIR / "preskool.dreamstechnologies.com" ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
