@@ -1,6 +1,35 @@
 {% block css %}
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+ .app-menu {
+        background-color: #ebebebee !important;
+        border: none !important; 
+    }
+    .navbar-nav .nav-link {
+        transition: background-color 0.3s ease;
+        border: none !important; 
+    }
+    .navbar-nav .nav-link:hover {
+        background-color: #e6f2ff !important;
+        color: #6786a7 !important;
+     } 
+    .menu-title {
+        color: #666 !important;
+    }
+    .navbar-nav .nav-link {
+        font-weight: 600; 
+    }
+    
+    .menu-title {
+        font-weight: 700; 
+    }
+    
+    .nav-link span[data-key="t-dashboards"] {
+        font-weight: 700;
+    }
+    
+</style>
 {% endblock css %}
 {% load static %}
 <div class="app-menu navbar-menu">
@@ -9,19 +38,19 @@
         <!-- Dark Logo-->
         <a href="index.html" class="logo logo-dark">
             <span class="logo-sm">
-                <img src="assets/images/logo-sm.png" alt="" height="22">
+                <img src="assets/images/clients/sahakari.jpeg" alt="" height="22">
             </span>
             <span class="logo-lg">
-                <img src="assets/images/logo-dark.png" alt="" height="17">
+                <img src="assets/images/clients/sahakari.jpeg" alt="" height="17">
             </span>
         </a>
         <!-- Light Logo-->
         <a href="" class="logo logo-light">
             <span class="logo-sm">
-				<!-- <img src="{% static 'dashboard/custom_image/agua_no_bg.png' %}" alt="" height="22"> -->
+				<img src="{% static 'assets/images/clients/sahakari.jpeg' %}" alt="" height="22">
 			</span>
 			<span class="logo-lg">
-				<!-- <img src="{% static 'dashboard/custom_image/agua_no_bg.png' %}" alt="" height="40"> -->
+				<img src="{% static 'assets/images/clients/sahakari.jpeg' %}" alt="" height="40">
 			</span>
         </a>
         <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover" id="vertical-hover">
