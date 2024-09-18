@@ -2,8 +2,29 @@ from dashboard.views.imports import *
 
 @login_required(login_url='dashboard-login')
 def manager(request):
-    return render(request, "ci/template/public/student/student_grid.html")
+    sort_option = request.GET.get('sort', 'name_ascending')
 
+    if sort_option == 'ascending':
+        user_list = CustomUser.objects.filter(is_deleted=False, is_staff=False, is_superuser=False).order_by('id')
+    elif sort_option == 'descending':
+        user_list = CustomUser.objects.filter(is_deleted=False, is_staff=False, is_superuser=False).order_by('-id')
+    elif sort_option == 'name_ascending':
+        user_list = CustomUser.objects.filter(is_deleted=False, is_staff=False, is_superuser=False).order_by('name')
+    elif sort_option == 'name_descending':
+        user_list = CustomUser.objects.filter(is_deleted=False, is_staff=False, is_superuser=False).order_by('-name')
+    else:
+        user_list = CustomUser.objects.filter(is_deleted=False, is_staff=False, is_superuser=False).order_by('-id')
+
+    paginator = Paginator(user_list, 25)
+    page_number = request.GET.get('page')
+    users = paginator.get_page(page_number)
+
+    context = {
+        "users": users,
+        "current_sort": sort_option,  
+    }
+
+    return render(request, "ci/template/public/student/student_grid.html", context)
 
 
 @login_required(login_url='dashboard-login')

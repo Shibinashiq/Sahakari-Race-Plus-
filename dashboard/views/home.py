@@ -4,7 +4,6 @@ from dashboard.views.imports import *
 def home(request):
     user = request.user
     created = CustomUser.objects.filter(id=user.id)
-    print(created)
     
     customers = CustomUser.objects.filter(is_deleted=False, is_staff=False, is_superuser=False).count()
     
@@ -30,8 +29,6 @@ def home(request):
     most_subscribed_course_count = course_with_most_subscriptions.sub_count if course_with_most_subscriptions else 0
 
 
-    # print(most_subscribed_course_count)
-    # print(most_subscribed_course_name)
     context = {
         "user": user,
         "customers": customers,

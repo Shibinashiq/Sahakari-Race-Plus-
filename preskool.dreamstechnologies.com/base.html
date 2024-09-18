@@ -1,808 +1,400 @@
-<html lang="en" data-theme="auto" data-sidebar="light" data-color="primary" data-topbar="white" data-layout="default"><!-- Mirrored from preskool.dreamstechnologies.com/cakephp/template/student_grid by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 18 Sep 2024 07:12:42 GMT --><!-- Added by HTTrack --><head><meta http-equiv="content-type" content="text/html;charset=UTF-8"><!-- /Added by HTTrack -->
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <meta name="description" content="Preskool - Bootstrap Admin Template">
-    <meta name="keywords" content="admin, estimates, bootstrap, business, html5, responsive, Projects">
-    <meta name="author" content="Dreams technologies - Bootstrap Admin Template">
-    <meta name="robots" content="noindex, nofollow">
-    <title>Preskool Admin Template</title>
-    
-    <link href="https://preskool.dreamstechnologies.com/cakephp/template/img/favicon.png" type="image/x-icon" rel="icon"><link href="https://preskool.dreamstechnologies.com/cakephp/template/img/favicon.png" type="image/x-icon" rel="shortcut icon">
-    
-    <link rel="stylesheet" href="https://preskool.dreamstechnologies.com/cakephp/template/webroot/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://preskool.dreamstechnologies.com/cakephp/template/webroot/css/plugins/icons/feather/feather.css">
-    <link rel="stylesheet" href="https://preskool.dreamstechnologies.com/cakephp/template/webroot/css/plugins/tabler-icons/tabler-icons.css">
-    
-    <link rel="stylesheet" href="https://preskool.dreamstechnologies.com/cakephp/template/webroot/css/plugins/daterangepicker/daterangepicker.css">
-    
-    <link rel="stylesheet" href="https://preskool.dreamstechnologies.com/cakephp/template/webroot/css/plugins/select2/css/select2.min.css">
-    
-    <link rel="stylesheet" href="https://preskool.dreamstechnologies.com/cakephp/template/webroot/css/plugins/fontawesome/css/fontawesome.min.css"><link rel="stylesheet" href="https://preskool.dreamstechnologies.com/cakephp/template/webroot/css/plugins/fontawesome/css/all.min.css">
-    
-    <link rel="stylesheet" href="https://preskool.dreamstechnologies.com/cakephp/template/webroot/css/bootstrap-datetimepicker.min.css">
-    
-    <link rel="stylesheet" href="https://preskool.dreamstechnologies.com/cakephp/template/webroot/css/plugins/owlcarousel/owl.theme.default.min.css"><link rel="stylesheet" href="https://preskool.dreamstechnologies.com/cakephp/template/webroot/css/plugins/owlcarousel/owl.carousel.min.css">
-    
-    <link rel="stylesheet" href="https://preskool.dreamstechnologies.com/cakephp/template/webroot/css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/themify-icons/css/themify-icons.css"></head>
-    
-    
-    <body style="">
-    
-    <div class="main-wrapper">
-    
-    <div class="header">
-    
-    <div class="header-left active">
-    <a href="https://preskool.dreamstechnologies.com/" class="logo logo-normal">
-    <img src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/img/logo.svg" alt=""> </a>
-    <a href="https://preskool.dreamstechnologies.com/" class="logo-small">
-    <img src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/img/logo-small.svg" alt=""> </a>
-    <a href="https://preskool.dreamstechnologies.com/" class="dark-logo">
-    <img src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/img/logo-dark.svg" alt=""> </a>
-    <a id="toggle_btn" href="javascript:void(0);">
-    <i class="ti ti-menu-deep"></i>
-    </a>
-    </div>
-    
-    <a id="mobile_btn" class="mobile_btn" href="#sidebar">
-    <span class="bar-icon">
-    <span></span>
-    <span></span>
-    <span></span>
-    </span>
-    </a>
-    <div class="header-user">
-    <div class="nav user-menu">
-    
-    <div class="nav-item nav-search-inputs me-auto">
-    <div class="top-nav-search">
-    <a href="javascript:void(0);" class="responsive-search">
-    <i class="fa fa-search"></i>
-    </a>
-    <form action="#" class="dropdown">
-    <div class="searchinputs" id="dropdownMenuClickable">
-    <input type="text" placeholder="Search">
-    <div class="search-addon">
-    <button type="submit"><i class="ti ti-command"></i></button>
-    </div>
-    </div>
-    </form>
-    </div>
-    </div>
-    
-    <div class="d-flex align-items-center">
-    <div class="dropdown me-2">
-    <a href="#" class="btn btn-outline-light fw-normal bg-white d-flex align-items-center p-2" data-bs-toggle="dropdown" aria-expanded="false">
-    <i class="ti ti-calendar-due me-1"></i>Academic Year : 2024 / 2025
-    </a>
-    <div class="dropdown-menu dropdown-menu-right">
-    <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">
-    Academic Year : 2023 / 2024
-    </a>
-    <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">
-    Academic Year : 2022 / 2023
-    </a>
-    <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">
-    Academic Year : 2021 / 2022
-    </a>
-    </div>
-    </div>
-    <div class="pe-1 ms-1">
-    <div class="dropdown">
-    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center me-1 p-2" data-bs-toggle="dropdown" aria-expanded="false">
-    <img src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/img/flags/us.png" alt="Language" class="img-fluid rounded-pill"> </a>
-    <div class="dropdown-menu dropdown-menu-right">
-    <a href="javascript:void(0);" class="dropdown-item active d-flex align-items-center">
-    <img src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/img/flags/us.png" alt="Img" class="me-2 rounded-pill" height="22" width="22"> English
-    </a>
-    <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">
-    <img src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/img/flags/fr.png" alt="Img" class="me-2 rounded-pill" height="22" width="22"> French
-    </a>
-    <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">
-    <img src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/img/flags/es.png" alt="Img" class="me-2 rounded-pill" height="22" width="22"> Spanish
-    </a>
-    <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">
-    <img src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/img/flags/de.png" alt="Img" class="me-2 rounded-pill" height="22" width="22"> German
-    </a>
-    </div>
-    </div>
-    </div>
-    <div class="pe-1">
-    <div class="dropdown">
-    <a href="#" class="btn btn-outline-light bg-white btn-icon me-1" data-bs-toggle="dropdown" aria-expanded="false">
-    <i class="ti ti-square-rounded-plus"></i>
-    </a>
-    <div class="dropdown-menu dropdown-menu-right border shadow-sm dropdown-md">
-    <div class="p-3 border-bottom">
-    <h5>Add New</h5>
-    </div>
-    <div class="p-3 pb-0">
-    <div class="row gx-2">
-    <div class="col-6">
-    <a href="https://preskool.dreamstechnologies.com/cakephp/template/add-student" class="d-block bg-primary-transparent ronded p-2 text-center mb-3 class-hover">
-    <div class="avatar avatar-lg mb-2">
-    <span class="d-inline-flex align-items-center justify-content-center w-100 h-100 bg-primary rounded-circle"><i class="ti ti-school"></i></span>
-    </div>
-    <p class="text-dark">Students</p>
-    </a>
-    </div>
-    <div class="col-6">
-    <a href="https://preskool.dreamstechnologies.com/cakephp/template/add-teacher" class="d-block bg-success-transparent ronded p-2 text-center mb-3 class-hover">
-    <div class="avatar avatar-lg mb-2">
-    <span class="d-inline-flex align-items-center justify-content-center w-100 h-100 bg-success rounded-circle"><i class="ti ti-users"></i></span>
-    </div>
-    <p class="text-dark">Teachers</p>
-    </a>
-    </div>
-    <div class="col-6">
-    <a href="https://preskool.dreamstechnologies.com/cakephp/template/add-staff" class="d-block bg-warning-transparent ronded p-2 text-center mb-3 class-hover">
-    <div class="avatar avatar-lg rounded-circle mb-2">
-    <span class="d-inline-flex align-items-center justify-content-center w-100 h-100 bg-warning rounded-circle"><i class="ti ti-users-group"></i></span>
-    </div>
-    <p class="text-dark">Staffs</p>
-    </a>
-    </div>
-    <div class="col-6">
-    <a href="https://preskool.dreamstechnologies.com/cakephp/template/add-invoice" class="d-block bg-info-transparent ronded p-2 text-center mb-3 class-hover">
-    <div class="avatar avatar-lg mb-2">
-    <span class="d-inline-flex align-items-center justify-content-center w-100 h-100 bg-info rounded-circle"><i class="ti ti-license"></i></span>
-    </div>
-    <p class="text-dark">Invoice</p>
-    </a>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    <div class="pe-1">
-    <a href="#" id="dark-mode-toggle" class="dark-mode-toggle activate btn btn-outline-light bg-white btn-icon me-1">
-    <i class="ti ti-moon"></i>
-    </a>
-    <a href="#" id="light-mode-toggle" class="dark-mode-toggle btn btn-outline-light bg-white btn-icon me-1">
-    <i class="ti ti-brightness-up"></i>
-    </a>
-    </div>
-    <div class="pe-1" id="notification_item">
-    <a href="#" class="btn btn-outline-light bg-white btn-icon position-relative me-1" id="notification_popup">
-    <i class="ti ti-bell"></i>
-    <span class="notification-status-dot"></span>
-    </a>
-    <div class="dropdown-menu dropdown-menu-end notification-dropdown p-4">
-    <div class="d-flex align-items-center justify-content-between border-bottom p-0 pb-3 mb-3">
-    <h4 class="notification-title">Notifications (2)</h4>
-    <div class="d-flex align-items-center">
-    <a href="#" class="text-primary fs-15 me-3 lh-1">Mark all as read</a>
-    <div class="dropdown">
-    <a href="javascript:void(0);" class="bg-white dropdown-toggle" data-bs-toggle="dropdown"><i class="ti ti-calendar-due me-1"></i>Today
-    </a>
-    <ul class="dropdown-menu mt-2 p-3">
-    <li>
-    <a href="javascript:void(0);" class="dropdown-item rounded-1">
-    This Week
-    </a>
-    </li>
-    <li>
-    <a href="javascript:void(0);" class="dropdown-item rounded-1">
-    Last Week
-    </a>
-    </li>
-    <li>
-    <a href="javascript:void(0);" class="dropdown-item rounded-1">
-    Last Week
-    </a>
-    </li>
-    </ul>
-    </div>
-    </div>
-    </div>
-    <div class="noti-content">
-    <div class="d-flex flex-column">
-    <div class="border-bottom mb-3 pb-3">
-    <a href="https://preskool.dreamstechnologies.com/cakephp/template/activities">
-    <div class="d-flex">
-    <span class="avatar avatar-lg me-2 flex-shrink-0">
-    <img src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/img/profiles/avatar-27.jpg" alt="Profile"> </span>
-    <div class="flex-grow-1">
-    <p class="mb-1"><span class="text-dark fw-semibold">Shawn</span> performance in Math is
-    below the threshold.</p>
-    <span>Just Now</span>
-    </div>
-    </div>
-    </a>
-    </div>
-    <div class="border-bottom mb-3 pb-3">
-    <a href="https://preskool.dreamstechnologies.com/cakephp/template/activities" class="pb-0">
-    </a><div class="d-flex"><a href="https://preskool.dreamstechnologies.com/cakephp/template/activities" class="pb-0">
-    <span class="avatar avatar-lg me-2 flex-shrink-0">
-    <img src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/img/profiles/avatar-23.jpg" alt="Profile"> </span>
-    </a><div class="flex-grow-1"><a href="https://preskool.dreamstechnologies.com/cakephp/template/activities" class="pb-0">
-    <p class="mb-1"><span class="text-dark fw-semibold">Sylvia</span> added appointment on
-    02:00 PM</p>
-    <span>10 mins ago</span>
-    </a><div class="d-flex justify-content-start align-items-center mt-1"><a href="https://preskool.dreamstechnologies.com/cakephp/template/activities" class="pb-0">
-    </a><a href="#" class="btn btn-light btn-sm me-2">Deny</a>
-    <a href="#" class="btn btn-primary btn-sm">Approve</a>
-    </div>
-    </div>
-    </div>
-    
-    </div>
-    <div class="border-bottom mb-3 pb-3">
-    <a href="https://preskool.dreamstechnologies.com/cakephp/template/activities">
-    <div class="d-flex">
-    <span class="avatar avatar-lg me-2 flex-shrink-0">
-    <img src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/img/profiles/avatar-25.jpg" alt="Profile"> </span>
-    <div class="flex-grow-1">
-    <p class="mb-1">New student record <span class="text-dark fw-semibold"> George</span> is
-    created by <span class="text-dark fw-semibold"> Teressa</span></p>
-    <span>2 hrs ago</span>
-    </div>
-    </div>
-    </a>
-    </div>
-    <div class="border-0 mb-3 pb-0">
-    <a href="https://preskool.dreamstechnologies.com/cakephp/template/activities">
-    <div class="d-flex">
-    <span class="avatar avatar-lg me-2 flex-shrink-0">
-    <img src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/img/profiles/avatar-01.jpg" alt="Profile"> </span>
-    <div class="flex-grow-1">
-    <p class="mb-1">A new teacher record for <span class="text-dark fw-semibold">Elisa</span>
-    </p>
-    <span>09:45 AM</span>
-    </div>
-    </div>
-    </a>
-    </div>
-    </div>
-    </div>
-    <div class="d-flex p-0">
-    <a href="#" class="btn btn-light w-100 me-2">Cancel</a>
-    <a href="https://preskool.dreamstechnologies.com/cakephp/template/activities" class="btn btn-primary w-100">View All</a>
-    </div>
-    </div>
-    </div>
-    <div class="pe-1">
-    <a href="https://preskool.dreamstechnologies.com/cakephp/template/chat" class="btn btn-outline-light bg-white btn-icon position-relative me-1">
-    <i class="ti ti-brand-hipchat"></i>
-    <span class="chat-status-dot"></span>
-    </a>
-    </div>
-    <div class="pe-1">
-    <a href="#" class="btn btn-outline-light bg-white btn-icon me-1">
-    <i class="ti ti-chart-bar"></i>
-    </a>
-    </div>
-    <div class="pe-1">
-    <a href="#" class="btn btn-outline-light bg-white btn-icon me-1" id="btnFullscreen">
-    <i class="ti ti-maximize"></i>
-    </a>
-    </div>
-    <div class="dropdown ms-1">
-    <a href="javascript:void(0);" class="dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
-    <span class="avatar avatar-md rounded">
-    <img src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/img/profiles/avatar-27.jpg" alt="Profile" calss="img-fluid"> </span>
-    </a>
-    <div class="dropdown-menu">
-    <div class="d-block">
-    <div class="d-flex align-items-center p-2">
-    <span class="avatar avatar-md me-2 online avatar-rounded">
-    <img src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/img/profiles/avatar-27.jpg" alt="Profile"> </span>
-    <div>
-    <h6 class="">Kevin Larry</h6>
-    <p class="text-primary mb-0">Administrator</p>
-    </div>
-    </div>
-    <hr class="m-0">
-    <a class="dropdown-item d-inline-flex align-items-center p-2" href="https://preskool.dreamstechnologies.com/cakephp/template/profile"> <i class="ti ti-user-circle me-2"></i>My Profile</a>
-    <a class="dropdown-item d-inline-flex align-items-center p-2" href="https://preskool.dreamstechnologies.com/cakephp/template/profile-settings"><i class="ti ti-settings me-2"></i>Settings</a>
-    <hr class="m-0">
-    <a class="dropdown-item d-inline-flex align-items-center p-2" href="https://preskool.dreamstechnologies.com/cakephp/template/login"><i class="ti ti-login me-2"></i>Logout</a>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    
-    <div class="dropdown mobile-user-menu">
-    <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-    <div class="dropdown-menu dropdown-menu-end">
-    <a class="dropdown-item" href="https://preskool.dreamstechnologies.com/cakephp/template/profile">My Profile</a>
-    <a class="dropdown-item" href="https://preskool.dreamstechnologies.com/cakephp/template/profile-settings">Settings</a>
-    <a class="dropdown-item" href="https://preskool.dreamstechnologies.com/cakephp/template/login">Logout</a>
-    </div>
-    </div>
-    
-    </div>
-    
-    <div class="sidebar" id="sidebar">
-        <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: 100%; height: 385px;"><div class="sidebar-inner slimscroll" style="overflow: hidden; width: 100%; height: 385px;">
-        <div id="sidebar-menu" class="sidebar-menu">
-        <ul>
-        <li>
-        <a href="javascript:void(0);" class="d-flex align-items-center border bg-white rounded p-2 mb-4">
-        <img src="https://preskool.dreamstechnologies.com/ci/template/public/assets/img/icons/global-img.svg" class="avatar avatar-md img-fluid rounded" alt="Profile">
+
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+<meta name="robots" content="">
+
+<!-- Icon-->
+<link rel="shortcut icon" type="image/x-icon" href="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/themify-icons/0.1.2/css/themify-icons.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/themify-icons@0.1.2/css/themify-icons.css">
+
+<link rel="stylesheet" href="https://preskool.dreamstechnologies.com/ci/template/public/assets/css/bootstrap.min.css">
+
+<link rel="stylesheet" href="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/icons/feather/feather.css">
+
+<link rel="stylesheet" href="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/tabler-icons/tabler-icons.css">
+
+<link rel="stylesheet" href="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/daterangepicker/daterangepicker.css">
+
+<link rel="stylesheet" href="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/select2/css/select2.min.css">
+
+<link rel="stylesheet" href="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/fontawesome/css/fontawesome.min.css">
+<link rel="stylesheet" href="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/fontawesome/css/all.min.css">
+
+<link rel="stylesheet" href="https://preskool.dreamstechnologies.com/ci/template/public/assets/css/bootstrap-datetimepicker.min.css">
+
+<link rel="stylesheet" href="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/owlcarousel/owl.carousel.min.css">
+<link rel="stylesheet" href="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/owlcarousel/owl.theme.default.min.css">
+
+<link rel="stylesheet" href="https://preskool.dreamstechnologies.com/ci/template/public/assets/css/dataTables.bootstrap5.min.css">
+
+<link rel="stylesheet" href="https://preskool.dreamstechnologies.com/ci/template/public/assets/css/style.css"></head>
+
+<body>
+<div id="global-loader">
+<div class="page-loader"></div>
+</div>
+
+<div class="main-wrapper">
+
+<div class="header">
+
+<div class="header-left active">
+<a href="https://preskool.dreamstechnologies.com/ci/template/public/" class="logo logo-normal">
+<img src="https://preskool.dreamstechnologies.com/ci/template/public/assets/img/logo.svg" alt="Logo">
+</a>
+<a href="https://preskool.dreamstechnologies.com/ci/template/public/" class="logo-small">
+<img src="https://preskool.dreamstechnologies.com/ci/template/public/assets/img/logo-small.svg" alt="Logo">
+</a>
+<a href="https://preskool.dreamstechnologies.com/ci/template/public/" class="dark-logo">
+<img src="https://preskool.dreamstechnologies.com/ci/template/public/assets/img/logo-dark.svg" alt="Logo">
+</a>
+<a id="toggle_btn" href="javascript:void(0);">
+    <i class="bi bi-person-workspace"></i>
+
+
+
+
+
+
+</a>
+</div>
+
+<a id="mobile_btn" class="mobile_btn" href="#sidebar">
+<span class="bar-icon">
+<span></span>
+<span></span>
+<span></span>
+</span>
+</a>
+<div class="header-user">
+<div class="nav user-menu">
+
+<div class="nav-item nav-search-inputs me-auto">
+<div class="top-nav-search">
+<a href="javascript:void(0);" class="responsive-search">
+<i class="fa fa-search"></i>
+</a>
+<form action="#" class="dropdown">
+<div class="searchinputs" id="dropdownMenuClickable">
+<input type="text" placeholder="Search">
+<div class="search-addon">
+<button type="submit"><i class="ti ti-command"></i></button>
+</div>
+</div>
+</form>
+</div>
+</div>
+
+<div class="d-flex align-items-center">
+<div class="dropdown me-2">
+<!-- <a href="#" class="btn btn-outline-light fw-normal bg-white d-flex align-items-center p-2" data-bs-toggle="dropdown" aria-expanded="false">
+<i class="ti ti-calendar-due me-1"></i>Academic Year : 2024 / 2025
+</a> -->
+<div class="dropdown-menu dropdown-menu-right">
+<a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">
+Academic Year : 2023 / 2024
+</a>
+<a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">
+Academic Year : 2022 / 2023
+</a>
+<a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">
+Academic Year : 2021 / 2022
+</a>
+</div>
+</div>
+<div class="pe-1 ms-1">
+<div class="dropdown">
+<!-- <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center me-1 p-2" data-bs-toggle="dropdown" aria-expanded="false">
+<img src="https://preskool.dreamstechnologies.com/ci/template/public/assets/img/flags/us.png" alt="Language" class="img-fluid rounded-pill">
+</a> -->
+<div class="dropdown-menu dropdown-menu-right">
+<a href="javascript:void(0);" class="dropdown-item active d-flex align-items-center">
+<img class="me-2 rounded-pill" src="https://preskool.dreamstechnologies.com/ci/template/public/assets/img/flags/us.png" alt="Img" height="22" width="22"> English
+</a>
+<a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">
+<img class="me-2 rounded-pill" src="https://preskool.dreamstechnologies.com/ci/template/public/assets/img/flags/fr.png" alt="Img" height="22" width="22"> French
+</a>
+<a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">
+<img class="me-2 rounded-pill" src="https://preskool.dreamstechnologies.com/ci/template/public/assets/img/flags/es.png" alt="Img" height="22" width="22"> Spanish
+</a>
+<a href="javascript:void(0);" class="dropdown-item d-flex align-items-center">
+<img class="me-2 rounded-pill" src="https://preskool.dreamstechnologies.com/ci/template/public/assets/img/flags/de.png" alt="Img" height="22" width="22"> German
+</a>
+</div>
+</div>
+</div>
+<div class="pe-1">
+<div class="dropdown">
+<a href="#" class="btn btn-outline-light bg-white btn-icon me-1" data-bs-toggle="dropdown" aria-expanded="false">
+    <i class="bi bi-plus"></i>
+
+
+
+</a>
+<div class="dropdown-menu dropdown-menu-right border shadow-sm dropdown-md">
+<div class="p-3 border-bottom">
+<h5>Add New</h5>
+</div>
+<div class="p-4 pb-0">
+<div class="row gx-2">
+<div class="col-4">
+<a href="https://preskool.dreamstechnologies.com/ci/template/public/add-student" class="d-block bg-primary-transparent ronded p-2 text-center mb-3 class-hover">
+<div class="avatar avatar-lg mb-2">
+<span class="d-inline-flex align-items-center justify-content-center w-100 h-100 bg-primary rounded-circle"><i class="bi bi-person-badge"></i>
+</i></span>
+</div>
+<p class="text-dark">Students</p>
+</a>
+</div>
+<div class="col-4">
+<a href="https://preskool.dreamstechnologies.com/ci/template/public/add-teacher" class="d-block bg-success-transparent ronded p-2 text-center mb-3 class-hover">
+<div class="avatar avatar-lg mb-2">
+<span class="d-inline-flex align-items-center justify-content-center w-100 h-100 bg-success rounded-circle"><i class="bi bi-person-lines-fill"></i></span>
+</div>
+<p class="text-dark">Teachers</p>
+</a>
+</div>
+<div class="col-4">
+<a href="https://preskool.dreamstechnologies.com/ci/template/public/add-staff" class="d-block bg-warning-transparent ronded p-2 text-center mb-3 class-hover">
+<div class="avatar avatar-lg rounded-circle mb-2">
+<span class="d-inline-flex align-items-center justify-content-center w-100 h-100 bg-warning rounded-circle"><i class="bi bi-person-workspace"></i></span>
+</div>
+<p class="text-dark">Staffs</p>
+</a>
+</div>
+
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="pe-1">
+<a href="#" id="dark-mode-toggle" class="dark-mode-toggle activate btn btn-outline-light bg-white btn-icon me-1">
+    <i class="bi bi-moon"></i> <!-- Moon icon for dark mode -->
+</a>
+<a href="#" id="light-mode-toggle" class="dark-mode-toggle btn btn-outline-light bg-white btn-icon me-1">
+    <i class="bi bi-brightness-high"></i> <!-- Sun icon for light mode -->
+</a>
+
+</div>
+<div class="pe-1" id="notification_item">
+<!-- <a href="#" class="btn btn-outline-light bg-white btn-icon position-relative me-1" id="notification_popup">
+<i class="ti ti-bell"></i>
+<span class="notification-status-dot"></span>
+</a> -->
+<div class="dropdown-menu dropdown-menu-end notification-dropdown p-4">
+<div class="d-flex align-items-center justify-content-between border-bottom p-0 pb-3 mb-3">
+<h4 class="notification-title">Notifications (2)</h4>
+<div class="d-flex align-items-center">
+<a href="#" class="text-primary fs-15 me-3 lh-1">Mark all as read</a>
+<div class="dropdown">
+<a href="javascript:void(0);" class="bg-white dropdown-toggle" data-bs-toggle="dropdown"><i class="ti ti-calendar-due me-1"></i>Today
+</a>
+<ul class="dropdown-menu mt-2 p-3">
+<li>
+<a href="javascript:void(0);" class="dropdown-item rounded-1">
+This Week
+</a>
+</li>
+<li>
+<a href="javascript:void(0);" class="dropdown-item rounded-1">
+Last Week
+</a>
+</li>
+<li>
+<a href="javascript:void(0);" class="dropdown-item rounded-1">
+Last Week
+</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="noti-content">
+<div class="d-flex flex-column">
+<div class="border-bottom mb-3 pb-3">
+<a href="https://preskool.dreamstechnologies.com/ci/template/public/activities">
+<div class="d-flex">
+<span class="avatar avatar-lg me-2 flex-shrink-0">
+<img src="https://preskool.dreamstechnologies.com/ci/template/public/assets/img/profiles/avatar-27.jpg" alt="Profile">
+</span>
+<div class="flex-grow-1">
+<p class="mb-1"><span class="text-dark fw-semibold">Shawn</span> performance in Math is
+below the threshold.</p>
+<span>Just Now</span>
+</div>
+</div>
+</a>
+</div>
+<div class="border-bottom mb-3 pb-3">
+<a href="https://preskool.dreamstechnologies.com/ci/template/public/activities" class="pb-0">
+<div class="d-flex">
+<span class="avatar avatar-lg me-2 flex-shrink-0">
+<img src="https://preskool.dreamstechnologies.com/ci/template/public/assets/img/profiles/avatar-23.jpg" alt="Profile">
+</span>
+<div class="flex-grow-1">
+<p class="mb-1"><span class="text-dark fw-semibold">Sylvia</span> added appointment on
+02:00 PM</p>
+<span>10 mins ago</span>
+<div class="d-flex justify-content-start align-items-center mt-1">
+<a href="#" class="btn btn-light btn-sm me-2">Deny</a>
+<a href="#" class="btn btn-primary btn-sm">Approve</a>
+</div>
+</div>
+</div>
+</a>
+</div>
+<div class="border-bottom mb-3 pb-3">
+<a href="https://preskool.dreamstechnologies.com/ci/template/public/activities">
+<div class="d-flex">
+<span class="avatar avatar-lg me-2 flex-shrink-0">
+<img src="https://preskool.dreamstechnologies.com/ci/template/public/assets/img/profiles/avatar-25.jpg" alt="Profile">
+</span>
+<div class="flex-grow-1">
+<p class="mb-1">New student record <span class="text-dark fw-semibold"> George</span> is
+created by <span class="text-dark fw-semibold"> Teressa</span></p>
+<span>2 hrs ago</span>
+</div>
+</div>
+</a>
+</div>
+<div class="border-0 mb-3 pb-0">
+<a href="https://preskool.dreamstechnologies.com/ci/template/public/activities">
+<div class="d-flex">
+<span class="avatar avatar-lg me-2 flex-shrink-0">
+<img src="https://preskool.dreamstechnologies.com/ci/template/public/assets/img/profiles/avatar-01.jpg" alt="Profile">
+</span>
+<div class="flex-grow-1">
+<p class="mb-1">A new teacher record for <span class="text-dark fw-semibold">Elisa</span>
+</p>
+<span>09:45 AM</span>
+</div>
+</div>
+</a>
+</div>
+</div>
+</div>
+<div class="d-flex p-0">
+<a href="#" class="btn btn-light w-100 me-2">Cancel</a>
+<a href="https://preskool.dreamstechnologies.com/ci/template/public/activities" class="btn btn-primary w-100">View All</a>
+</div>
+</div>
+</div>
+<div class="pe-1">
+<!-- <a href="https://preskool.dreamstechnologies.com/ci/template/public/chat" class="btn btn-outline-light bg-white btn-icon position-relative me-1">
+<i class="ti ti-brand-hipchat"></i>
+<span class="chat-status-dot"></span>
+</a> -->
+</div>
+<div class="pe-1">
+<!-- <a href="#" class="btn btn-outline-light bg-white btn-icon me-1">
+<i class="ti ti-chart-bar"></i>
+</a> -->
+</div>
+<div class="pe-1">
+<a href="#" class="btn btn-outline-light bg-white btn-icon me-1" id="btnFullscreen">
+    <i class="bi bi-arrows-expand"></i>
+
+</a>
+</div>
+<div class="dropdown ms-1">
+<a href="javascript:void(0);" class="dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
+<span class="avatar avatar-md rounded">
+<img src="https://preskool.dreamstechnologies.com/ci/template/public/assets/img/profiles/avatar-27.jpg" alt="Img" class="img-fluid">
+</span>
+<!-- <i class="fas fa-plus ms-2"></i> -->
+</a>
+<div class="dropdown-menu">
+<div class="d-block">
+<div class="d-flex align-items-center p-2">
+<span class="avatar avatar-md me-2 online avatar-rounded">
+<img src="https://preskool.dreamstechnologies.com/ci/template/public/assets/img/profiles/avatar-27.jpg" alt="img">
+</span>
+<div>
+<h6 class>{{user}}</h6>
+<p class="text-primary mb-0">Administrator</p>
+</div>
+</div>
+<hr class="m-0">
+<a class="dropdown-item d-inline-flex align-items-center p-2" href="https://preskool.dreamstechnologies.com/ci/template/public/profile"> <i class="ti ti-user-circle me-2"></i>My Profile</a>
+<a class="dropdown-item d-inline-flex align-items-center p-2" href="https://preskool.dreamstechnologies.com/ci/template/public/profile-settings"><i class="ti ti-settings me-2"></i>Settings</a>
+<hr class="m-0">
+<a class="dropdown-item d-inline-flex align-items-center p-2" href="{% url 'dashboard-logout' %}"><i class="ti ti-login me-2"></i>Logout</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="dropdown mobile-user-menu">
+<a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+<div class="dropdown-menu dropdown-menu-end">
+<a class="dropdown-item" href="https://preskool.dreamstechnologies.com/ci/template/public/profile">My Profile</a>
+<a class="dropdown-item" href="https://preskool.dreamstechnologies.com/ci/template/public/profile-settings">Settings</a>
+<a class="dropdown-item" href="{% url 'dashboard-logout' %}">Logout</a>
+</div>
+</div>
+
+</div>
+
+
+<div class="sidebar" id="sidebar">
+<div class="sidebar-inner slimscroll">
+<div id="sidebar-menu" class="sidebar-menu">
+<ul>
+<li>
+    <!-- <a href="javascript:void(0);" class="d-flex align-items-center border bg-white rounded p-2 mb-4">
+        <span class="icon-addon">
+          <i class="bi bi-globe avatar-md text-primary"></i>
+        </span>
         <span class="text-dark ms-2 fw-normal">Global International</span>
+    </a> -->
+</li>
+</ul>
+<ul>
+
+    
+<li>
+<h6 class="submenu-hdr"><span>Main</span></h6>
+<ul>
+    <li class="">
+        <a href="{% url 'dashboard-home' %}">
+            <i class="bi bi-house-door"></i>
+            <span>Home</span>
         </a>
-        </li>
-        </ul>
-        <ul>
-        
-            
-        <li>
-        <h6 class="submenu-hdr"><span>Main</span></h6>
-        <ul>
-        <li class="submenu">
-        <a href="#" class="subdrop active"><i class="ti ti-layout-dashboard"></i><span>Home</span></a>
-        
-        </li>
-        
-        
-        </ul>
-        </li>
-        <li>
-        
-        </li>
-        <li>
-        <h6 class="submenu-hdr"><span>Student</span></h6>
-        <ul>
-            <li><a class="" href="/customer/">All Students</a></li>
-        <ul>
-        </ul>
-        
-        </ul>
-        </li>
-        
-        
-        </ul>
-        
-        
-        </div>
-        </div><div class="slimScrollBar" style="background: rgb(204, 204, 204); width: 7px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 385px;"></div><div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div></div>
-        </div>
+    </li>
+   
     
-    <div class="page-wrapper" style="min-height: 445px;">
-    
-    </div>
-    
-    
-    <div class="modal fade" id="add_fees_collect">
-    <div class="modal-dialog modal-dialog-centered  modal-lg">
-    <div class="modal-content">
-    <div class="modal-header">
-    <div class="d-flex align-items-center">
-    <h4 class="modal-title">Collect Fees</h4>
-    <span class="badge badge-sm bg-primary ms-2">AD124556</span>
-    </div>
-    <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
-    <i class="ti ti-x"></i>
-    </button>
-    </div>
-    <form action="https://preskool.dreamstechnologies.com/cakephp/template/student_grid">
-    <div class="modal-body">
-    <div class="bg-light-300 p-3 pb-0 rounded mb-4">
-    <div class="row align-items-center">
-    <div class="col-lg-3 col-md-6">
-    <div class="d-flex align-items-center mb-3">
-    <a href="https://preskool.dreamstechnologies.com/cakephp/template/student_details" class="avatar avatar-md me-2">
-    <img src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/img/students/student-01.jpg" alt="img"> </a>
-    <a href="https://preskool.dreamstechnologies.com/cakephp/template/student_details" class="d-flex flex-column"><span class="text-dark">Janet</span>III, A</a>
-    </div>
-    </div>
-    <div class="col-lg-3 col-md-6">
-    <div class="mb-3">
-    <span class="fs-12 mb-1">Total Outstanding</span>
-    <p class="text-dark">2000</p>
-    </div>
-    </div>
-    <div class="col-lg-3 col-md-6">
-    <div class="mb-3">
-    <span class="fs-12 mb-1">Last Date</span>
-    <p class="text-dark">25 May 2024</p>
-    </div>
-    </div>
-    <div class="col-lg-3 col-md-6">
-    <div class="mb-3">
-    <span class="badge badge-soft-danger"><i class="ti ti-circle-filled me-2"></i>Unpaid</span>
-    </div>
-    </div>
-    </div>
-    </div>
-    <div class="row">
-    <div class="col-lg-6">
-    <div class="mb-3">
-    <label class="form-label">Fees Group</label>
-    <select class="select select2-hidden-accessible" data-select2-id="select2-data-16-jakd" tabindex="-1" aria-hidden="true">
-    <option data-select2-id="select2-data-18-qqlk">Select</option>
-    <option>Class 1 General</option>
-    <option>Monthly Fees</option>
-    <option>Admission-Fees</option>
-    <option>Class 1- I Installment</option>
-    </select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="select2-data-17-jj35" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-slek-container" aria-controls="select2-slek-container"><span class="select2-selection__rendered" id="select2-slek-container" role="textbox" aria-readonly="true" title="Select">Select</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
-    </div>
-    </div>
-    <div class="col-lg-6">
-    <div class="mb-3">
-    <label class="form-label">Fees Type</label>
-    <select class="select select2-hidden-accessible" data-select2-id="select2-data-19-1r6o" tabindex="-1" aria-hidden="true">
-    <option data-select2-id="select2-data-21-phw1">Select</option>
-    <option>Tuition Fees</option>
-    <option>Monthly Fees</option>
-    <option>Admission Fees</option>
-    <option>Bus Fees</option>
-    </select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="select2-data-20-79r7" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-o0yb-container" aria-controls="select2-o0yb-container"><span class="select2-selection__rendered" id="select2-o0yb-container" role="textbox" aria-readonly="true" title="Select">Select</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
-    </div>
-    </div>
-    <div class="col-lg-6">
-    <div class="mb-3">
-    <label class="form-label">Amount</label>
-    <input type="text" class="form-control" placeholder="Enter Amout">
-    </div>
-    </div>
-    <div class="col-lg-6">
-    <div class="mb-3">
-    <label class="form-label">Collection Date</label>
-    <div class="date-pic">
-    <input type="text" class="form-control datetimepicker" placeholder="Select">
-    <span class="cal-icon"><i class="ti ti-calendar"></i></span>
-    </div>
-    </div>
-    </div>
-    <div class="col-lg-6">
-    <div class="mb-3">
-    <label class="form-label">Payment Type</label>
-    <select class="select select2-hidden-accessible" data-select2-id="select2-data-22-ioko" tabindex="-1" aria-hidden="true">
-    <option data-select2-id="select2-data-24-etcq">Select</option>
-    <option>Paytm</option>
-    <option>Cash On Delivery</option>
-    </select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="select2-data-23-ieok" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-3ndg-container" aria-controls="select2-3ndg-container"><span class="select2-selection__rendered" id="select2-3ndg-container" role="textbox" aria-readonly="true" title="Select">Select</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
-    </div>
-    </div>
-    <div class="col-lg-6">
-    <div class="mb-3">
-    <label class="form-label">Payment Reference No</label>
-    <input type="text" class="form-control" placeholder="Enter Payment Reference No">
-    </div>
-    </div>
-    <div class="col-lg-12">
-    <div class="modal-satus-toggle d-flex align-items-center justify-content-between mb-3">
-    <div class="status-title">
-    <h5>Status</h5>
-    <p>Change the Status by toggle </p>
-    </div>
-    <div class="status-toggle modal-status">
-    <input type="checkbox" id="user1" class="check">
-    <label for="user1" class="checktoggle"> </label>
-    </div>
-    </div>
-    </div>
-    <div class="col-lg-12">
-    <div class="mb-0">
-    <label class="form-label">Notes</label>
-    <textarea rows="4" class="form-control" placeholder="Add Notes"></textarea>
-    </div>
-    </div>
-    </div>
-    </div>
-    <div class="modal-footer">
-    <a href="#" class="btn btn-light me-2" data-bs-dismiss="modal">Cancel</a>
-    <button type="submit" class="btn btn-primary">Pay Fees</button>
-    </div>
-    </form>
-    </div>
-    </div>
-    </div>
-    
-    
-    <div class="modal fade" id="delete-modal">
-    <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-    <form action="https://preskool.dreamstechnologies.com/cakephp/template/student_grid">
-    <div class="modal-body text-center">
-    <span class="delete-icon">
-    <i class="ti ti-trash-x"></i>
-    </span>
-    <h4>Confirm Deletion</h4>
-    <p>You want to delete all the marked items, this cant be undone once you delete.</p>
-    <div class="d-flex justify-content-center">
-    <a href="javascript:void(0);" class="btn btn-light me-3" data-bs-dismiss="modal">Cancel</a>
-    <button type="submit" class="btn btn-danger">Yes, Delete</button>
-    </div>
-    </div>
-    </form>
-    </div>
-    </div>
-    </div>
-    
-    
-        <div class="sidebar-contact ">
-            
-            </div>
-            <div class="sidebar-themesettings offcanvas offcanvas-end" id="theme-setting">
-            <div class="offcanvas-header d-flex align-items-center justify-content-between bg-light-500">
-                <div>
-                    <h4 class="mb-1">Theme Customizer</h4>
-                    <p>Choose your themes &amp; layouts etc.</p>
-                </div>
-                <a href="#" class="custom-btn-close d-flex align-items-center justify-content-center text-white" data-bs-dismiss="offcanvas"><i class="ti ti-x"></i></a>
-            </div>
-            <div class="themesettings-inner offcanvas-body">
-                <div class="accordion accordion-customicon1 accordions-items-seperate" id="settingtheme">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button text-dark fs-16" type="button" data-bs-toggle="collapse" data-bs-target="#layoutsetting" aria-expanded="true" aria-controls="collapsecustomicon1One">
-                                Select Layouts
-                            </button>
-                        </h2>
-                        <div id="layoutsetting" class="accordion-collapse collapse show">
-                            <div class="accordion-body">
-                                <div class="row gx-3">
-                                    <div class="col-4">
-                                        <div class="theme-layout mb-3">
-                                            <input type="radio" name="LayoutTheme" id="defaultLayout" value="default" checked="">
-                                            <label for="defaultLayout">
-                                                <span class="d-block mb-2 layout-img">
-                                                    <img src="/customer/img/theme/default.svg" alt="img">
-                                                </span>                                     
-                                                <span class="layout-type">Default</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="theme-layout mb-3">
-                                            <input type="radio" name="LayoutTheme" id="miniLayout" value="mini">
-                                            <label for="miniLayout">
-                                                <span class="d-block mb-2 layout-img">
-                                                    <img src="/customer/img/theme/mini.svg" alt="img">
-                                                </span>                                    
-                                                <span class="layout-type">Mini</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="theme-layout mb-3">
-                                            <input type="radio" name="LayoutTheme" id="boxLayout" value="box">
-                                            <label for="boxLayout">
-                                                <span class="d-block mb-2 layout-img">
-                                                    <img src="/customer/img/theme/box.svg" alt="img">
-                                                </span>                                    
-                                                <span class="layout-type">Boxed</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <a href="layout_rtl" class="theme-layout mb-3">
-                                            <span class="d-block mb-2 layout-img">
-                                                <img src="/customer/img/theme/rtl.svg" alt="img">
-                                            </span>                                    
-                                            <span class="layout-type">RTL</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button text-dark fs-16" type="button" data-bs-toggle="collapse" data-bs-target="#colorsetting" aria-expanded="true">
-                                Top Bar Color
-                            </button>
-                        </h2>
-                        <div id="colorsetting" class="accordion-collapse collapse show">
-                            <div class="accordion-body">
-                               <div class="d-flex align-items-center">
-                                    <div class="theme-colorselect m-1 me-3">
-                                        <input type="radio" name="topbar" id="whiteTopbar" value="white" checked="">
-                                        <label for="whiteTopbar" class="white-topbar"></label>
-                                    </div>
-                                    <div class="theme-colorselect m-1 me-3">
-                                        <input type="radio" name="topbar" id="darkTopbar" value="dark">
-                                        <label for="darkTopbar" class="dark-topbar"></label>
-                                    </div>
-                                    <div class="theme-colorselect m-1 me-3">
-                                        <input type="radio" name="topbar" id="primaryTopbar" value="primary">
-                                        <label for="primaryTopbar" class="primary-topbar"></label>
-                                    </div>
-                                    <div class="theme-colorselect m-1">
-                                    <input type="radio" name="topbar" id="greyTopbar" value="grey">
-                                    <label for="greyTopbar" class="grey-topbar"></label>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> 
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button text-dark fs-16" type="button" data-bs-toggle="collapse" data-bs-target="#modesetting" aria-expanded="true">
-                                Color Mode
-                            </button>
-                        </h2>
-                        <div id="modesetting" class="accordion-collapse collapse show">
-                            <div class="accordion-body">
-                               <div class="row gx-3">
-                                    <div class="col-6">
-                                        <div class="theme-mode">
-                                            <input type="radio" name="theme" id="lightTheme" value="light" checked="">
-                                            <label for="lightTheme" class="p-2 rounded fw-medium w-100">                            
-                                                <span class="avatar avatar-md d-inline-flex rounded me-2"><i class="ti ti-sun-filled"></i></span>Light Mode
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="theme-mode">
-                                            <input type="radio" name="theme" id="darkTheme" value="dark">
-                                            <label for="darkTheme" class="p-2 rounded fw-medium w-100">                         
-                                                <span class="avatar avatar-md d-inline-flex rounded me-2"><i class="ti ti-moon-filled"></i></span>Dark Mode
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>   
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button text-dark fs-16" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarsetting" aria-expanded="true">
-                                Sidebar Color
-                            </button>
-                        </h2>
-                        <div id="sidebarsetting" class="accordion-collapse collapse show">
-                            <div class="accordion-body">
-                               <div class="d-flex align-items-center">
-                                    <div class="theme-colorselect m-1 me-3">
-                                        <input type="radio" name="sidebar" id="lightSidebar" value="light" checked="">
-                                        <label for="lightSidebar" class="d-block rounded mb-2">
-                                        </label>
-                                    </div>
-                                    <div class="theme-colorselect m-1 me-3">
-                                        <input type="radio" name="sidebar" id="darkSidebar" value="dark">
-                                        <label for="darkSidebar" class="d-block rounded bg-dark mb-2">
-                                        </label>
-                                    </div>
-                                    <div class="theme-colorselect m-1 me-3">
-                                        <input type="radio" name="sidebar" id="primarySidebar" value="primary">
-                                        <label for="primarySidebar" class="d-block rounded bg-primary mb-2">
-                                        </label>
-                                    </div>
-                                    <div class="theme-colorselect m-1 me-3">
-                                        <input type="radio" name="sidebar" id="darkblackSidebar" value="darkblack">
-                                        <label for="darkblackSidebar" class="d-block rounded bg-darkblack mb-2">
-                                        </label>
-                                    </div>
-                                    <div class="theme-colorselect m-1">
-                                        <input type="radio" name="sidebar" id="darkblueSidebar" value="darkblue">
-                                        <label for="darkblueSidebar" class="d-block rounded bg-darkblue mb-2">
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>     
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button text-dark fs-16" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarbgsetting" aria-expanded="true">
-                                Sidebar Background
-                            </button>
-                        </h2>
-                        <div id="sidebarbgsetting" class="accordion-collapse collapse show">
-                            <div class="accordion-body">
-                               <div class="d-flex align-items-center">
-                                    <div class="theme-sidebarbg me-3">
-                                        <input type="radio" name="sidebarbg" id="sidebarBg1" value="sidebarbg1" checked="">
-                                        <label for="sidebarBg1" class="d-block rounded">
-                                            <img src="/customer/img/theme/sidebar-bg-01.svg" alt="img" class="rounded">
-                                        </label>
-                                    </div>
-                                    <div class="theme-sidebarbg me-3">
-                                        <input type="radio" name="sidebarbg" id="sidebarBg2" value="sidebarbg2">
-                                        <label for="sidebarBg2" class="d-block rounded">
-                                            <img src="/customer/img/theme/sidebar-bg-02.svg" alt="img" class="rounded">
-                                        </label>
-                                    </div>
-                                    <div class="theme-sidebarbg me-3">
-                                        <input type="radio" name="sidebarbg" id="sidebarBg3" value="sidebarbg3">
-                                        <label for="sidebarBg3" class="d-block rounded">
-                                            <img src="/customer/img/theme/sidebar-bg-03.svg" alt="img" class="rounded">
-                                        </label>
-                                    </div>
-                                    <div class="theme-sidebarbg me-3">
-                                        <input type="radio" name="sidebarbg" id="sidebarBg4" value="sidebarbg4">
-                                        <label for="sidebarBg4" class="d-block rounded">
-                                            <img src="/customer/img/theme/sidebar-bg-04.svg" alt="img" class="rounded">
-                                        </label>
-                                    </div>
-                                    <div class="theme-sidebarbg me-3">
-                                        <input type="radio" name="sidebarbg" id="sidebarBg5" value="sidebarbg5">
-                                        <label for="sidebarBg5" class="d-block rounded">
-                                            <img src="/customer/img/theme/sidebar-bg-05.svg" alt="img" class="rounded">
-                                        </label>
-                                    </div>
-                                    <div class="theme-sidebarbg me-3">
-                                        <input type="radio" name="sidebarbg" id="sidebarBg6" value="sidebarbg6">
-                                        <label for="sidebarBg6" class="d-block rounded">
-                                            <img src="/customer/img/theme/sidebar-bg-06.svg" alt="img" class="rounded">
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>    
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button text-dark fs-16" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarcolor" aria-expanded="true">
-                                Theme Colors
-                            </button>
-                        </h2>
-                        <div id="sidebarcolor" class="accordion-collapse collapse show">
-                            <div class="accordion-body pb-2">
-                               <div class="d-flex align-items-center">
-                                    <div class="theme-colorsset me-3 mb-2">
-                                        <input type="radio" name="color" id="primaryColor" value="primary" checked="">
-                                        <label for="primaryColor" class="primary-clr"></label>
-                                    </div>
-                                    <div class="theme-colorsset me-3 mb-2">
-                                        <input type="radio" name="color" id="violetColor" value="violet">
-                                        <label for="violetColor" class="violet-clr"></label>
-                                    </div>
-                                    <div class="theme-colorsset me-3 mb-2">
-                                        <input type="radio" name="color" id="pinkColor" value="pink">
-                                        <label for="pinkColor" class="pink-clr"></label>
-                                    </div>
-                                    <div class="theme-colorsset me-3 mb-2">
-                                        <input type="radio" name="color" id="orangeColor" value="orange">
-                                        <label for="orangeColor" class="orange-clr"></label>
-                                    </div>
-                                    <div class="theme-colorsset me-3 mb-2">
-                                        <input type="radio" name="color" id="greenColor" value="green">
-                                        <label for="greenColor" class="green-clr"></label>
-                                    </div>
-                                    <div class="theme-colorsset me-3 mb-2">
-                                        <input type="radio" name="color" id="redColor" value="red">
-                                        <label for="redColor" class="red-clr"></label>
-                                    </div>  
-                                </div>
-                            </div>
-                        </div>
-                    </div>  
-                </div>     
-            </div>
-            <div class="bg-light-500 p-3">
-                <div class="row gx-3">
-                    <div class="col-6">
-                        <a href="#" id="resetbutton" class="btn btn-light close-theme w-100">Reset</a>
-                    </div>
-                    <div class="col-6">
-                        <a href="https://1.envato.market/52Ndo" target="_blank" class="btn btn-primary w-100">Buy Now</a>
-                    </div>
-                </div>
-            </div>
-            </div>
-                    </div>
-    
-    
-    <script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/jquery-3.7.1.min.js" type="text/javascript"></script>
-    
-    <script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/bootstrap.bundle.min.js" type="text/javascript"></script>
-    
-    <script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/moment.js" type="text/javascript"></script> <script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/plugins/daterangepicker/daterangepicker.js" type="text/javascript"></script> <script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
-    
-    <script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/feather.min.js" type="text/javascript"></script>
-    
-    <script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/jquery.slimscroll.min.js" type="text/javascript"></script>
-    
-    <script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/plugins/apexchart/apexcharts.min.js" type="text/javascript"></script> <script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/plugins/apexchart/chart-data.js" type="text/javascript"></script>
-    
-    <script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/plugins/owlcarousel/owl.carousel.min.js" type="text/javascript"></script>
-    
-    <script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/plugins/select2/js/select2.min.js" type="text/javascript"></script>
-    
-    <script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/plugins/countup/jquery.counterup.min.js" type="text/javascript"></script> <script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/plugins/countup/jquery.waypoints.min.js" type="text/javascript"></script>
-    
-    <script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/theme-script.js" type="text/javascript"></script>
-    
-    <script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/script.js" type="text/javascript"></script>
-    
-    
-    <svg id="SvgjsSvg1001" width="2" height="0" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev" style="overflow: hidden; top: -100%; left: -100%; position: absolute; opacity: 0;"><defs id="SvgjsDefs1002"></defs><polyline id="SvgjsPolyline1003" points="0,0"></polyline><path id="SvgjsPath1004" d="M0 0 "></path></svg><div class="sidebar-overlay"></div><div class="daterangepicker ltr show-ranges opensright"><div class="ranges"><ul><li data-range-key="Today">Today</li><li data-range-key="Yesterday">Yesterday</li><li data-range-key="Last 7 Days">Last 7 Days</li><li data-range-key="Last 30 Days">Last 30 Days</li><li data-range-key="This Year">This Year</li><li data-range-key="Next Year">Next Year</li><li data-range-key="Custom Range">Custom Range</li></ul></div><div class="drp-calendar left"><div class="calendar-table"></div><div class="calendar-time" style="display: none;"></div></div><div class="drp-calendar right"><div class="calendar-table"></div><div class="calendar-time" style="display: none;"></div></div><div class="drp-buttons"><span class="drp-selected"></span><button class="cancelBtn btn btn-sm btn-default" type="button">Cancel</button><button class="applyBtn btn btn-sm btn-primary" disabled="disabled" type="button">Apply</button> </div></div></body><!-- Mirrored from preskool.dreamstechnologies.com/cakephp/template/student_grid by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 18 Sep 2024 07:12:42 GMT --></html>
+
+</ul>
+<h6 class="submenu-hdr"><span>Students</span></h6>
+<ul>
+<li class="">
+    <a href="{% url 'dashboard-customer' %}">
+        <i class="bi bi-person-lines-fill"></i>
+        <span>All Students</span>
+    </a>
+</li>
+
+
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+{% block content %}{% endblock content %}
