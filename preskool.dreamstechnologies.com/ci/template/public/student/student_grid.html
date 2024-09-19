@@ -11,12 +11,10 @@
                 <nav>
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item">
-                            <a href="https://preskool.dreamstechnologies.com/cakephp/template/home">Dashboard</a>
+                            <a href="{% url 'dashboard-home' %}">Dashboard</a>
                         </li>
-                        <li class="breadcrumb-item">
-                            Peoples
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">Students Grid</li>
+                        
+                        <li class="breadcrumb-item active" aria-current="page">Students </li>
                     </ol>
                 </nav>
             </div>
@@ -30,31 +28,18 @@
                 
                 </div>
                 <div class="pe-1 mb-2">
-                    <button type="button" class="btn btn-outline-light bg-white btn-icon me-1" data-bs-toggle="tooltip"
-                        data-bs-placement="top" aria-label="Print" data-bs-original-title="Print">
+                    <button type="button" class="btn btn-outline-light bg-white btn-icon me-1" 
+                        data-bs-toggle="tooltip" data-bs-placement="top" 
+                        aria-label="Print" data-bs-original-title="Print"
+                        onclick="printPage()">
                         <i class="bi bi-printer"></i>
                     </button>
                 </div>
-                <div class="dropdown me-2 mb-2">
-                    <a href="javascript:void(0);"
-                        class="dropdown-toggle btn btn-light fw-medium d-inline-flex align-items-center"
-                        data-bs-toggle="dropdown">
-                        <i class="bi bi-file-earmark-arrow-up me-2"></i>Export
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end p-3">
-                        <li>
-                            <a href="javascript:void(0);" class="dropdown-item rounded-1"><i
-                                    class="bi bi-file-earmark-pdf me-2"></i>Export as PDF</a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);" class="dropdown-item rounded-1"><i
-                                    class="bi bi-file-earmark-spreadsheet me-2"></i>Export as Excel </a>
-                        </li>
-                    </ul>
-                </div>
+                
+               
 
                 <div class="mb-2">
-                    <a href="https://preskool.dreamstechnologies.com/cakephp/template/add_student"
+                    <a href="{% url 'dashboard-customer-add' %}"
                         class="btn btn-primary d-flex align-items-center"><i
                             class="ti ti-square-rounded-plus me-2"></i>Add Student</a>
                 </div>
@@ -66,104 +51,41 @@
             class="bg-white p-3 border rounded-1 d-flex align-items-center justify-content-between flex-wrap mb-4 pb-0">
             <h4 class="mb-3">Students Grid</h4>
             <div class="d-flex align-items-center flex-wrap">
+                <!-- Date Range Picker -->
                 <div class="input-icon-start mb-3 me-2 position-relative">
                     <span class="icon-addon">
                         <i class="fa fa-calendar"></i>
                     </span>
-                    <input type="text" class="form-control date-range bookingrange" placeholder="Select"
-                        value="Academic Year : 2024 / 2025">
+                    <input type="text" class="form-control custom-date-picker" placeholder="Select Date Range">
                 </div>
-                <div class="dropdown mb-3 me-2">
-                    <!-- <a href="javascript:void(0);" class="btn btn-outline-light bg-white dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside"> <i class="fa fa-filter me-2"></i>Filter</a> -->
-                    <div class="dropdown-menu drop-width">
-                        <form action="https://preskool.dreamstechnologies.com/cakephp/template/student_grid">
-                            <div class="d-flex align-items-center border-bottom p-3">
-                                <h4>Filter</h4>
-                            </div>
-                            <div class="p-3 pb-0 border-bottom">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Class</label>
-                                            <select class="select">
-                                                <option>Select</option>
-                                                <option>I</option>
-                                                <option>II</option>
-                                                <option>III</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Section</label>
-                                            <select class="select">
-                                                <option>Select</option>
-                                                <option>A</option>
-                                                <option>B</option>
-                                                <option>C</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="mb-3">
-                                            <label class="form-label">Name</label>
-                                            <select class="select">
-                                                <option>Select</option>
-                                                <option>Janet</option>
-                                                <option>Joann</option>
-                                                <option>Kathleen</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Gender</label>
-                                            <select class="select">
-                                                <option>Select</option>
-                                                <option>Male</option>
-                                                <option>Female</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Status</label>
-                                            <select class="select">
-                                                <option>Select</option>
-                                                <option>Active</option>
-                                                <option>Inactive</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="p-3 d-flex align-items-center justify-content-end">
-                                <a href="#" class="btn btn-light me-3">Reset</a>
-                                <button type="submit" class="btn btn-primary">Apply</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
+            
+                <!-- Sort by Dropdown -->
                 <div class="dropdown mb-3">
                     <a href="javascript:void(0);" class="btn btn-outline-light bg-white dropdown-toggle"
-                        data-bs-toggle="dropdown"><i class="ti ti-sort-ascending-2 me-2"></i>Sort by</a>
+                       data-bs-toggle="dropdown">
+                       <i class="bi bi-sort-alpha-up me-2"></i>Sort by
+                    </a>
+                
                     <ul class="dropdown-menu p-3">
-                        
                         <li>
-                            <a href="?sort=name_ascending{% if request.GET.page %}&page={{ request.GET.page }}{% endif %}" class="dropdown-item rounded-1 {% if current_sort == 'name_ascending' %}active{% endif %}">
+                            <a href="javascript:void(0);" data-sort="name_ascending"
+                               class="dropdown-item rounded-1 {% if current_sort == 'name_ascending' %}active{% endif %}">
                                 Name A-Z
                             </a>
                         </li>
                         <li>
-                            <a href="?sort=name_descending{% if request.GET.page %}&page={{ request.GET.page }}{% endif %}" class="dropdown-item rounded-1 {% if current_sort == 'name_descending' %}active{% endif %}">
+                            <a href="javascript:void(0);" data-sort="name_descending"
+                               class="dropdown-item rounded-1 {% if current_sort == 'name_descending' %}active{% endif %}">
                                 Name Z-A
                             </a>
                         </li>
                     </ul>
                 </div>
                 
+                
+                
             </div>
+            
         </div>
 
         <div class="row">
@@ -172,7 +94,7 @@
             <div class="col-xxl-3 col-xl-4 col-md-6 d-flex">
                 <div class="card flex-fill">
                     <div class="card-header d-flex align-items-center justify-content-between">
-                        <a href="" class="link-primary">{{ user.username }}</a>
+                        <a href="" class="link-primary">{{ user.id }}</a>
                         <div class="d-flex align-items-center">
                             <span class="badge badge-soft-success d-inline-flex align-items-center me-1">
                                 <i class="bi bi-circle-fill fs-5 me-1"></i>Active
@@ -183,22 +105,22 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-right p-3">
                                     <li>
-                                        <a class="dropdown-item rounded-1" href="">
+                                        <a class="dropdown-item rounded-1" href="{% url 'dashboard-user-detail' pk=user.id %}">
                                             <i class="bi bi-eye me-2"></i>View Student
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item rounded-1" href="">
+                                        <a class="dropdown-item rounded-1" href="{% url 'dashboard-customer-update' pk=user.id %}">
                                             <i class="bi bi-pencil me-2"></i>Edit
                                         </a>
                                     </li>
-                                    <li>
+                                    <!-- <li>
                                         <a class="dropdown-item rounded-1" href="">
                                             <i class="bi bi-arrow-right-circle me-2"></i>Promote Student
                                         </a>
-                                    </li>
+                                    </li> -->
                                     <li>
-                                        <a class="dropdown-item rounded-1" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal">
+                                        <a class="dropdown-item rounded-1" href="#" data-bs-toggle="modal" data-user-id="{{ user.id }}" data-bs-target="#delete-modal">
                                             <i class="bi bi-trash me-2"></i>Delete
                                         </a>
                                     </li>
@@ -211,7 +133,12 @@
                         <div class="bg-light-300 rounded-2 p-3 mb-3">
                             <div class="d-flex align-items-center">
                                 <a href="" class="avatar avatar-lg flex-shrink-0">
-                                    <img src="{{user.image}}" class="img-fluid rounded-circle" alt="N/A" />
+                                    {% if user.image %}
+                                        <img src="{{ user.image.url }}" class="img-fluid rounded-circle" alt="{{ user.name }}'s image" />
+                                    {% else %}
+                                    <i class="bi bi-person-circle fs-3 text-dark" style="background: #f0f0f0; border-radius: 50%; padding: 10px;"></i>
+
+                                    {% endif %}
                                 </a>
                                 <div class="ms-2">
                                     <h5 class="mb-0 text-dark text-truncate">
@@ -223,10 +150,7 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center justify-content-between gx-2">
-                            <div>
-                                <p class="mb-0">ID</p>
-                                <p class="text-dark">{{ user.id }}</p>
-                            </div>
+                           
                             <div>
                                 <p class="mb-0">Email</p>
                                 <p class="text-dark">{{ user.email }}</p>
@@ -237,20 +161,7 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="card-footer d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle p-0 me-2">
-                                <i class="bi bi-chat-dots"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle p-0 me-2">
-                                <i class="bi bi-telephone"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle p-0 me-3">
-                                <i class="bi bi-envelope"></i>
-                            </a>
-                        </div>
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#add_fees_collect" class="btn btn-light btn-sm fw-semibold">Add Fees</a>
-                    </div> -->
+                   
                 </div>
             </div>
         {% endfor %}
@@ -454,22 +365,21 @@
 <div class="modal fade" id="delete-modal">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form action="https://preskool.dreamstechnologies.com/cakephp/template/student_grid">
-                <div class="modal-body text-center">
-                    <span class="delete-icon">
-                        <i class="fas fa-trash-alt"></i>
-                    </span>
-                    <h4>Confirm Deletion</h4>
-                    <p>You want to delete all the marked items, this cant be undone once you delete.</p>
-                    <div class="d-flex justify-content-center">
-                        <a href="javascript:void(0);" class="btn btn-light me-3" data-bs-dismiss="modal">Cancel</a>
-                        <button type="submit" class="btn btn-danger">Yes, Delete</button>
-                    </div>
+            <div class="modal-body text-center">
+                <span class="delete-icon">
+                    <i class="fas fa-trash-alt"></i>
+                </span>
+                <h4>Confirm Deletion</h4>
+                <p>You want to delete the selected item. This action cannot be undone.</p>
+                <div class="d-flex justify-content-center">
+                    <button class="btn btn-light me-3" data-bs-dismiss="modal">Cancel</button>
+                    <button id="delete-record" class="btn btn-danger">Yes, Delete</button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
+
 
 </div>
 
@@ -525,3 +435,111 @@
 <!-- Mirrored from preskool.dreamstechnologies.com/cakephp/template/student_grid by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 18 Sep 2024 07:12:42 GMT -->
 
 </html>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function () {
+    $(document).on('click', '.dropdown-item[data-bs-target="#delete-modal"]', function () {
+        var userId = $(this).data('user-id');
+        $('#delete-record').data('user-id', userId);
+    });
+
+    $('#delete-record').click(function () {
+        var userId = $(this).data('user-id');
+
+        console.log("Deleting User ID: " + userId);
+
+        $.ajax({
+            url: '/customer/delete/' + userId + '/',
+            type: 'POST',
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function (data) {
+                console.log("Deleted successfully");
+                window.location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.error("Error deleting user:", error);
+            }
+        });
+    });
+});
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<!-- Include Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize flatpickr date picker
+        const datepicker = flatpickr(".custom-date-picker", {
+            mode: "range",
+            dateFormat: "Y-m-d",
+            onClose: function(selectedDates, dateStr, instance) {
+                if (selectedDates.length === 2) {
+                    let startDate = selectedDates[0].toISOString().split('T')[0];
+                    let endDate = selectedDates[1].toISOString().split('T')[0];
+    
+                    // Get the current sort parameter
+                    const sort = new URL(window.location.href).searchParams.get('sort');
+    
+                    // Update URL with date range and sort parameter
+                    updateURL(startDate, endDate, sort);
+                }
+            }
+        });
+    
+        function updateURL(startDate, endDate, sort) {
+            const url = new URL(window.location.href);
+    
+            // Set date range parameters
+            url.searchParams.set('start_date', startDate);
+            url.searchParams.set('end_date', endDate);
+    
+            // Set or preserve sorting parameter
+            if (sort) {
+                url.searchParams.set('sort', sort);
+            }
+    
+            // Redirect to updated URL
+            window.location.href = url;
+        }
+    
+        function handleSortChange(event) {
+            const sort = event.target.getAttribute('data-sort');
+            const url = new URL(window.location.href);
+    
+            // Get existing date range parameters
+            const startDate = url.searchParams.get('start_date');
+            const endDate = url.searchParams.get('end_date');
+    
+            // Update URL with sorting parameter
+            updateURL(startDate, endDate, sort);
+        }
+    
+        // Add event listener to sorting links
+        document.querySelectorAll('.dropdown-menu .dropdown-item').forEach(item => {
+            item.addEventListener('click', handleSortChange);
+        });
+    
+        function clearFiltersOnRefresh() {
+            const url = new URL(window.location.href);
+    
+            // Optionally: Remove date range and sorting parameters on refresh
+            url.searchParams.delete('start_date');
+            url.searchParams.delete('end_date');
+            url.searchParams.delete('sort');
+    
+            // Redirect to URL without filters
+            window.history.replaceState(null, '', url);
+        }
+    
+        // Trigger function to clear filters on page load
+        window.addEventListener('load', function() {
+            clearFiltersOnRefresh();
+        });
+    });
+    </script>
+    

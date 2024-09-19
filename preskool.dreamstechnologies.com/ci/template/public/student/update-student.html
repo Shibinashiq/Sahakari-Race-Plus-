@@ -5,7 +5,7 @@
 
         <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
             <div class="my-auto mb-2">
-                <h3 class="mb-1">Add Student</h3>
+                <h3 class="mb-1">Update Student</h3>
                 <nav>
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item">
@@ -14,7 +14,7 @@
                         <li class="breadcrumb-item">
                             <a href="{% url 'dashboard-customer' %}">Students</a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">Add Student</li>
+                        <li class="breadcrumb-item active" aria-current="page">Update Student</li>
                     </ol>
                 </nav>
             </div>
@@ -48,21 +48,23 @@
                             {% if form.image.value %}
                                 <img id="image-preview" src="{{ form.image.value.url }}" alt="Profile Image" style="width: 100px; height: 100px; object-fit: cover;">
                             {% else %}
-                            <i class="bi bi-image fs-16"></i>
+                                <i id="image-placeholder-icon" class="bi bi-image fs-16"></i>
                             {% endif %}
                         </div>
                         <div class="profile-upload">
                             <div class="profile-uploader d-flex align-items-center">
                                 <div class="drag-upload-btn mb-3">
                                     Upload
-                                    <!-- Use Django crispy-forms to render the image input field -->
+                                    <!-- Ensure the form field has the class 'image-sign' -->
                                     {{ form.image }}
                                 </div>
+                                <a href="javascript:void(0);" class="btn btn-primary mb-3" id="remove-image">Remove</a>
                             </div>
                             <p class="fs-12">Upload image size 4MB, Format JPG, PNG, SVG</p>
                         </div>
                     </div>
                 </div>
+                
             </div>
         
             <!-- Form Fields Rendering -->
@@ -100,46 +102,74 @@
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var imageInput = document.querySelector('input[type="file"].image-sign');
-        var imagePreview = document.getElementById('image-preview');
-        var imagePlaceholder = document.getElementById('image-placeholder-icon');
+    var imageInput = document.querySelector('input[type="file"].image-sign');
+    var imagePreview = document.getElementById('image-preview');
+    var imagePlaceholder = document.getElementById('image-placeholder-icon');
+    var removeButton = document.getElementById('remove-image');
+    
+    console.log("Document loaded, initializing script.");
 
-        if (imageInput) {
-            imageInput.addEventListener('change', function() {
-                var file = imageInput.files[0];
-                if (file) {
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        if (imagePreview) {
-                            imagePreview.src = e.target.result;
-                            imagePreview.style.display = 'block';
-                            if (imagePlaceholder) {
-                                imagePlaceholder.style.display = 'none';
-                            }
-                        }
-                    }
-                    reader.readAsDataURL(file);
-                } else {
-                    // Clear the preview if no file is selected
+    if (imageInput) {
+        console.log("Image input found.");
+
+        imageInput.addEventListener('change', function() {
+            var file = imageInput.files[0];
+            console.log("File selected:", file);
+
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    console.log("File read successfully.");
                     if (imagePreview) {
-                        imagePreview.src = '';
-                        imagePreview.style.display = 'none';
+                        imagePreview.src = e.target.result;
+                        imagePreview.style.display = 'block';
+                        console.log("Image preview updated.");
                         if (imagePlaceholder) {
-                            imagePlaceholder.style.display = 'block';
+                            imagePlaceholder.style.display = 'none';
                         }
                     }
                 }
-            });
-        }
-
-        // Handle the case where an image might already be present
-        if (imagePreview && imagePreview.src) {
-            imagePreview.style.display = 'block';
-            if (imagePlaceholder) {
-                imagePlaceholder.style.display = 'none';
+                reader.readAsDataURL(file);
+            } else {
+                console.log("No file selected.");
+                if (imagePreview) {
+                    imagePreview.src = '';
+                    imagePreview.style.display = 'none';
+                    if (imagePlaceholder) {
+                        imagePlaceholder.style.display = 'block';
+                    }
+                }
             }
+        });
+
+        removeButton.addEventListener('click', function() {
+            console.log("Remove button clicked.");
+            if (imageInput) {
+                imageInput.value = '';  // Clear the file input
+                console.log("Image input cleared.");
+            }
+            if (imagePreview) {
+                imagePreview.src = '';
+                imagePreview.style.display = 'none';
+                console.log("Image preview cleared.");
+            }
+            if (imagePlaceholder) {
+                imagePlaceholder.style.display = 'block';
+                console.log("Image placeholder displayed.");
+            }
+        });
+    } else {
+        console.log("Image input not found.");
+    }
+
+    // Handle the case where an image might already be present
+    if (imagePreview && imagePreview.src) {
+        imagePreview.style.display = 'block';
+        if (imagePlaceholder) {
+            imagePlaceholder.style.display = 'none';
         }
-    });
+    }
+});
 </script>
 
 

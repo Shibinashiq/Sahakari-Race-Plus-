@@ -2,18 +2,32 @@ from dashboard.views.imports import *
 
 @login_required(login_url='dashboard-login')
 def manager(request):
-    sort_option = request.GET.get('sort', 'name_ascending')
-
-    if sort_option == 'ascending':
-        user_list = CustomUser.objects.filter(is_deleted=False, is_staff=False, is_superuser=False).order_by('id')
-    elif sort_option == 'descending':
-        user_list = CustomUser.objects.filter(is_deleted=False, is_staff=False, is_superuser=False).order_by('-id')
-    elif sort_option == 'name_ascending':
-        user_list = CustomUser.objects.filter(is_deleted=False, is_staff=False, is_superuser=False).order_by('name')
-    elif sort_option == 'name_descending':
-        user_list = CustomUser.objects.filter(is_deleted=False, is_staff=False, is_superuser=False).order_by('-name')
+    sort_option = request.GET.get('sort')
+    
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    if end_date:
+        end_date = (datetime.strptime(end_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
+    if start_date:
+        start_date = (datetime.strptime(start_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
+    user_filter = CustomUser.objects.filter(is_deleted=False, is_staff=False, is_superuser=False)
+    
+    if start_date and end_date:
+        user_filter = user_filter.filter(created__range=[start_date, end_date])
     else:
-        user_list = CustomUser.objects.filter(is_deleted=False, is_staff=False, is_superuser=False).order_by('-id')
+        start_date = None
+        end_date = None
+    
+    if sort_option == 'ascending':
+        user_list = user_filter.order_by('id')
+    elif sort_option == 'descending':
+        user_list = user_filter.order_by('-id')
+    elif sort_option == 'name_ascending':
+        user_list = user_filter.order_by('name')
+    elif sort_option == 'name_descending':
+        user_list = user_filter.order_by('-name')
+    else:
+        user_list = user_filter.order_by('-id')
 
     paginator = Paginator(user_list, 25)
     page_number = request.GET.get('page')
@@ -21,10 +35,19 @@ def manager(request):
 
     context = {
         "users": users,
-        "current_sort": sort_option,  
+        "current_sort": sort_option,
+        "start_date": start_date,
+        "end_date": end_date
     }
 
     return render(request, "ci/template/public/student/student_grid.html", context)
+
+
+
+
+
+
+
 
 
 @login_required(login_url='dashboard-login')
@@ -135,14 +158,14 @@ def add(request):
                 "title": "Add Customer | Dashboard",
                 "form": form,
             }
-            return render(request, "dashboard/webpages/customer/add.html", context)
+            return render(request, "ci/template/public/student/add-student.html", context)
     else:
         form = CustomerForm()  
         context = {
             "title": "Add Customer",
             "form": form,
         }
-        return render(request, "dashboard/webpages/customer/add.html", context)
+        return render(request, "ci/template/public/student/add-student.html", context)
 
 
 
@@ -178,20 +201,22 @@ def update(request, pk):
                 "title": "Update Customer | Dashboard",
                 "form": form,
             }
-            return render(request, "dashboard/webpages/customer/update.html", context)
+            return render(request, "ci/template/public/student/update-student.html", context)
     else:
         form = CustomerForm(instance=customer)
         context = {
             "title": "Update Customer",
             "form": form,
         }
-        return render(request, "dashboard/webpages/customer/update.html", context)
+        return render(request, "ci/template/public/student/update-student.html", context)
 
 
 
 @login_required(login_url='dashboard-login')
 def delete(request,pk):
+    print("Delete request received 1")
     if request.method == "POST":
+        print("Delete request received")
         customer = get_object_or_404(CustomUser, pk=pk)
         customer.is_deleted = True
         customer.save()
@@ -204,21 +229,27 @@ def delete(request,pk):
 
 from django.db.models import Count
     
-@login_required(login_url='dashboard-login')
 def detail(request, pk):
     customer = get_object_or_404(CustomUser, pk=pk)
     subscriptions = Subscription.objects.filter(user=customer, is_deleted=False).prefetch_related('batch')
+    
+    batches = Batch.objects.filter(subscription__in=subscriptions).distinct()
+
+    courses = Course.objects.filter(batch__in=batches).distinct()
+
     unique_batches_count = subscriptions.aggregate(
         total_batches=Count('batch', distinct=True)
     )['total_batches']
+
     context = {
         "title": "Customer Detail",
         "customer": customer,
         "subscriptions": subscriptions,
-        "sub_count":unique_batches_count
+        "sub_count": unique_batches_count,
+        "courses": courses  
     }
-    return render (request,"dashboard/webpages/customer/detail.html",context)
     
+    return render(request, "ci/template/public/student/student-details.html", context)
     
 
 
@@ -312,3 +343,9 @@ def subscription_delete(request,pk):
     else:
         messages.success(request, " Action denied!")
         return redirect('dashboard-user-detail',pk=user_id)
+
+
+
+
+def result(request,pk):
+    return render(request,'ci/template/public/student/student-result.html')
