@@ -4,7 +4,7 @@ from dashboard.models import *
 class BatchForm(forms.ModelForm):
     class Meta:
         model = Batch
-        fields = ['batch_expiry', 'batch_price', 'course', 'start_date']
+        fields = ['course', 'batch_price',  'start_date' ,'batch_expiry']
         widgets = {
             'batch_expiry': forms.DateInput(attrs={'class': 'form-control', 'required': True, 'type': 'date'}),
             'batch_price': forms.NumberInput(attrs={'class': 'form-control', 'required': True}),

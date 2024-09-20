@@ -1,7 +1,11 @@
 from dashboard.views.imports import *
 
 def manager(request):
-    return render(request, 'dashboard/webpages/comment/manager.html')
+    comments = Comment.objects.filter(is_deleted=False)
+    context = {
+        'comments': comments,
+    }
+    return render(request, 'ci/template/public/comment/comment.html',context)
 
 def list(request):
     draw = int(request.GET.get("draw", 1))

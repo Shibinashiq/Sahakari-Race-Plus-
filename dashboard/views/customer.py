@@ -6,7 +6,6 @@ def manager(request):
     start_date = request.GET.get('start_date', None)
     end_date = request.GET.get('end_date', None)
 
-    # Check if the date values are valid and not 'null'
     if start_date and start_date.lower() != 'null':
         start_date = datetime.strptime(start_date, "%Y-%m-%d").strftime("%Y-%m-%d")
     else:
@@ -22,7 +21,6 @@ def manager(request):
     if start_date and end_date:
         user_filter = user_filter.filter(created__range=[start_date, end_date])
     
-    # Sorting options
     if sort_option == 'ascending':
         user_list = user_filter.order_by('id')
     elif sort_option == 'descending':
