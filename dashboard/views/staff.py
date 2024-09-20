@@ -1,11 +1,57 @@
 from dashboard.views.imports import *
 
+@login_required(login_url='dashboard-login')
 def manager(request):
-    return render (request,'dashboard/webpages/staff/manager.html')
+    sort_option = request.GET.get('sort')
+    
+    start_date = request.GET.get('start_date', None)
+    end_date = request.GET.get('end_date', None)
 
+    if start_date and start_date.lower() != 'null':
+        start_date = datetime.strptime(start_date, "%Y-%m-%d").strftime("%Y-%m-%d")
+    else:
+        start_date = None
+
+    if end_date and end_date.lower() != 'null':
+        end_date = (datetime.strptime(end_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
+    else:
+        end_date = None
+    
+    user_filter = CustomUser.objects.filter(is_deleted=False, is_superuser=False, is_staff=True)
+    
+    if start_date and end_date:
+        user_filter = user_filter.filter(created__range=[start_date, end_date])
+    
+    if sort_option == 'ascending':
+        user_list = user_filter.order_by('id')
+    elif sort_option == 'descending':
+        user_list = user_filter.order_by('-id')
+    elif sort_option == 'name_ascending':
+        user_list = user_filter.order_by('name')
+    elif sort_option == 'name_descending':
+        user_list = user_filter.order_by('-name')
+    else:
+        user_list = user_filter.order_by('-id')
+
+    paginator = Paginator(user_list, 25)
+    page_number = request.GET.get('page')
+    users = paginator.get_page(page_number)
+
+    staff_count = user_filter.count()
+
+    context = {
+        "users": users,
+        "current_sort": sort_option,
+        "start_date": start_date,
+        "end_date": end_date,
+        "staff_count": staff_count,
+    }
+
+    return render(request, "ci/template/public/staff/staffs.html", context)
 
 
 def list(request):
+    print("hiiiiiiiiiiiiiiiiiiiiiiiiiiii")
     draw = int(request.GET.get("draw", 1))
     start = int(request.GET.get("start", 0))
     length = int(request.GET.get("length", 10))
@@ -76,7 +122,8 @@ def add(request):
         form = StaffForm(request.POST, request.FILES)
         if form.is_valid():
             customer = form.save(commit=False)
-            customer.is_staff = True                
+            customer.is_staff = True 
+            customer.is_active = True               
             customer.save()
            
 
@@ -89,14 +136,14 @@ def add(request):
                 "title": "Add staff | Dashboard",
                 "form": form,
             }
-            return render(request, "dashboard/webpages/staff/add.html", context)
+            return render(request, "ci/template/public/staff/add-staff.html", context)
     else:
         form = StaffForm()  
         context = {
             "title": "Add Customer",
             "form": form,
         }
-        return render(request, "dashboard/webpages/staff/add.html", context)
+        return render(request, "ci/template/public/staff/add-staff.html", context)
 
 
 
@@ -117,14 +164,14 @@ def update(request, pk):
                 "title": "Update Customer | Dashboard",
                 "form": form,
             }
-            return render(request, "dashboard/webpages/staff/update.html", context)
+            return render(request, "ci/template/public/staff/update-staff.html", context)
     else:
         form = StaffForm(instance=customer)
         context = {
             "title": "Update Customer",
             "form": form,
         }
-        return render(request, "dashboard/webpages/staff/update.html", context)
+        return render(request, "ci/template/public/staff/update-staff.html", context)
     
 
 
@@ -161,3 +208,6 @@ def set_password(request, pk):
         form = PasswordSettingForm(user_id=pk)
 
     return render(request, 'dashboard/webpages/staff/password.html', {'form': form, 'pk': pk})
+
+
+

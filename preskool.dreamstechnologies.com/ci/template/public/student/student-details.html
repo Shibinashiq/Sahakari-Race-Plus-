@@ -34,10 +34,11 @@
                     </div>
                     <div class="d-flex my-xl-auto right-content align-items-center  flex-wrap">
                         <a href="#" class="btn btn-light me-2 mb-2" data-bs-toggle="modal"
-                            data-bs-target="#login_detail"><i class="ti ti-lock me-2"></i>Login Details</a>
+                            data-bs-target="#login_detail"><i class="bi bi-lock me-2"></i>
+Login Details</a>
                         <a href="{% url 'dashboard-customer-update' pk=customer.id %}"
-                            class="btn btn-primary d-flex align-items-center mb-2"><i
-                                class="ti ti-edit-circle me-2"></i>Edit Student</a>
+                            class="btn btn-primary d-flex align-items-center mb-2"><i class="bi bi-pencil-fill me-2"></i>
+                                                        Edit Student</a>
                     </div>
                 </div>
             </div>
@@ -81,7 +82,7 @@
                             <dt class="col-6 fw-medium text-dark mb-3">Phone Number</dt>
                             <dd class="col-6 mb-3">{{customer.phone_number}}</dd>
 
-                            <dt class="col-6 fw-medium text-dark mb-3">Course Purchased</dt>
+                            <!-- <dt class="col-6 fw-medium text-dark mb-3">Course Purchased</dt>
                             <dd class="col-6 mb-3">
                                 {% if courses %}
                                 {% for course in courses %}
@@ -90,7 +91,7 @@
                                 {% else %}
                                 <span class="badge badge-light text-dark">No courses purchased</span>
                                 {% endif %}
-                            </dd>
+                            </dd> -->
                         </dl>
                         <a href="#" data-bs-toggle="modal" data-bs-target="#add_fees_collect"
                             class="btn btn-primary btn-sm w-100">Add Fees</a>
@@ -127,53 +128,43 @@
 
 
                 <div class="card border-white">
-                    <div class="card-body pb-1">
-                        <ul class="nav nav-tabs nav-tabs-bottom mb-3">
-                            <li class="nav-item"><a class="nav-link active" href="#hostel"
-                                    data-bs-toggle="tab">Hostel</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#transport"
-                                    data-bs-toggle="tab">Transportation</a></li>
+                    <div class="card-body">
+                        <h5 class="mb-3">Purchased Courses</h5>
+                
+                        <!-- Display Batch Details -->
+                        <ul class="list-unstyled">
+                            {% for batch in batch_details %}
+                                <li class="mb-3 border-bottom pb-3">
+                                    <div class="d-flex align-items-start">
+                                        <span class="avatar avatar-sm bg-light-300 rounded me-3 flex-shrink-0 text-default">
+                                            <i class="bi bi-journal-bookmark fs-5"></i>
+                                        </span>
+                                        <div>
+                                            <strong>Course:</strong> {{ batch.course_name }} <br>
+                                            <strong>
+                                                <i class="bi bi-calendar me-1"></i> Start Date:
+                                            </strong>
+                                            {{ batch.start_date|date:"F j, Y" }} <br>
+                                            <strong>
+                                                <i class="bi bi-calendar-x me-1"></i> End Date:
+                                            </strong>
+                                            {{ batch.expiry_date|date:"F j, Y" }} <br>
+                                            <strong>
+                                                <i class="bi bi-currency-rupee me-1"></i>
+                                                    Price:
+                                            </strong>
+                                            ${{ batch.price|floatformat:2 }} <br>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% empty %}
+                                <li>No batches found.</li>
+                            {% endfor %}
                         </ul>
-                        <div class="tab-content">
-                            <div class="tab-pane fade show active" id="hostel">
-                                <div class="d-flex align-items-center mb-3">
-                                    <span
-                                        class="avatar avatar-md bg-light-300 rounded me-2 flex-shrink-0 text-default"><i
-                                            class="ti ti-building-fortress fs-16"></i></span>
-                                    <div>
-                                        <h6 class="fs-14 mb-1">HI-Hostel, Floor</h6>
-                                        <p class="text-primary">Room No : 25</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="transport">
-                                <div class="d-flex align-items-center mb-3">
-                                    <span
-                                        class="avatar avatar-md bg-light-300 rounded me-2 flex-shrink-0 text-default"><i
-                                            class="ti ti-bus fs-16"></i></span>
-                                    <div>
-                                        <span class="fs-12 mb-1">Route</span>
-                                        <p class="text-dark">Newyork</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="mb-3">
-                                            <span class="fs-12 mb-1">Bus Number</span>
-                                            <p class="text-dark">AM 54548</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="mb-3">
-                                            <span class="fs-12 mb-1">Pickup Point</span>
-                                            <p class="text-dark">Cincinatti</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
+                
+                
 
             </div>
 
@@ -181,11 +172,9 @@
                 <div class="row">
                     <ul class="nav nav-tabs nav-tabs-bottom mb-4">
                         <li>
-                            <a href="#" class="nav-link" data-target="studentDetails">Student Details</a>
+                            <a href="#" class="nav-link" data-target="studentDetails">Student & ExamDetails</a>
                         </li>
-                        <li>
-                            <a href="#" class="nav-link" data-target="examResults">Exam & Results</a>
-                        </li>
+                        
                     </ul>
                     <div class="card" id="studentDetails" class="tab-content">
                         <div class="col-md-12">
@@ -534,16 +523,23 @@
                                         <h4 class="modal-title">Login Details</h4>
                                         <button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal"
                                             aria-label="Close">
-                                            <i class="ti ti-x"></i>
+                                          <i class="bi bi-x"></i>
+
+
                                         </button>
                                     </div>
                                     <div class="modal-body">
                                         <div class="student-detail-info">
-                                            <span class="student-img"><img
-                                                    src="https://preskool.dreamstechnologies.com/html/template/assets/img/students/student-01.jpg"
-                                                    alt="Img"></span>
+                                            <span class="student-img">
+                                                    {% if customer.image.url %}
+                                                        <img src="{{ customer.image.url }}" alt="Img">
+                                                    {% else %}
+                                                        <img src="https://preskool.dreamstechnologies.com/html/template/assets/img/students/student-01.jpg" alt="Img">
+                                                    {% endif %}
+                                                </span>
+
                                             <div class="name-info">
-                                                <h6>Janet <span>III, A</span></h6>
+                                                <h6>{{customer.name}}</h6>
                                             </div>
                                         </div>
                                         <div class="table-responsive custom-table no-datatable_length">
@@ -556,15 +552,11 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td>Parent</td>
-                                                        <td>parent53</td>
-                                                        <td>parent@53</td>
-                                                    </tr>
+                                                   
                                                     <tr>
                                                         <td>Student</td>
-                                                        <td>student20</td>
-                                                        <td>stdt@53</td>
+                                                        <td>{{customer.name}}</td>
+                                                        <td>{{customer.password}}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -773,26 +765,6 @@
                     </body>
 
                     <!-- Mirrored from preskool.dreamstechnologies.com/html/template/student-details.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 18 Sep 2024 04:06:32 GMT -->
-                    <script>
-                        function showTab(event, tabId) {
-    // Prevent default anchor behavior
-    event.preventDefault();
-
-    // Hide all tab content
-    const tabs = document.querySelectorAll('.tab-content');
-    tabs.forEach(tab => tab.style.display = 'none');
-
-    // Remove 'active' class from all nav links
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => link.classList.remove('active'));
-
-    // Show the selected tab
-    document.getElementById(tabId).style.display = 'block';
-
-    // Add 'active' class to the clicked tab
-    event.currentTarget.classList.add('active');
-}
-
-                    </script>
+                  
 
                     </html>

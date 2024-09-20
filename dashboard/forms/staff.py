@@ -3,9 +3,13 @@ from dashboard.views.imports import *
 
 
 class StaffForm(forms.ModelForm):
+    image = forms.ImageField(
+        required=False,
+        widget=forms.FileInput(attrs={'class': 'form-control-file'}),
+    )
     class Meta:
         model = CustomUser
-        fields = ['name', 'password', 'phone_number']
+        fields = ['image','name', 'password', 'phone_number' ]
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
             'phone_number': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
@@ -58,6 +62,9 @@ class StaffForm(forms.ModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
         password = self.cleaned_data.get('password')
+        if self.cleaned_data.get('image'):
+            instance.image = self.cleaned_data.get('image')
+
 
         if password:
             instance.set_password(password)

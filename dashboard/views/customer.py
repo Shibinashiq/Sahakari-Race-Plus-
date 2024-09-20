@@ -1,23 +1,28 @@
 from dashboard.views.imports import *
-
 @login_required(login_url='dashboard-login')
 def manager(request):
     sort_option = request.GET.get('sort')
     
-    start_date = request.GET.get('start_date')
-    end_date = request.GET.get('end_date')
-    if end_date:
+    start_date = request.GET.get('start_date', None)
+    end_date = request.GET.get('end_date', None)
+
+    # Check if the date values are valid and not 'null'
+    if start_date and start_date.lower() != 'null':
+        start_date = datetime.strptime(start_date, "%Y-%m-%d").strftime("%Y-%m-%d")
+    else:
+        start_date = None
+
+    if end_date and end_date.lower() != 'null':
         end_date = (datetime.strptime(end_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
-    if start_date:
-        start_date = (datetime.strptime(start_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
-    user_filter = CustomUser.objects.filter(is_deleted=False, is_staff=False, is_superuser=False)
+    else:
+        end_date = None
+    
+    user_filter = CustomUser.objects.filter(is_deleted=False, is_staff=False, is_active=True, is_superuser=False)
     
     if start_date and end_date:
         user_filter = user_filter.filter(created__range=[start_date, end_date])
-    else:
-        start_date = None
-        end_date = None
     
+    # Sorting options
     if sort_option == 'ascending':
         user_list = user_filter.order_by('id')
     elif sort_option == 'descending':
@@ -29,6 +34,7 @@ def manager(request):
     else:
         user_list = user_filter.order_by('-id')
 
+    # Pagination
     paginator = Paginator(user_list, 25)
     page_number = request.GET.get('page')
     users = paginator.get_page(page_number)
@@ -41,10 +47,6 @@ def manager(request):
     }
 
     return render(request, "ci/template/public/student/student_grid.html", context)
-
-
-
-
 
 
 
@@ -150,6 +152,7 @@ def add(request):
         form = CustomerForm(request.POST, request.FILES)
         if form.is_valid():
             customer = form.save(commit=False)
+            customer.is_active = True
             customer.save()
             messages.success(request, "Customer added successfully!")
             return redirect('dashboard-customer')
@@ -232,25 +235,26 @@ from django.db.models import Count
 def detail(request, pk):
     customer = get_object_or_404(CustomUser, pk=pk)
     subscriptions = Subscription.objects.filter(user=customer, is_deleted=False).prefetch_related('batch')
-    
-    batches = Batch.objects.filter(subscription__in=subscriptions).distinct()
 
-    courses = Course.objects.filter(batch__in=batches).distinct()
-
-    unique_batches_count = subscriptions.aggregate(
-        total_batches=Count('batch', distinct=True)
-    )['total_batches']
+    batch_details = []
+    for subscription in subscriptions:
+        for batch in subscription.batch.all():
+            batch_details.append({
+                'start_date': batch.start_date,
+                'expiry_date': batch.batch_expiry,
+                'price': batch.batch_price,
+                'course_name': batch.course.course_name,
+            })
 
     context = {
         "title": "Customer Detail",
         "customer": customer,
         "subscriptions": subscriptions,
-        "sub_count": unique_batches_count,
-        "courses": courses  
+        "batch_details": batch_details,  # Add this line
     }
     
     return render(request, "ci/template/public/student/student-details.html", context)
-    
+
 
 
 
