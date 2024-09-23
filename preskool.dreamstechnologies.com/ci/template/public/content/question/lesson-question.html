@@ -13,14 +13,16 @@
 
         <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
             <div class="my-auto mb-2">
-                <h3 class="page-title mb-1">Exam</h3>
+                <h3 class="page-title mb-1">Question</h3>
                 <nav>
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item">
                             <a href="{% url 'dashboard-home' %}">Dashboard</a>
                         </li>
                        
-                        <li class="breadcrumb-item active" aria-current="page">Exam</li>
+                        <li class="breadcrumb-item active" aria-current="page">TalentHunt</li>
+                        <li class="breadcrumb-item active" aria-current="page">TalentHunt-Subject</li>
+                        <li class="breadcrumb-item active" aria-current="page">Level</li>
                         <li class="breadcrumb-item active" aria-current="page">Question</li>
                     </ol>
                 </nav>
@@ -45,7 +47,7 @@
                 
                
                 <div class="mb-2">
-                    <a href="{% url 'dashboard-exam-question-add' exam_id=exam_id %}"
+                    <a href="{% url 'dashboard-chapter-question-add' chapter %}"
                         class="btn btn-primary d-flex align-items-center"><i class="bi bi-plus-circle me-2"></i>
                         Add Question</a>
                 </div>
@@ -54,7 +56,7 @@
 
         <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">
-                <h4 class="mb-3">Exam List</h4>
+                <h4 class="mb-3">Question List</h4>
                 <div class="d-flex align-items-center flex-wrap">
                     <!-- Date Range Picker -->
                     <div class="input-icon-start mb-3 me-2 position-relative">
@@ -119,7 +121,7 @@
                                 <th>ID</th>
                                 <th>Question Description</th>
                                 <th>Hint</th>
-                                  <th>Options</th>
+                                <th>Options</th>
                                 <th>Correct Answers</th>
                                 <th>Created</th>
                                 <th>Action</th>
@@ -136,14 +138,15 @@
                                 </td>
                 
                                 <!-- Question ID -->
-                                <td><a href="#" class="link-primary">{{ question.id }}</a></td>
+                                <td><a href="#">{{ question.id }}</a></td>
                 
                                 <!-- Question Description -->
                                 <td>{{ question.question_description|safe }}</td>
-
                 
                                 <!-- Hint -->
                                 <td>{{ question.hint|default:"N/A" }}</td>
+                
+                                <!-- Options -->
                                 <td>
                                     <ul>
                                         {% for option in question.options %}
@@ -164,28 +167,26 @@
                                         {% endfor %}
                                     </ul>
                                 </td>
+                
                                 <!-- Created Date -->
                                 <td>{{ question.created|date:"Y-m-d H:i:s" }}</td>
                 
                                 <!-- Action (Edit/Delete) -->
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <a href="{% url 'dashboard-exam-question-update' exam_id=exam_id question_id=question.id %}" class="text-primary me-3" title="Edit Question">
+                                        <a href="{% url 'dashboard-level-question-update' pk=question.id %}" class="text-primary me-3" title="Edit Question">
                                             <i class="bi bi-pencil-square me-2"></i>
                                         </a>
-                                        
-                                        
                                         
                                         <a class="btn-delete" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal" data-question-id="{{ question.id }}" title="Delete Question">
                                             <i class="bi bi-trash me-2"></i>
                                         </a>
-                                        
                                     </div>
                                 </td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="6" class="text-center">No questions found.</td>
+                                <td colspan="8" class="text-center">No questions found.</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -204,6 +205,7 @@
                         {% endif %}
                     </div>
                 </div>
+                
                 
                 
 
@@ -305,13 +307,13 @@ $(document).on('click', '.btn-delete', function () {
 
 // Deletion logic
 $('#delete-record').click(function () {
-    var examId = "{{ exam_id }}";  // Fetch the exam ID from your context
+    var chapterId = "{{ chapter }}";  // Fetch the chapter ID from your context
     var questionId = $(this).data('question-id');  // Get the question ID stored in the modal button
 
-    console.log("Deleting Question ID: " + questionId + " for Exam ID: " + examId);
+    console.log("Deleting Question ID: " + questionId + " for Chapter ID: " + chapterId);
 
     $.ajax({
-        url: '/exam/question/delete/' + examId + '/' + questionId + '/',  // Pass both IDs to the delete URL
+        url: '/chapter/question/delete/' + questionId + '/' + chapterId + '/',  // Pass both IDs to the delete URL
         type: 'POST',
         data: {
             csrfmiddlewaretoken: '{{ csrf_token }}',  // Pass the CSRF token for security

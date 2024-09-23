@@ -113,7 +113,11 @@
                                     </div>
                                 </td>
                                 <td><a href="" class="link-primary">{{ talenthunt.id }}</a></td>
-                                <td>{{ talenthunt.title|default:"N/A" }}</td>
+                                <td>
+                                    <a href="{% url 'dashboard-talenthunt-subject-manager' pk=talenthunt.id %}" class="link-primary">
+                                        {{ talenthunt.title|default:"N/A" }}
+                                    </a>
+                                </td>
                                 <td>{{ talenthunt.course.course_name|default:"N/A" }}</td>
                                 <td>{{ talenthunt.created|date:"Y-m-d H:i:s" }}</td>
                                 <td>

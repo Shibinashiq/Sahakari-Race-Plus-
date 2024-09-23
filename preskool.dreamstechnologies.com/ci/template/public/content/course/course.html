@@ -1,10 +1,5 @@
 {% include 'base.html' %}
-{% load static %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-
 
 
 
@@ -13,15 +8,14 @@
 
         <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
             <div class="my-auto mb-2">
-                <h3 class="page-title mb-1">Exam</h3>
+                <h3 class="page-title mb-1">Course</h3>
                 <nav>
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item">
                             <a href="{% url 'dashboard-home' %}">Dashboard</a>
                         </li>
                        
-                        <li class="breadcrumb-item active" aria-current="page">Exam</li>
-                        <li class="breadcrumb-item active" aria-current="page">Question</li>
+                        <li class="breadcrumb-item active" aria-current="page">Course</li>
                     </ol>
                 </nav>
             </div>
@@ -45,16 +39,16 @@
                 
                
                 <div class="mb-2">
-                    <a href="{% url 'dashboard-exam-question-add' exam_id=exam_id %}"
+                    <a href="{% url 'dashboard-course-add' %}"
                         class="btn btn-primary d-flex align-items-center"><i class="bi bi-plus-circle me-2"></i>
-                        Add Question</a>
+                        Add Course</a>
                 </div>
             </div>
         </div>
 
         <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">
-                <h4 class="mb-3">Exam List</h4>
+                <h4 class="mb-3">Course List</h4>
                 <div class="d-flex align-items-center flex-wrap">
                     <!-- Date Range Picker -->
                     <div class="input-icon-start mb-3 me-2 position-relative">
@@ -85,18 +79,18 @@
                                     Name Z-A
                                 </a>
                             </li>
-                            <!-- <li>
-                                <a href="javascript:void(0);" data-sort="duration_ascending"
-                                   class="dropdown-item rounded-1 {% if current_sort == 'duration_ascending' %}active{% endif %}">
-                                    Duration Ascending
+                            <li>
+                                <a href="javascript:void(0);" data-sort="price_ascending"
+                                   class="dropdown-item rounded-1 {% if current_sort == 'price_ascending' %}active{% endif %}">
+                                    Price Low to High
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0);" data-sort="duration_descending"
-                                   class="dropdown-item rounded-1 {% if current_sort == 'duration_descending' %}active{% endif %}">
-                                    Duration Descending
+                                <a href="javascript:void(0);" data-sort="price_descending"
+                                   class="dropdown-item rounded-1 {% if current_sort == 'price_descending' %}active{% endif %}">
+                                    Price High to Low
                                 </a>
-                            </li> -->
+                            </li>
                         </ul>
                         
                     </div>
@@ -106,7 +100,6 @@
                 </div>
             </div>
             <div class="card-body p-0 py-3">
-
                 <div class="table-responsive">
                     <table class="table">
                         <thead class="thead-light">
@@ -117,100 +110,71 @@
                                     </div>
                                 </th>
                                 <th>ID</th>
-                                <th>Question Description</th>
-                                <th>Hint</th>
-                                  <th>Options</th>
-                                <th>Correct Answers</th>
+                                <th>image</th>
+
+                                <th>Course Name</th>
+                                <th>Description</th>
                                 <th>Created</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for question in questions %}
+                            {% for course in courses %}
                             <tr>
-                                <!-- Checkbox -->
                                 <td>
                                     <div class="form-check form-check-md">
                                         <input class="form-check-input" type="checkbox">
                                     </div>
                                 </td>
-                
-                                <!-- Question ID -->
-                                <td><a href="#" class="link-primary">{{ question.id }}</a></td>
-                
-                                <!-- Question Description -->
-                                <td>{{ question.question_description|safe }}</td>
-
-                
-                                <!-- Hint -->
-                                <td>{{ question.hint|default:"N/A" }}</td>
-                                <td>
-                                    <ul>
-                                        {% for option in question.options %}
-                                            <li>{{ option }}</li>
-                                        {% empty %}
-                                            <li>No options available</li>
-                                        {% endfor %}
-                                    </ul>
-                                </td>
-                
-                                <!-- Correct Answers -->
-                                <td>
-                                    <ul>
-                                        {% for answer in question.right_answers %}
-                                            <li>{{ answer }}</li>
-                                        {% empty %}
-                                            <li>No correct answers available</li>
-                                        {% endfor %}
-                                    </ul>
-                                </td>
-                                <!-- Created Date -->
-                                <td>{{ question.created|date:"Y-m-d H:i:s" }}</td>
-                
-                                <!-- Action (Edit/Delete) -->
+                                <td><a href="#" class="link-primary">{{ course.id }}</a></td>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <a href="{% url 'dashboard-exam-question-update' exam_id=exam_id question_id=question.id %}" class="text-primary me-3" title="Edit Question">
+                                        <a href="" class="avatar avatar-md">
+                                            {% if course.image %}
+                                                <img src="{{ course.image.url }}" class="img-fluid rounded-circle" alt="{{ user.name }}" />
+                                            {% else %}
+                                            <i class="bi bi-person-circle fs-3 text-dark" ></i>
+                                            {% endif %}
+                                        </a>
+                                        
+                                    </div>
+                                    
+                                </td>
+                                <td>
+                                    <a href="{% url 'dashboard-course-subjects-list' course.id %}" class="link-primary">
+                                        {{ course.course_name }}
+                                    </a>
+                                </td>
+                                
+                                <td>{{ course.description|truncatewords:10 }}</td>
+                                <td>{{ course.created|date:"Y-m-d" }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <!-- Edit Course -->
+                                        <a href="{% url 'dashboard-course-update' pk=course.id %}" class="text-primary me-3" title="Edit Course">
                                             <i class="bi bi-pencil-square me-2"></i>
                                         </a>
-                                        
-                                        
-                                        
-                                        <a class="btn-delete" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal" data-question-id="{{ question.id }}" title="Delete Question">
+                                        <!-- Delete Course (Delete confirmation via modal) -->
+                                        <a class="btn-delete" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal" data-batch-id="{{ course.id }}" title="Delete Course">
                                             <i class="bi bi-trash me-2"></i>
                                         </a>
-                                        
                                     </div>
                                 </td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="6" class="text-center">No questions found.</td>
+                                <td colspan="7" class="text-center">No courses found.</td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-                
-                    <!-- Pagination controls -->
-                    <div class="pagination">
-                        {% if questions.has_previous %}
-                            <a href="?page=1" class="btn btn-primary">First</a>
-                            <a href="?page={{ questions.previous_page_number }}" class="btn btn-primary">Previous</a>
-                        {% endif %}
-                        <span>Page {{ questions.number }} of {{ questions.paginator.num_pages }}</span>
-                        {% if questions.has_next %}
-                            <a href="?page={{ questions.next_page_number }}" class="btn btn-primary">Next</a>
-                            <a href="?page={{ questions.paginator.num_pages }}" class="btn btn-primary">Last</a>
-                        {% endif %}
-                    </div>
                 </div>
-                
-                
-
             </div>
+            
         </div>
     </div>
 </div>
+
 
 
 <div class="modal fade" id="delete-modal">
@@ -219,6 +183,7 @@
             <div class="modal-body text-center">
                 <span class="delete-icon">
                     <i class="bi bi-trash"></i>
+
                 </span>
                 <h4>Confirm Deletion</h4>
                 <p>You want to delete the selected item. This action cannot be undone.</p>
@@ -292,42 +257,39 @@
 
 
 </html>
-<script src="{% static 'dashboard/assets/libs/sweetalert2/sweetalert2.min.js' %}"></script>
-<script src="{% static 'dashboard/assets/libs/apexcharts/apexcharts.min.js' %}"></script>
-<script src="{% static 'dashboard/assets/js/pages/modal.init.js' %}"></script>
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-// Store question ID when the delete button is clicked
-$(document).on('click', '.btn-delete', function () {
-    var questionId = $(this).data('question-id');  // Get the question ID
-    $('#delete-record').data('question-id', questionId);  // Store it in the modal's button
-});
+$(document).ready(function () {
+    $(document).on('click', '.btn-delete', function () {
+        var batchId = $(this).data('batch-id'); // Use batch-id instead of user-id
+        $('#delete-record').data('batch-id', batchId); // Store the batch ID in the modal button
+    });
 
-// Deletion logic
-$('#delete-record').click(function () {
-    var examId = "{{ exam_id }}";  // Fetch the exam ID from your context
-    var questionId = $(this).data('question-id');  // Get the question ID stored in the modal button
 
-    console.log("Deleting Question ID: " + questionId + " for Exam ID: " + examId);
+    $('#delete-record').click(function () {
+        var userId = $(this).data('batch-id');
 
-    $.ajax({
-        url: '/exam/question/delete/' + examId + '/' + questionId + '/',  // Pass both IDs to the delete URL
-        type: 'POST',
-        data: {
-            csrfmiddlewaretoken: '{{ csrf_token }}',  // Pass the CSRF token for security
-        },
-        success: function (data) {
-            console.log("Deleted successfully");
-            window.location.reload();  // Reload the page after successful deletion
-        },
-        error: function(xhr, status, error) {
-            console.error("Error deleting question:", error);
-        }
+        console.log("Deleting User ID: " + userId);
+
+        $.ajax({
+            url: '/course/delete/' + userId + '/',
+            type: 'POST',
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function (data) {
+                console.log("Deleted successfully");
+                window.location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.error("Error deleting user:", error);
+            }
+        });
     });
 });
-
-
-    </script>
+</script>
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">

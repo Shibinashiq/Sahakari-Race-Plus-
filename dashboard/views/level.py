@@ -3,11 +3,50 @@ from dashboard.views.imports import *
 
 
 @login_required(login_url='dashboard-login')
-def manager(request,pk):
-    context={
-         'pk':pk
+def manager(request, pk):
+    start_date = request.GET.get('start_date', None)
+    end_date = request.GET.get('end_date', None)
+    sort_option = request.GET.get('sort', 'name_ascending')  
+
+    if start_date and start_date.lower() != 'null':
+        try:
+            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+        except ValueError:
+            start_date = None
+
+    if end_date and end_date.lower() != 'null':
+        try:
+            end_date = datetime.strptime(end_date, "%Y-%m-%d").date() + timedelta(days=1)  
+        except ValueError:
+            end_date = None
+
+    level_filter = Level.objects.filter(is_deleted=False, talenthuntsubject=pk)
+
+    if start_date and end_date:
+        level_filter = level_filter.filter(created__range=[start_date, end_date])
+
+    if sort_option == 'name_ascending':
+        level_filter = level_filter.order_by('created')
+    elif sort_option == 'name_descending':
+        level_filter = level_filter.order_by('-created')
+    # elif sort_option == 'date_ascending':
+    #     level_filter = level_filter.order_by('created')
+    # elif sort_option == 'date_descending':
+    #     level_filter = level_filter.order_by('-created')
+
+    paginator = Paginator(level_filter, 25)
+    page_number = request.GET.get('page')
+    levels_paginated = paginator.get_page(page_number)
+
+    context = {
+        'pk': pk,  
+        'levels': levels_paginated,
+        'start_date': start_date,
+        'end_date': end_date,
+        'current_sort': sort_option,
     }
-    return render(request, 'dashboard/webpages/level/manager.html',context)
+
+    return render(request, 'ci/template/public/level/levels.html', context)
 
 
 
@@ -74,7 +113,6 @@ def add(request,pk):
         form = LevelForm(request.POST, request.FILES)
         if form.is_valid():
             level = form.save(commit=False)
-            talenthuntsubject= form.cleaned_data.get('talenthuntsubject')
             level.talenthuntsubject = talenthuntsubject
 
             level.save()
@@ -88,7 +126,7 @@ def add(request,pk):
                 "form": form,
                 "pk":pk,
             }
-            return render(request, "dashboard/webpages/level/add.html", context)
+            return render(request, "ci/template/public/level/add-level.html", context)
     else:
             form = LevelForm()  
             context = {
@@ -96,7 +134,7 @@ def add(request,pk):
                 "form": form,
                 "pk":pk,
             }
-            return render(request, "dashboard/webpages/level/add.html", context)
+            return render(request, "ci/template/public/level/add-level.html", context)
     
 
 
@@ -118,7 +156,7 @@ def update(request, pk, level_id):
                 "pk": pk,
                 "level_id": level_id
             }
-            return render(request, "dashboard/webpages/level/update.html", context)
+            return render(request, "ci/template/public/level/update-level.html", context)
     
     else:
         form = LevelForm(instance=level)
@@ -128,7 +166,7 @@ def update(request, pk, level_id):
             "pk": pk,
             "level_id": level_id
         }
-        return render(request, "dashboard/webpages/level/update.html", context)
+        return render(request, "ci/template/public/level/update-level.html", context)
     
 
 @login_required(login_url='dashboard-login')
@@ -149,13 +187,51 @@ def delete(request, pk):
 
 
 
-
 @login_required(login_url='dashboard-login')
-def level_question_manager(request,pk):
-    context={
-         'pk':pk
+def level_question_manager(request, pk):
+    search_query = request.GET.get('search', '')  
+    start_date = request.GET.get('start_date', '')  
+    end_date = request.GET.get('end_date', '') 
+    sort_option = request.GET.get('sort', 'created')  
+
+    questions = Question.objects.filter(is_deleted=False, level=pk)
+
+    if search_query:
+        questions = questions.filter(text__icontains=search_query)
+
+    if start_date and start_date.lower() != 'null':
+        try:
+            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+        except ValueError:
+            start_date = None
+
+    if end_date and end_date.lower() != 'null':
+        try:
+            end_date = datetime.strptime(end_date, "%Y-%m-%d").date() + timedelta(days=1)  
+        except ValueError:
+            end_date = None
+
+    if sort_option == 'text_asc':
+        questions = questions.order_by('text')
+    elif sort_option == 'text_desc':
+        questions = questions.order_by('-text')
+    else:
+        questions = questions.order_by('-created')  
+
+    paginator = Paginator(questions, 25) 
+    page_number = request.GET.get('page')
+    paginated_questions = paginator.get_page(page_number)
+
+    context = {
+        'pk': pk,
+        'questions': paginated_questions,
+        'search_query': search_query,
+        'start_date': start_date,
+        'end_date': end_date,
+        'current_sort': sort_option,
     }
-    return render(request, 'dashboard/webpages/level/question_manager.html',context)
+
+    return render(request, 'ci/template/public/level/level-question.html', context)
 
 
 @login_required(login_url='dashboard-login')
@@ -251,17 +327,16 @@ def level_question_add(request,pk):
             messages.success(request, "Question added successfully.")
             return redirect('dashboard-level-question-manager',pk)  
         else:
-            return render(request, 'dashboard/webpages/level/question_add.html', {'form': form ,'pk':pk})
+            return render(request, 'ci/template/public/level/add-level-question.html', {'form': form ,'pk':pk})
 
     else:
         form = QuestionForm()  
 
-    return render(request, 'dashboard/webpages/level/question_add.html', {'form': form ,'pk':pk})
-
+    return render(request, 'ci/template/public/level/add-level-question.html', {'form': form ,'pk':pk})
 
 
 @login_required(login_url='dashboard-login')
-def level_question_update(request,pk):
+def level_question_update(request, pk):
     question = get_object_or_404(Question, id=pk)
     
     if request.method == 'POST':
@@ -276,17 +351,21 @@ def level_question_update(request,pk):
             question.question_type = question_type
             question.question_description = question_description
             question.hint = hint
-            question.options = options
-            question.right_answers = answers
+            question.options = options  # Saving options as list
+            question.right_answers = answers  # Saving answers as list
             question.save()
+
+            # Update master question, if exists
             if question.master_question:
-                master_question=Question.objects.get(id=question.master_question,is_deleted=False)
+                master_question = Question.objects.get(id=question.master_question, is_deleted=False)
                 master_question.question_type = question_type
                 master_question.question_description = question_description
                 master_question.hint = hint
                 master_question.options = options
                 master_question.right_answers = answers
                 master_question.save()
+
+            # Update related questions
             related_questions = Question.objects.filter(master_question=question.id, is_deleted=False)
             for related_question in related_questions:
                 related_question.question_type = question_type
@@ -295,16 +374,18 @@ def level_question_update(request,pk):
                 related_question.options = options
                 related_question.right_answers = answers
                 related_question.save()
+
             messages.success(request, 'Question updated successfully.')
-            return redirect('dashboard-level-question-manager',pk=question.level.id)  
+            return redirect('dashboard-level-question-manager', pk=question.level.id)
+    
     else:
         form = QuestionForm(instance=question)
     
-    return render(request, 'dashboard/webpages/level/question_update.html', {
+    return render(request, 'ci/template/public/level/update-level-question.html', {
         'form': form,
         'question': question,
-        'options': question.options,
-        'answers': question.right_answers
+        'options': question.options,  
+        'answers': question.right_answers  
     })
 
 

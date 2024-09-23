@@ -2,16 +2,12 @@ from django import forms
 from dashboard.models import TalentHuntSubject,Level,Question
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 class LevelForm(forms.ModelForm):
-    talenthuntsubject = forms.ModelChoiceField(
-        queryset=TalentHuntSubject.objects.filter(is_deleted=False),
-        widget=forms.Select(attrs={'class': 'form-control', 'required': True}),
-        empty_label="Select a subject"
-    )
+   
     
    
     class Meta:
         model = Level
-        fields = ['title','number', 'talenthuntsubject' ]
+        fields = ['title','number' ]
         widgets = {
                 'title': forms.TextInput(
                     attrs={'class': 'form-control', 'placeholder': 'Enter title'}

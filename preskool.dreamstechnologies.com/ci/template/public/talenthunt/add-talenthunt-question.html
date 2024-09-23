@@ -14,16 +14,16 @@
 
         <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
             <div class="my-auto mb-2">
-                <h3 class="mb-1">Update Question</h3>
+                <h3 class="mb-1">Add Question</h3>
                 <nav>
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item">
                             <a href="{% url 'dashboard-home' %}">Dashboard</a>
                         </li>
                         <li class="breadcrumb-item">
-                            <a href="">Exam</a>
+                            <a href="">TalentHunt</a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">Update Question</li>
+                        <li class="breadcrumb-item active" aria-current="page">Add Question</li>
                     </ol>
                 </nav>
             </div>
@@ -31,7 +31,7 @@
 
         <div class="row">
             <div class="col-md-12">
-                <form method="POST" enctype="multipart/form-data" action="">
+                <form method="POST" enctype="multipart/form-data" action="{% url 'dashboard-exam-question-add' exam_id=exam  %}">
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-md-6">
@@ -48,40 +48,35 @@
                     </div>
                     <div class="form-group">
                         <label for="question_description">Question Description</label>
-                        <textarea id="editor1" name="question_description" class="form-control">{{ form.question_description.value|safe }}</textarea>
+                        <textarea id="editor1" name="question_description" class="form-control">{{ form.question_description|safe }}</textarea>
                     </div>
                     <div class="row">
+                        
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="options">Options</label>
                                 <div id="options-container">
-                                    {% for option in options %}
                                     <div class="option-field">
-                                        <input type="text" name="options[]" value="{{ option }}" class="form-control mb-2" placeholder="Enter option">
+                                        <input type="text" name="options[]" class="form-control" placeholder="Enter option">
                                         <button type="button" class="btn btn-danger btn-sm mt-2 remove-btn remove-option">Remove</button>
                                     </div>
-                                    {% endfor %}
                                 </div>
                                 <button type="button" id="add-option" class="btn btn-secondary mt-2">Add Option</button>
                             </div>
                         </div>
-                        
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="answers">Right Answers</label>
                                 <div id="answers-container">
-                                    {% for answer in answers %}
                                     <div class="answers-field">
-                                        <input type="text" name="answers[]" value="{{ answer }}" class="form-control mb-2" placeholder="Enter answer">
+                                        <input type="text" name="answers[]" class="form-control" placeholder="Enter answer">
                                         <button type="button" class="btn btn-danger btn-sm mt-2 remove-btn remove-answer">Remove</button>
                                     </div>
-                                    {% endfor %}
                                 </div>
                                 <button type="button" id="add-answers" class="btn btn-secondary mt-2">Add Answer</button>
                             </div>
                         </div>
                     </div>
-                    
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary mt-2">Submit</button>
                     </div>

@@ -1,13 +1,47 @@
 
 from dashboard.views.imports import *
 
-
 @login_required(login_url='dashboard-login')
-def manager(request,pk):
-    context={
-        'pk':pk
+def manager(request, pk):
+    start_date = request.GET.get('start_date', None)
+    end_date = request.GET.get('end_date', None)
+    sort_option = request.GET.get('sort')
+
+    if start_date and start_date.lower() != 'null':
+        try:
+            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+        except ValueError:
+            start_date = None
+
+    if end_date and end_date.lower() != 'null':
+        try:
+            end_date = datetime.strptime(end_date, "%Y-%m-%d").date() + timedelta(days=1)  
+        except ValueError:
+            end_date = None
+
+    talenthunt_subject_filter = TalentHuntSubject.objects.filter(is_deleted=False, talentHunt=pk)
+
+    if start_date and end_date:
+        talenthunt_subject_filter = talenthunt_subject_filter.filter(created__range=[start_date, end_date])
+
+    if sort_option == 'name_ascending':
+        talenthunt_subject_filter = talenthunt_subject_filter.order_by('title')
+    elif sort_option == 'name_descending':
+        talenthunt_subject_filter = talenthunt_subject_filter.order_by('-title')
+
+    paginator = Paginator(talenthunt_subject_filter, 25)
+    page_number = request.GET.get('page')
+    talenthunts_subject_paginated = paginator.get_page(page_number)
+
+    context = {
+        "talenthunts": talenthunts_subject_paginated,
+        "start_date": start_date,
+        "end_date": end_date,
+        "current_sort": sort_option,
+        "pk": pk  
     }
-    return render (request,'dashboard/webpages/talenthuntsubject/manager.html',context)
+
+    return render(request, 'ci/template/public/talenthunt/talenthunt-subject.html', context)
 
 
 @login_required(login_url='dashboard-login')
@@ -96,7 +130,7 @@ def add(request, pk):
                 "form": form,
                 "pk": pk
             }
-            return render(request, "dashboard/webpages/talenthuntsubject/add.html", context)
+            return render(request, "ci/template/public/talenthunt/talenthunt-subject-add.html", context)
     else:
         form = TalentHuntSubjectForm(course=talenthunt.course)
         context = {
@@ -104,7 +138,7 @@ def add(request, pk):
             "form": form,
             "pk": pk
         }
-        return render(request, "dashboard/webpages/talenthuntsubject/add.html", context)
+        return render(request, "ci/template/public/talenthunt/talenthunt-subject-add.html", context)
 
 
 
@@ -131,7 +165,7 @@ def update(request, pk):
                 "form": form,
                 "pk": pk
             }
-            return render(request, "dashboard/webpages/talenthuntsubject/update.html", context)
+            return render(request, "ci/template/public/talenthunt/talenthunt-subject-update.html", context)
     else:
         form = TalentHuntSubjectForm(instance=talenthuntsubject, course=talenthunt.course)
         context = {
@@ -139,7 +173,7 @@ def update(request, pk):
             "form": form,
             "pk": pk
         }
-        return render(request, "dashboard/webpages/talenthuntsubject/update.html", context)
+        return render(request, "ci/template/public/talenthunt/talenthunt-subject-update.html", context)
 
 
 @login_required(login_url='dashboard-login')
