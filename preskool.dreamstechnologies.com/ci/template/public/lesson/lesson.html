@@ -22,36 +22,28 @@
             <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
                 <div class="pe-1 mb-2">
                     <a href="#" class="btn btn-outline-light bg-white btn-icon me-1" data-bs-toggle="tooltip"
-                       data-bs-placement="top" aria-label="Refresh" data-bs-original-title="Refresh"
-                       onclick="window.location.reload();">
-                        <i class="bi bi-arrow-repeat"></i>
-                    </a>
+                    data-bs-placement="top" aria-label="Refresh" data-bs-original-title="Refresh"
+                    onclick="window.location.reload();">
+                    <i class="bi bi-arrow-repeat"></i>
+                </a>
+                
                 </div>
                 <div class="pe-1 mb-2">
                     <button type="button" class="btn btn-outline-light bg-white btn-icon me-1" 
-                            data-bs-toggle="tooltip" data-bs-placement="top" 
-                            aria-label="Print" data-bs-original-title="Print"
-                            onclick="printPage()">
+                        data-bs-toggle="tooltip" data-bs-placement="top" 
+                        aria-label="Print" data-bs-original-title="Print"
+                        onclick="printPage()">
                         <i class="bi bi-printer"></i>
                     </button>
                 </div>
+                
+               
                 <div class="mb-2">
-                    <a href="{% url 'dashboad-chapter-lesson-add' obj_chapter.id %}"
-                       class="btn btn-primary d-flex align-items-center">
-                        <i class="bi bi-plus-circle me-2"></i>
-                        Add Lesson
-                    </a>
-                </div>
-                <nbbsp></nbbsp>
-                <div class="mb-2">
-                    <a href="{% url 'dashboard-chapter-question-add' obj_chapter.id %}"
-                       class="btn btn-primary d-flex align-items-center">
-                        <i class="bi bi-plus-circle me-2"></i>
-                        Add Question
-                    </a>
+                    <a href="{% url 'dashboard-lesson-add' %}"
+                        class="btn btn-primary d-flex align-items-center"><i class="bi bi-plus-circle me-2"></i>
+                        Add Lesson</a>
                 </div>
             </div>
-            
         </div>
 
         <div class="card">
@@ -87,20 +79,7 @@
                                     Name Z-A
                                 </a>
                             </li>
-                            <li>
-                                <a href="javascript:void(0);" data-sort="price_ascending"
-                                   class="dropdown-item rounded-1 {% if current_sort == 'price_ascending' %}active{% endif %}">
-                                    Price Low to High
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);" data-sort="price_descending"
-                                   class="dropdown-item rounded-1 {% if current_sort == 'price_descending' %}active{% endif %}">
-                                    Price High to Low
-                                </a>
-                            </li>
                         </ul>
-                        
                     </div>
                     
                     
@@ -114,6 +93,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Image</th>
+                                <th>Chapter Name</th>
                                 <th>Chapter Name</th>
                                 <th>Description</th>
                                 <th>Created</th>
@@ -134,6 +114,7 @@
                                     {% endif %}
                                 </td>
                                 <td>{{ lesson.lesson_name }}</td>
+                                <td>{{ lesson.chapter.chapter_name }}</td>
                                 <td>{{ lesson.description|truncatewords:10 }}</td>
                                 <td>{{ lesson.created|date:"Y-m-d" }}</td>
                                 <td>
@@ -162,10 +143,10 @@
                                 </td>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <a href="{% url 'dashboard-chapter-lesson-update' chapter_id=obj_chapter.id lesson_id=lesson.id %}" class="text-primary me-3" title="Edit Course">
+                                        <a href="{% url 'dashboard-lesson-update' pk=lesson.id %}" class="text-primary me-3" title="Edit Course">
                                             <i class="bi bi-pencil-square me-2"></i>
                                         </a>
-                                        <a class="btn-delete" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal" data-batch-id="{{ course.id }}" title="Delete Course">
+                                        <a class="btn-delete" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal" data-user-id="{{ lesson.id }}" title="Delete Course">
                                             <i class="bi bi-trash me-2"></i>
                                         </a>
                                     </div>
@@ -180,8 +161,6 @@
                     </table>
                 </div>
             </div>
-            
-            
         </div>
     </div>
 </div>
@@ -274,19 +253,18 @@
 <script>
 $(document).ready(function () {
     $(document).on('click', '.btn-delete', function () {
-        var batchId = $(this).data('batch-id'); // Use batch-id instead of user-id
-        $('#delete-record').data('batch-id', batchId); // Store the batch ID in the modal button
-    });
-    
+    var userId = $(this).data('user-id');
+    $('#delete-record').data('user-id', userId);
+});
+
 
     $('#delete-record').click(function () {
-        var userId = $(this).data('batch-id');
-        var subjects_id = "{{ obj_chapter.id }}";
-        console.log("Subject ID: " + subjects_id);
+        var userId = $(this).data('user-id');
+
         console.log("Deleting User ID: " + userId);
 
         $.ajax({
-            url: '/chapter/delete/' +  userId + '/',
+            url: '/lesson/delete/' + userId + '/',
             type: 'POST',
             data: {
                 csrfmiddlewaretoken: '{{ csrf_token }}',

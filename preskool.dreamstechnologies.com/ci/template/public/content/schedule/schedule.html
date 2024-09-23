@@ -8,14 +8,14 @@
 
         <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
             <div class="my-auto mb-2">
-                <h3 class="page-title mb-1">Lesson</h3>
+                <h3 class="page-title mb-1">Schedule</h3>
                 <nav>
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item">
                             <a href="{% url 'dashboard-home' %}">Dashboard</a>
                         </li>
                        
-                        <li class="breadcrumb-item active" aria-current="page">Lesson</li>
+                        <li class="breadcrumb-item active" aria-current="page">Schedule</li>
                     </ol>
                 </nav>
             </div>
@@ -36,27 +36,20 @@
                     </button>
                 </div>
                 <div class="mb-2">
-                    <a href="{% url 'dashboad-chapter-lesson-add' obj_chapter.id %}"
+                    <a href="{% url 'dashboard-schedule-add'  %}"
                        class="btn btn-primary d-flex align-items-center">
                         <i class="bi bi-plus-circle me-2"></i>
-                        Add Lesson
+                        Add Schedule
                     </a>
                 </div>
-                <nbbsp></nbbsp>
-                <div class="mb-2">
-                    <a href="{% url 'dashboard-chapter-question-add' obj_chapter.id %}"
-                       class="btn btn-primary d-flex align-items-center">
-                        <i class="bi bi-plus-circle me-2"></i>
-                        Add Question
-                    </a>
-                </div>
+               
             </div>
             
         </div>
 
         <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">
-                <h4 class="mb-3">Lesson List</h4>
+                <h4 class="mb-3">Schedule List</h4>
                 <div class="d-flex align-items-center flex-wrap">
                     <!-- Date Range Picker -->
                     <div class="input-icon-start mb-3 me-2 position-relative">
@@ -113,59 +106,29 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>ID</th>
-                                <th>Image</th>
-                                <th>Chapter Name</th>
-                                <th>Description</th>
+                                <th>Title</th>
+                                <th>Lesson Name</th>
+                                <th>Exam Name</th>
                                 <th>Created</th>
-                                <th>Video</th>
-                                <th>PDF</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for lesson in lessons %}
+                            {% for schedule in schedules %}
                             <tr>
-                                <td>{{ lesson.id }}</td>
-                                <td>
-                                    {% if lesson.image %}
-                                        <img src="{{ lesson.image.url }}" alt="{{ lesson.lesson_name }}" style="width: 50px;">
-                                    {% else %}
-                                        N/A
-                                    {% endif %}
-                                </td>
-                                <td>{{ lesson.lesson_name }}</td>
-                                <td>{{ lesson.description|truncatewords:10 }}</td>
-                                <td>{{ lesson.created|date:"Y-m-d" }}</td>
-                                <td>
-                                    {% for video in lesson.videos.all %}
-                                        <strong>{{ video.title|default:"N/A" }}</strong><br>
-                                        {% if video.url %}
-                                            <a href="{{ video.url }}" target="_blank">Watch Video</a>
-                                        {% else %}
-                                            N/A
-                                        {% endif %}
-                                    {% empty %}
-                                        N/A
-                                    {% endfor %}
-                                </td>
-                                <td>
-                                    {% for pdf in lesson.pdf_notes.all %}
-                                        <strong>{{ pdf.title|default:"N/A" }}</strong><br>
-                                        {% if pdf.file %}
-                                            <a href="{{ pdf.file.url }}" target="_blank">Download PDF</a>
-                                        {% else %}
-                                            N/A
-                                        {% endif %}
-                                    {% empty %}
-                                        N/A
-                                    {% endfor %}
-                                </td>
+                                <td>{{ schedule.id }}</td>
+                                
+                                <td>{{ schedule.title }}</td>
+                                <td>{{ schedule.lesson.lesson_name }}</td>
+                                <td>{{ schedule.exam.title }}</td>
+                                <td>{{ schedule.date|date:"Y-m-d" }}</td>
+                               
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <a href="{% url 'dashboard-chapter-lesson-update' chapter_id=obj_chapter.id lesson_id=lesson.id %}" class="text-primary me-3" title="Edit Course">
+                                        <a href="{% url 'dashboard-schedule-update' pk=schedule.id  %}" class="text-primary me-3" title="Edit Course">
                                             <i class="bi bi-pencil-square me-2"></i>
                                         </a>
-                                        <a class="btn-delete" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal" data-batch-id="{{ course.id }}" title="Delete Course">
+                                        <a class="btn-delete" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal" data-batch-id="{{ schedule.id }}" title="Delete Course">
                                             <i class="bi bi-trash me-2"></i>
                                         </a>
                                     </div>
@@ -286,7 +249,7 @@ $(document).ready(function () {
         console.log("Deleting User ID: " + userId);
 
         $.ajax({
-            url: '/chapter/delete/' +  userId + '/',
+            url: '/schedule/delete/' +  userId + '/',
             type: 'POST',
             data: {
                 csrfmiddlewaretoken: '{{ csrf_token }}',

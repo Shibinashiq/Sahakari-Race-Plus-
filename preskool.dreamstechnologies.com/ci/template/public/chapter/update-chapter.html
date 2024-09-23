@@ -1,11 +1,11 @@
 {% include 'base.html' %}
-{% load crispy_forms_tags %}
+
 <div class="page-wrapper">
     <div class="content content-two">
 
         <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
             <div class="my-auto mb-2">
-                <h3 class="mb-1">Add Chapter</h3>
+                <h3 class="mb-1">Update Chapter</h3>
                 <nav>
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item">
@@ -14,7 +14,7 @@
                         <li class="breadcrumb-item">
                             <a href="">Chapter</a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">Add Chapter</li>
+                        <li class="breadcrumb-item active" aria-current="page">Update Chapter</li>
                     </ol>
                 </nav>
             </div>
@@ -32,7 +32,7 @@
                 <span class="bg-white avatar avatar-sm me-2 text-gray-7 flex-shrink-0">
                     <i class="bi bi-info-circle"></i>
                 </span>
-                <h4 class="text-dark">Chapter Information</h4>
+                <h4 class="text-dark">Personal Information</h4>
             </div>
         </div>
     
@@ -47,13 +47,14 @@
                             {% if form.image.value %}
                                 <img id="image-preview" src="{{ form.image.value.url }}" alt="Profile Image" style="width: 100px; height: 100px; object-fit: cover;">
                             {% else %}
-                                <i class="bi bi-image fs-16"></i>
+                            <i class="bi bi-image fs-16"></i>
                             {% endif %}
                         </div>
                         <div class="profile-upload">
                             <div class="profile-uploader d-flex align-items-center">
                                 <div class="drag-upload-btn mb-3">
                                     Upload
+                                    <!-- Use Django crispy-forms to render the image input field -->
                                     {{ form.image }}
                                 </div>
                             </div>
@@ -62,78 +63,28 @@
                     </div>
                 </div>
             </div>
-        
+    
             <!-- Form Fields Rendering -->
             <div class="row">
-                <!-- Chapter Fields -->
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {{ form.lesson_name|as_crispy_field }}
-                    </div>
+                <!-- Name Field -->
+                <div class="col-xxl-4 col-xl-4 col-md-6 mb-3">
+                    {{ form.subject|as_crispy_field }}
+                </div>
+            
+                <!-- Phone Number Field -->
+                <div class="col-xxl-4 col-xl-4 col-md-6 mb-3">
+                    {{ form.chapter_name|as_crispy_field }}
                 </div>
                 
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {{ form.chapter|as_crispy_field }}
-                    </div>
+                <!-- Password Field -->
+                <div class="col-xxl-4 col-xl-4 col-md-6 mb-3">
+                    {{ form.description|as_crispy_field }}
                 </div>
             </div>
             
+    
             
-            <!-- Video Fields -->
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {{ form.video_title|as_crispy_field }}
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {{ form.video_url|as_crispy_field }}
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {{ form.video_is_downloadable|as_crispy_field }}
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {{ form.video_is_free|as_crispy_field }}
-                    </div>
-                </div>
-            </div>
-        <br>
-            <!-- PDF Note Fields -->
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {{ form.pdf_title|as_crispy_field }}
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {{ form.pdf_file|as_crispy_field }}
-                    </div>
-                </div>
-                
-                
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    {{ form.pdf_is_downloadable|as_crispy_field }}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {{ form.description|as_crispy_field }}
-                    </div>
-                </div>
-            </div>		
-            </div>
         </div>
-        
     </div>
     
 

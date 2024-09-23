@@ -8,55 +8,47 @@
 
         <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
             <div class="my-auto mb-2">
-                <h3 class="page-title mb-1">Lesson</h3>
+                <h3 class="page-title mb-1">Subject</h3>
                 <nav>
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item">
                             <a href="{% url 'dashboard-home' %}">Dashboard</a>
                         </li>
                        
-                        <li class="breadcrumb-item active" aria-current="page">Lesson</li>
+                        <li class="breadcrumb-item active" aria-current="page">Subjects</li>
                     </ol>
                 </nav>
             </div>
             <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
                 <div class="pe-1 mb-2">
                     <a href="#" class="btn btn-outline-light bg-white btn-icon me-1" data-bs-toggle="tooltip"
-                       data-bs-placement="top" aria-label="Refresh" data-bs-original-title="Refresh"
-                       onclick="window.location.reload();">
-                        <i class="bi bi-arrow-repeat"></i>
-                    </a>
+                    data-bs-placement="top" aria-label="Refresh" data-bs-original-title="Refresh"
+                    onclick="window.location.reload();">
+                    <i class="bi bi-arrow-repeat"></i>
+                </a>
+                
                 </div>
                 <div class="pe-1 mb-2">
                     <button type="button" class="btn btn-outline-light bg-white btn-icon me-1" 
-                            data-bs-toggle="tooltip" data-bs-placement="top" 
-                            aria-label="Print" data-bs-original-title="Print"
-                            onclick="printPage()">
+                        data-bs-toggle="tooltip" data-bs-placement="top" 
+                        aria-label="Print" data-bs-original-title="Print"
+                        onclick="printPage()">
                         <i class="bi bi-printer"></i>
                     </button>
                 </div>
+                
+               
                 <div class="mb-2">
-                    <a href="{% url 'dashboad-chapter-lesson-add' obj_chapter.id %}"
-                       class="btn btn-primary d-flex align-items-center">
-                        <i class="bi bi-plus-circle me-2"></i>
-                        Add Lesson
-                    </a>
-                </div>
-                <nbbsp></nbbsp>
-                <div class="mb-2">
-                    <a href="{% url 'dashboard-chapter-question-add' obj_chapter.id %}"
-                       class="btn btn-primary d-flex align-items-center">
-                        <i class="bi bi-plus-circle me-2"></i>
-                        Add Question
-                    </a>
+                    <a href="{% url 'dashboard-subject-add' %}"
+                        class="btn btn-primary d-flex align-items-center"><i class="bi bi-plus-circle me-2"></i>
+                        Add Subject</a>
                 </div>
             </div>
-            
         </div>
 
         <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">
-                <h4 class="mb-3">Lesson List</h4>
+                <h4 class="mb-3">Subject List</h4>
                 <div class="d-flex align-items-center flex-wrap">
                     <!-- Date Range Picker -->
                     <div class="input-icon-start mb-3 me-2 position-relative">
@@ -87,20 +79,7 @@
                                     Name Z-A
                                 </a>
                             </li>
-                            <li>
-                                <a href="javascript:void(0);" data-sort="price_ascending"
-                                   class="dropdown-item rounded-1 {% if current_sort == 'price_ascending' %}active{% endif %}">
-                                    Price Low to High
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);" data-sort="price_descending"
-                                   class="dropdown-item rounded-1 {% if current_sort == 'price_descending' %}active{% endif %}">
-                                    Price High to Low
-                                </a>
-                            </li>
                         </ul>
-                        
                     </div>
                     
                     
@@ -108,80 +87,91 @@
                 </div>
             </div>
             <div class="card-body p-0 py-3">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>ID</th>
-                                <th>Image</th>
-                                <th>Chapter Name</th>
-                                <th>Description</th>
-                                <th>Created</th>
-                                <th>Video</th>
-                                <th>PDF</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for lesson in lessons %}
-                            <tr>
-                                <td>{{ lesson.id }}</td>
-                                <td>
-                                    {% if lesson.image %}
-                                        <img src="{{ lesson.image.url }}" alt="{{ lesson.lesson_name }}" style="width: 50px;">
-                                    {% else %}
-                                        N/A
-                                    {% endif %}
-                                </td>
-                                <td>{{ lesson.lesson_name }}</td>
-                                <td>{{ lesson.description|truncatewords:10 }}</td>
-                                <td>{{ lesson.created|date:"Y-m-d" }}</td>
-                                <td>
-                                    {% for video in lesson.videos.all %}
-                                        <strong>{{ video.title|default:"N/A" }}</strong><br>
-                                        {% if video.url %}
-                                            <a href="{{ video.url }}" target="_blank">Watch Video</a>
-                                        {% else %}
-                                            N/A
-                                        {% endif %}
-                                    {% empty %}
-                                        N/A
-                                    {% endfor %}
-                                </td>
-                                <td>
-                                    {% for pdf in lesson.pdf_notes.all %}
-                                        <strong>{{ pdf.title|default:"N/A" }}</strong><br>
-                                        {% if pdf.file %}
-                                            <a href="{{ pdf.file.url }}" target="_blank">Download PDF</a>
-                                        {% else %}
-                                            N/A
-                                        {% endif %}
-                                    {% empty %}
-                                        N/A
-                                    {% endfor %}
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <a href="{% url 'dashboard-chapter-lesson-update' chapter_id=obj_chapter.id lesson_id=lesson.id %}" class="text-primary me-3" title="Edit Course">
-                                            <i class="bi bi-pencil-square me-2"></i>
-                                        </a>
-                                        <a class="btn-delete" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal" data-batch-id="{{ course.id }}" title="Delete Course">
-                                            <i class="bi bi-trash me-2"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="8" class="text-center">No lessons found.</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+
+                <div class="card-body p-0 py-3">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="no-sort">
+                                        <div class="form-check form-check-md">
+                                            <input class="form-check-input" type="checkbox" id="select-all">
+                                        </div>
+                                    </th>
+                                    <th>ID</th>
+                                    <th>Image</th>
+                                    <th>Subject Name</th>
+                                    <th>Course</th>
+                                    <th>Description</th>
+                                    <th>Created</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for subject in subjects %}
+                                <tr>
+                                    <!-- Checkbox -->
+                                    <td>
+                                        <div class="form-check form-check-md">
+                                            <input class="form-check-input" type="checkbox">
+                                        </div>
+                                    </td>
+                
+                                    <!-- Subject ID -->
+                                    <td><a href="#" class="link-primary">{{ subject.id }}</a></td>
+                
+                                    <!-- Subject Image -->
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <a href="#" class="avatar avatar-md">
+                                                {% if subject.image %}
+                                                    <img src="{{ subject.image.url }}" class="img-fluid rounded-circle" alt="" />
+                                                {% else %}
+                                                    <i class="bi bi-card-image fs-3 text-dark"></i>
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                    </td>
+                
+                                    <!-- Subject Name -->
+                                    <td>{{ subject.subject_name }}</td>
+                
+                                    <!-- Course Name -->
+                                    <td>{{ subject.course.course_name }}</td>
+                
+                                    <!-- Subject Description -->
+                                    <td>{{ subject.description }}</td>
+                
+                                    <!-- Created Date -->
+                                    <td>{{ subject.created|date:"Y-m-d H:i:s" }}</td>
+                
+                                    <!-- Actions -->
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <!-- Edit Subject -->
+                                            <a href="{% url 'dashboard-subject-update' subject.id %}" class="text-primary me-3" title="Edit Subject">
+                                                <i class="bi bi-pencil-square me-2"></i> 
+                                            </a>
+                
+                                            <!-- Delete Subject -->
+                                            <a class="btn-delete" href="#" data-bs-toggle="modal" data-user-id="{{ subject.id }}" data-bs-target="#delete-modal" title="Delete Subject">
+                                                <i class="bi bi-trash me-2"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="8" class="text-center">No subjects found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+                
+
             </div>
-            
-            
         </div>
     </div>
 </div>
@@ -274,19 +264,18 @@
 <script>
 $(document).ready(function () {
     $(document).on('click', '.btn-delete', function () {
-        var batchId = $(this).data('batch-id'); // Use batch-id instead of user-id
-        $('#delete-record').data('batch-id', batchId); // Store the batch ID in the modal button
-    });
-    
+    var userId = $(this).data('user-id');
+    $('#delete-record').data('user-id', userId);
+});
+
 
     $('#delete-record').click(function () {
-        var userId = $(this).data('batch-id');
-        var subjects_id = "{{ obj_chapter.id }}";
-        console.log("Subject ID: " + subjects_id);
+        var userId = $(this).data('user-id');
+
         console.log("Deleting User ID: " + userId);
 
         $.ajax({
-            url: '/chapter/delete/' +  userId + '/',
+            url: '/subject/delete/' + userId + '/',
             type: 'POST',
             data: {
                 csrfmiddlewaretoken: '{{ csrf_token }}',
