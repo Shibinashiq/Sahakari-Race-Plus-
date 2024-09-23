@@ -53,9 +53,9 @@
 </head>
 
 <body>
-    <div id="global-loader">
+    <!-- <div id="global-loader">
         <div class="page-loader"></div>
-    </div>
+    </div> -->
 
     <div class="main-wrapper">
 
@@ -485,16 +485,30 @@
                             <li class="">
                                 <a href="{% url 'dashboard-comment-manager' %}">
                                     <i class="bi bi-chat-dots-fill"></i>
-
-
-
-
-
-
                                     <span>All Comment</span>
                                 </a>
                             </li>
                         </ul>
+
+                        <h6 class="submenu-hdr"><span>Exam</span></h6>
+                        <ul>
+                            <li class="">
+                                <a href="{% url 'dashboard-exam-manager' %}">
+                                    <i class="bi bi-chat-dots-fill"></i>
+                                    <span>All Exam</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <h6 class="submenu-hdr"><span>TalentHunt</span></h6>
+                        <ul>
+                            <li class="">
+                                <a href="{% url 'dashboard-talenthunt-manager' %}">
+                                    <i class="bi bi-chat-dots-fill"></i>
+                                    <span>All TalentHunt</span>
+                                </a>
+                            </li>
+                        </ul>
+
 
                         
                     </li>
@@ -504,3 +518,5 @@
         </div>
     </div>
     {% block content %}{% endblock content %}
+
+    {% block js %}{% endblock js %}

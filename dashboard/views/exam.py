@@ -1,9 +1,53 @@
 from dashboard.views.imports import *
 
+
+
 @login_required(login_url='dashboard-login')
 def manager(request):
+    # Fetch sorting and filter options from GET parameters
+    sort_option = request.GET.get('sort')
+    print(sort_option,"{{{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}")
+    start_date = request.GET.get('start_date', None)
+    end_date = request.GET.get('end_date', None)
 
-    return render(request, "dashboard/webpages/exam/manager.html")
+    # Parse start and end dates if provided
+    if start_date and start_date.lower() != 'null':
+        start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+    else:
+        start_date = None
+
+    if end_date and end_date.lower() != 'null':
+        end_date = datetime.strptime(end_date, "%Y-%m-%d").date() + timedelta(days=1)
+    else:
+        end_date = None
+
+    # Filter exams that are not deleted
+    exam_filter = Exam.objects.filter(is_deleted=False)
+    
+    # Apply date range filter if dates are provided
+    if start_date and end_date:
+        exam_filter = exam_filter.filter(created__range=[start_date, end_date])
+
+    # Apply sorting based on the sort_option parameter
+    if sort_option == 'name_ascending':
+        exams = exam_filter.order_by('title')  # Sort by title A-Z
+    elif sort_option == 'name_descending':
+        exams = exam_filter.order_by('-title')  # Sort by title Z-A
+    else:
+        exams = exam_filter.order_by('-created') 
+    
+    paginator = Paginator(exams, 25)
+    page_number = request.GET.get('page')
+    exams_paginated = paginator.get_page(page_number)
+
+    context = {
+        "exams": exams_paginated,
+        "current_sort": sort_option,
+        "start_date": start_date,
+        "end_date": end_date,
+    }
+
+    return render(request, "ci/template/public/exam/exam.html", context)
 
 @login_required(login_url='dashboard-login')
 def list(request):
@@ -74,12 +118,12 @@ def add(request):
             messages.success(request, "Question added successfully.")
             return redirect('dashboard-exam-manager')  
         else:
-            return render(request, 'dashboard/webpages/exam/add.html', {'form': form})
+            return render(request, 'ci/template/public/exam/add-exam.html', {'form': form})
 
     else:
         form = ExamForm()  
 
-    return render(request, 'dashboard/webpages/exam/add.html', {'form': form})
+    return render(request, 'ci/template/public/exam/add-exam.html', {'form': form})
 
 
 
@@ -99,7 +143,7 @@ def update(request, pk):
         form = ExamForm(instance=exam)
     
 
-    return render(request, 'dashboard/webpages/exam/update.html', {'form': form})
+    return render(request, 'ci/template/public/exam/update-exam.html', {'form': form})
 
 
 
@@ -124,10 +168,45 @@ def delete(request, pk):
 
 
 
+
 @login_required(login_url='dashboard-login')
 def exam_question_manager(request, exam_id):
-    exam = get_object_or_404(Exam, pk=exam_id)
-    return render(request, 'dashboard/webpages/exam/exam_question_manager.html', {'exam': exam.id})
+    sort_option = request.GET.get('sort')
+    
+    start_date = request.GET.get('start_date', None)
+    end_date = request.GET.get('end_date', None)
+
+    if start_date and start_date.lower() != 'null':
+        start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+    else:
+        start_date = None
+
+    if end_date and end_date.lower() != 'null':
+        end_date = datetime.strptime(end_date, "%Y-%m-%d").date() + timedelta(days=1)
+    else:
+        end_date = None
+
+    question_filter = Question.objects.filter(is_deleted=False, exam=exam_id)
+
+    if start_date and end_date:
+        question_filter = question_filter.filter(created__range=[start_date, end_date])
+
+    if sort_option == 'name_ascending':
+        questions = question_filter.order_by('created')
+    elif sort_option == 'name_descending':
+        questions = question_filter.order_by('-created')
+    else:
+        questions = question_filter.order_by('id')  
+
+    context = {
+        'questions': questions,
+        'current_sort': sort_option,
+        'start_date': start_date,
+        'end_date': end_date,
+        'exam_id': exam_id,
+    }
+
+    return render(request, 'ci/template/public/exam/exam-question.html', context)
 
 
 
@@ -222,12 +301,12 @@ def exam_question_add(request, exam_id):
             messages.success(request, "Question added successfully.")
             return redirect('dashboard-exam-question-manager',exam_id=exam_id)  
         else:
-            return render(request, 'dashboard/webpages/exam/question_add.html', {'form': form ,'exam':exam_id})
+            return render(request, 'ci/template/public/exam/add-exam-question.html', {'form': form ,'exam':exam_id})
 
     else:
         form = QuestionForm()  
 
-    return render(request, 'dashboard/webpages/exam/question_add.html', {'form': form ,'exam':exam_id})
+    return render(request, 'ci/template/public/exam/add-exam-question.html', {'form': form ,'exam':exam_id})
 
 
 @login_required(login_url='dashboard-login')
@@ -273,7 +352,7 @@ def exam_question_update(request,exam_id,question_id):
     else:
         form = QuestionForm(instance=question)
     
-    return render(request, 'dashboard/webpages/exam/question_update.html', {
+    return render(request, 'ci/template/public/exam/update-exam-question.html', {
         'form': form,
         'question': question,
         'options': question.options,

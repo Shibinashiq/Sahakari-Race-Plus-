@@ -8,14 +8,14 @@
 
         <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
             <div class="my-auto mb-2">
-                <h3 class="page-title mb-1">Comment</h3>
+                <h3 class="page-title mb-1">TalentHunt</h3>
                 <nav>
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item">
                             <a href="{% url 'dashboard-home' %}">Dashboard</a>
                         </li>
                        
-                        <li class="breadcrumb-item active" aria-current="page">Comment</li>
+                        <li class="breadcrumb-item active" aria-current="page">TalentHunt</li>
                     </ol>
                 </nav>
             </div>
@@ -39,14 +39,16 @@
                 
                
                 <div class="mb-2">
-                   
+                    <a href="{% url 'dashboard-talenthunt-add' %}"
+                        class="btn btn-primary d-flex align-items-center"><i class="bi bi-plus-circle me-2"></i>
+                        Add TalentHunt</a>
                 </div>
             </div>
         </div>
 
         <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">
-                <h4 class="mb-3">Comment List</h4>
+                <h4 class="mb-3">TalentHunt List</h4>
                 <div class="d-flex align-items-center flex-wrap">
                     <!-- Date Range Picker -->
                     <div class="input-icon-start mb-3 me-2 position-relative">
@@ -77,9 +79,7 @@
                                     Name Z-A
                                 </a>
                             </li>
-                            
                         </ul>
-                        
                     </div>
                     
                     
@@ -98,74 +98,30 @@
                                     </div>
                                 </th>
                                 <th>ID</th>
-                                <th>User</th>
-                                <th>Content</th>
-                                <th>Video</th>
-                                <th>PDF</th>
-                                <th>Created</th>
+                                <th>Title</th>
+                                <th>Course</th>
+                                <th>Created Date</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for comment in comments %}
+                            {% for talenthunt in talenthunts %}
                             <tr>
-                                <!-- Checkbox -->
                                 <td>
                                     <div class="form-check form-check-md">
                                         <input class="form-check-input" type="checkbox">
                                     </div>
                                 </td>
-                                
-                                <!-- Comment ID -->
-                                <td><a href="#" class="link-primary">{{ comment.id }}</a></td>
-                                
-                                <!-- User Name -->
-                                <td>
-                                    {% if comment.user.name %}
-                                        {{ comment.user.name }}
-                                    {% else %}
-                                        N/A
-                                    {% endif %}
-                                </td>
-                                
-                                <!-- Comment Content -->
-                                <td>{{ comment.content|default:"N/A" }}</td>
-                                
-                                <!-- Video Title and URL -->
-                                <td>
-                                    {% if comment.video %}
-                                        <strong>{{ comment.video.title|default:"N/A" }}</strong><br>
-                                        {% if comment.video.url %}
-                                            <a href="{{ comment.video.url }}" target="_blank" class="link-primary">Watch Video</a>
-                                        {% else %}
-                                            N/A
-                                        {% endif %}
-                                    {% else %}
-                                        N/A
-                                    {% endif %}
-                                </td>
-                                
-                                <!-- PDF Title and URL -->
-                                <td>
-                                    {% if comment.pdf_note %}
-                                        <strong>{{ comment.pdf_note.title|default:"N/A" }}</strong><br>
-                                        {% if comment.pdf_note.file %}
-                                            <a href="{{ comment.pdf_note.file.url }}" target="_blank" class="link-primary">Download PDF</a>
-                                        {% else %}
-                                            N/A
-                                        {% endif %}
-                                    {% else %}
-                                        N/A
-                                    {% endif %}
-                                </td>
-                                
-                                <!-- Created Date -->
-                                <td>{{ comment.created|date:"Y-m-d H:i:s" }}</td>
-                                
-                                <!-- Action (Delete) -->
+                                <td><a href="" class="link-primary">{{ talenthunt.id }}</a></td>
+                                <td>{{ talenthunt.title|default:"N/A" }}</td>
+                                <td>{{ talenthunt.course.course_name|default:"N/A" }}</td>
+                                <td>{{ talenthunt.created|date:"Y-m-d H:i:s" }}</td>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <a class="btn-delete" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal" data-comment-id="{{ comment.id }}" title="Delete Comment">
+                                        <a href="{% url 'dashboard-talenthunt-update' pk=talenthunt.id %}" class="text-primary me-3" title="Edit Talent Hunt">
+                                            <i class="bi bi-pencil-square me-2"></i>
+                                        </a>
+                                        <a class="btn-delete" href="#" data-bs-toggle="modal" data-user-id="{{ talenthunt.id }}" data-bs-target="#delete-modal">
                                             <i class="bi bi-trash me-2"></i>
                                         </a>
                                     </div>
@@ -173,19 +129,19 @@
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="8" class="text-center">No comments found.</td>
+                                <td colspan="6" class="text-center">No talent hunts found.</td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                     
                 </div>
-                
 
             </div>
         </div>
     </div>
 </div>
+
 
 
 <div class="modal fade" id="delete-modal">
@@ -194,6 +150,7 @@
             <div class="modal-body text-center">
                 <span class="delete-icon">
                     <i class="bi bi-trash"></i>
+
                 </span>
                 <h4>Confirm Deletion</h4>
                 <p>You want to delete the selected item. This action cannot be undone.</p>
@@ -268,33 +225,33 @@
 
 </html>
 
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function () {
-    // When the delete button is clicked, store the comment ID in the modal
     $(document).on('click', '.btn-delete', function () {
-        var commentId = $(this).data('comment-id');  // Fetch the correct comment ID
-        $('#delete-record').data('comment-id', commentId);  // Store the comment ID in the modal's delete button
-    });
+    var userId = $(this).data('user-id');
+    $('#delete-record').data('user-id', userId);
+});
 
-    // When the 'Yes, Delete' button is clicked, make an AJAX request to delete the comment
+
     $('#delete-record').click(function () {
-        var commentId = $(this).data('comment-id');  // Get the comment ID stored in the modal button
+        var userId = $(this).data('user-id');
 
-        console.log("Deleting Comment ID: " + commentId);
+        console.log("Deleting User ID: " + userId);
 
         $.ajax({
-            url: '/comment/delete/' + commentId + '/',  // Pass the comment ID to the delete URL
+            url: '/talenthunt/delete/' + userId + '/',
             type: 'POST',
             data: {
-                csrfmiddlewaretoken: '{{ csrf_token }}',  // Pass the CSRF token for security
+                csrfmiddlewaretoken: '{{ csrf_token }}',
             },
             success: function (data) {
                 console.log("Deleted successfully");
-                window.location.reload();  // Reload the page after successful deletion
+                window.location.reload();
             },
             error: function(xhr, status, error) {
-                console.error("Error deleting comment:", error);
+                console.error("Error deleting user:", error);
             }
         });
     });

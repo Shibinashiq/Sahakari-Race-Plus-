@@ -143,7 +143,7 @@ urlpatterns = [
     path("exam/update/<int:pk>/", exam.update, name="dashboard-exam-update"),
     path("exam/delete/<int:pk>/", exam.delete, name="dashboard-exam-delete"),
     path("exam/paste/", exam.paste, name="dashboard-exam-paste"),
-
+  
 
     path("exam/question/<int:exam_id>/", exam.exam_question_manager, name="dashboard-exam-question-manager"),
     path("exam/question/list/<int:exam_id>/", exam.exam_question_list, name="dashboard-exam-question-list"),

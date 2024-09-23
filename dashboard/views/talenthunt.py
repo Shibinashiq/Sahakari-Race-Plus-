@@ -4,8 +4,42 @@ from dashboard.views.imports import *
 
 @login_required(login_url='dashboard-login')
 def manager(request):
-    return render (request,'dashboard/webpages/talenthunt/manager.html')
+    start_date = request.GET.get('start_date', None)
+    end_date = request.GET.get('end_date', None)
+    sort_option = request.GET.get('sort')
 
+    if start_date and start_date.lower() != 'null':
+        start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+    else:
+        start_date = None
+
+    if end_date and end_date.lower() != 'null':
+        end_date = datetime.strptime(end_date, "%Y-%m-%d").date() + timedelta(days=1)  
+    else:
+        end_date = None
+
+    talenthunt_filter = TalentHunt.objects.filter(is_deleted=False)
+
+    if start_date and end_date:
+        talenthunt_filter = talenthunt_filter.filter(created__range=[start_date, end_date])
+
+    if sort_option == 'name_ascending':
+        talenthunt_filter = talenthunt_filter.order_by('title')
+    elif sort_option == 'name_descending':
+        talenthunt_filter = talenthunt_filter.order_by('-title')
+    
+    paginator = Paginator(talenthunt_filter, 25) 
+    page_number = request.GET.get('page')
+    talenthunts_paginated = paginator.get_page(page_number)
+
+    context = {
+        "talenthunts": talenthunts_paginated,
+        "start_date": start_date,
+        "end_date": end_date,
+        "current_sort": sort_option,
+    }
+
+    return render(request, 'ci/template/public/talenthunt/talenthunt.html', context)
 
 @login_required(login_url='dashboard-login')
 def list(request):
@@ -85,14 +119,14 @@ def add(request):
                 "title": "Add Subject",
                 "form": form,
             }
-            return render(request, "dashboard/webpages/talenthunt/add.html", context)
+            return render(request, "ci/template/public/talenthunt/add-talenthunt.html", context)
     else:
             form = TalentHuntForm()  
             context = {
                 "title": "Add talenthunt ",
                 "form": form,
             }
-            return render(request, "dashboard/webpages/talenthunt/add.html", context)
+            return render(request, "ci/template/public/talenthunt/add-talenthunt.html", context)
     
 
 
@@ -118,7 +152,7 @@ def update(request, pk):
                 "form": form,
                 "talenthunt": talenthunt,  
             }
-            return render(request, "dashboard/webpages/talenthunt/update.html", context)
+            return render(request, "ci/template/public/talenthunt/update-talenthunt.html", context)
     else:
         form = TalentHuntForm(instance=talenthunt)  
         context = {
@@ -126,7 +160,7 @@ def update(request, pk):
             "form": form,
             "talenthunt": talenthunt,  
         }
-        return render(request, "dashboard/webpages/talenthunt/update.html", context)
+        return render(request, "ci/template/public/talenthunt/update-talenthunt.html", context)
 
 @login_required(login_url='dashboard-login')
 def delete(request, pk):

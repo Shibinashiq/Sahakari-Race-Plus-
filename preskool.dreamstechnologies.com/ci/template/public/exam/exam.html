@@ -8,14 +8,14 @@
 
         <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
             <div class="my-auto mb-2">
-                <h3 class="page-title mb-1">Comment</h3>
+                <h3 class="page-title mb-1">Exam</h3>
                 <nav>
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item">
                             <a href="{% url 'dashboard-home' %}">Dashboard</a>
                         </li>
                        
-                        <li class="breadcrumb-item active" aria-current="page">Comment</li>
+                        <li class="breadcrumb-item active" aria-current="page">Exam</li>
                     </ol>
                 </nav>
             </div>
@@ -39,14 +39,16 @@
                 
                
                 <div class="mb-2">
-                   
+                    <a href="{% url 'dashboard-exam-add' %}"
+                        class="btn btn-primary d-flex align-items-center"><i class="bi bi-plus-circle me-2"></i>
+                        Add Exam</a>
                 </div>
             </div>
         </div>
 
         <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">
-                <h4 class="mb-3">Comment List</h4>
+                <h4 class="mb-3">Exam List</h4>
                 <div class="d-flex align-items-center flex-wrap">
                     <!-- Date Range Picker -->
                     <div class="input-icon-start mb-3 me-2 position-relative">
@@ -77,7 +79,18 @@
                                     Name Z-A
                                 </a>
                             </li>
-                            
+                            <!-- <li>
+                                <a href="javascript:void(0);" data-sort="duration_ascending"
+                                   class="dropdown-item rounded-1 {% if current_sort == 'duration_ascending' %}active{% endif %}">
+                                    Duration Ascending
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" data-sort="duration_descending"
+                                   class="dropdown-item rounded-1 {% if current_sort == 'duration_descending' %}active{% endif %}">
+                                    Duration Descending
+                                </a>
+                            </li> -->
                         </ul>
                         
                     </div>
@@ -98,74 +111,60 @@
                                     </div>
                                 </th>
                                 <th>ID</th>
-                                <th>User</th>
-                                <th>Content</th>
-                                <th>Video</th>
-                                <th>PDF</th>
+                                <th>Title</th>
+                                <th>Subject</th>
+                                <th>Duration</th>
                                 <th>Created</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for comment in comments %}
+                            {% for exam in exams %}
                             <tr>
-                                <!-- Checkbox -->
                                 <td>
                                     <div class="form-check form-check-md">
                                         <input class="form-check-input" type="checkbox">
                                     </div>
                                 </td>
                                 
-                                <!-- Comment ID -->
-                                <td><a href="#" class="link-primary">{{ comment.id }}</a></td>
+                                <td><a href="#" class="link-primary">{{ exam.id }}</a></td>
                                 
-                                <!-- User Name -->
                                 <td>
-                                    {% if comment.user.name %}
-                                        {{ comment.user.name }}
+                                    <a href="{% url 'dashboard-exam-question-manager' exam.id %}" class="link-primary">
+                                        {{ exam.title|default:"N/A" }}
+                                    </a>
+                                </td>
+                                
+                                
+                                <td>
+                                    {% if exam.subject %}
+                                        {{ exam.subject.subject_name|default:"N/A" }}
                                     {% else %}
                                         N/A
                                     {% endif %}
                                 </td>
                                 
-                                <!-- Comment Content -->
-                                <td>{{ comment.content|default:"N/A" }}</td>
-                                
-                                <!-- Video Title and URL -->
+                                <!-- Duration -->
                                 <td>
-                                    {% if comment.video %}
-                                        <strong>{{ comment.video.title|default:"N/A" }}</strong><br>
-                                        {% if comment.video.url %}
-                                            <a href="{{ comment.video.url }}" target="_blank" class="link-primary">Watch Video</a>
-                                        {% else %}
-                                            N/A
-                                        {% endif %}
-                                    {% else %}
-                                        N/A
-                                    {% endif %}
-                                </td>
-                                
-                                <!-- PDF Title and URL -->
-                                <td>
-                                    {% if comment.pdf_note %}
-                                        <strong>{{ comment.pdf_note.title|default:"N/A" }}</strong><br>
-                                        {% if comment.pdf_note.file %}
-                                            <a href="{{ comment.pdf_note.file.url }}" target="_blank" class="link-primary">Download PDF</a>
-                                        {% else %}
-                                            N/A
-                                        {% endif %}
+                                    {% if exam.duration %}
+                                        {{ exam.duration|default:"N/A" }}
                                     {% else %}
                                         N/A
                                     {% endif %}
                                 </td>
                                 
                                 <!-- Created Date -->
-                                <td>{{ comment.created|date:"Y-m-d H:i:s" }}</td>
+                                <td>{{ exam.created|date:"Y-m-d H:i:s" }}</td>
                                 
                                 <!-- Action (Delete) -->
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <a class="btn-delete" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal" data-comment-id="{{ comment.id }}" title="Delete Comment">
+                                        <a href="{% url 'dashboard-exam-update' pk=exam.id %}" class="text-primary me-3" title="Edit Exam">
+                                            <i class="bi bi-pencil-square me-2"></i> 
+                                        </a>
+                                        
+                                 
+                                        <a class="btn-delete" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal" data-comment-id="{{ exam.id }}" title="Delete Exam">
                                             <i class="bi bi-trash me-2"></i>
                                         </a>
                                     </div>
@@ -173,11 +172,12 @@
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="8" class="text-center">No comments found.</td>
+                                <td colspan="7" class="text-center">No exams found.</td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
+                    
                     
                 </div>
                 

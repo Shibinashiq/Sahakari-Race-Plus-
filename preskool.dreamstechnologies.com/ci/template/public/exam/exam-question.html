@@ -1,5 +1,10 @@
 {% include 'base.html' %}
+{% load static %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
 
 
 
@@ -8,14 +13,15 @@
 
         <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
             <div class="my-auto mb-2">
-                <h3 class="page-title mb-1">Comment</h3>
+                <h3 class="page-title mb-1">Exam</h3>
                 <nav>
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item">
                             <a href="{% url 'dashboard-home' %}">Dashboard</a>
                         </li>
                        
-                        <li class="breadcrumb-item active" aria-current="page">Comment</li>
+                        <li class="breadcrumb-item active" aria-current="page">Exam</li>
+                        <li class="breadcrumb-item active" aria-current="page">Question</li>
                     </ol>
                 </nav>
             </div>
@@ -39,14 +45,16 @@
                 
                
                 <div class="mb-2">
-                   
+                    <a href="{% url 'dashboard-exam-question-add' exam_id=exam_id %}"
+                        class="btn btn-primary d-flex align-items-center"><i class="bi bi-plus-circle me-2"></i>
+                        Add Question</a>
                 </div>
             </div>
         </div>
 
         <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">
-                <h4 class="mb-3">Comment List</h4>
+                <h4 class="mb-3">Exam List</h4>
                 <div class="d-flex align-items-center flex-wrap">
                     <!-- Date Range Picker -->
                     <div class="input-icon-start mb-3 me-2 position-relative">
@@ -77,7 +85,18 @@
                                     Name Z-A
                                 </a>
                             </li>
-                            
+                            <!-- <li>
+                                <a href="javascript:void(0);" data-sort="duration_ascending"
+                                   class="dropdown-item rounded-1 {% if current_sort == 'duration_ascending' %}active{% endif %}">
+                                    Duration Ascending
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" data-sort="duration_descending"
+                                   class="dropdown-item rounded-1 {% if current_sort == 'duration_descending' %}active{% endif %}">
+                                    Duration Descending
+                                </a>
+                            </li> -->
                         </ul>
                         
                     </div>
@@ -98,16 +117,14 @@
                                     </div>
                                 </th>
                                 <th>ID</th>
-                                <th>User</th>
-                                <th>Content</th>
-                                <th>Video</th>
-                                <th>PDF</th>
+                                <th>Question Description</th>
+                                <th>Hint</th>
                                 <th>Created</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for comment in comments %}
+                            {% for question in questions %}
                             <tr>
                                 <!-- Checkbox -->
                                 <td>
@@ -115,71 +132,58 @@
                                         <input class="form-check-input" type="checkbox">
                                     </div>
                                 </td>
-                                
-                                <!-- Comment ID -->
-                                <td><a href="#" class="link-primary">{{ comment.id }}</a></td>
-                                
-                                <!-- User Name -->
-                                <td>
-                                    {% if comment.user.name %}
-                                        {{ comment.user.name }}
-                                    {% else %}
-                                        N/A
-                                    {% endif %}
-                                </td>
-                                
-                                <!-- Comment Content -->
-                                <td>{{ comment.content|default:"N/A" }}</td>
-                                
-                                <!-- Video Title and URL -->
-                                <td>
-                                    {% if comment.video %}
-                                        <strong>{{ comment.video.title|default:"N/A" }}</strong><br>
-                                        {% if comment.video.url %}
-                                            <a href="{{ comment.video.url }}" target="_blank" class="link-primary">Watch Video</a>
-                                        {% else %}
-                                            N/A
-                                        {% endif %}
-                                    {% else %}
-                                        N/A
-                                    {% endif %}
-                                </td>
-                                
-                                <!-- PDF Title and URL -->
-                                <td>
-                                    {% if comment.pdf_note %}
-                                        <strong>{{ comment.pdf_note.title|default:"N/A" }}</strong><br>
-                                        {% if comment.pdf_note.file %}
-                                            <a href="{{ comment.pdf_note.file.url }}" target="_blank" class="link-primary">Download PDF</a>
-                                        {% else %}
-                                            N/A
-                                        {% endif %}
-                                    {% else %}
-                                        N/A
-                                    {% endif %}
-                                </td>
-                                
+                
+                                <!-- Question ID -->
+                                <td><a href="#" class="link-primary">{{ question.id }}</a></td>
+                
+                                <!-- Question Description -->
+                                <td>{{ question.question_description|safe }}</td>
+
+                
+                                <!-- Hint -->
+                                <td>{{ question.hint|default:"N/A" }}</td>
+                
                                 <!-- Created Date -->
-                                <td>{{ comment.created|date:"Y-m-d H:i:s" }}</td>
-                                
-                                <!-- Action (Delete) -->
+                                <td>{{ question.created|date:"Y-m-d H:i:s" }}</td>
+                
+                                <!-- Action (Edit/Delete) -->
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <a class="btn-delete" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal" data-comment-id="{{ comment.id }}" title="Delete Comment">
+                                        <a href="{% url 'dashboard-exam-question-update' exam_id=exam_id question_id=question.id %}" class="text-primary me-3" title="Edit Question">
+                                            <i class="bi bi-pencil-square me-2"></i>
+                                        </a>
+                                        
+                                        
+                                        
+                                        <a class="btn-delete" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal" data-question-id="{{ question.id }}" title="Delete Question">
                                             <i class="bi bi-trash me-2"></i>
                                         </a>
+                                        
                                     </div>
                                 </td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="8" class="text-center">No comments found.</td>
+                                <td colspan="6" class="text-center">No questions found.</td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-                    
+                
+                    <!-- Pagination controls -->
+                    <div class="pagination">
+                        {% if questions.has_previous %}
+                            <a href="?page=1" class="btn btn-primary">First</a>
+                            <a href="?page={{ questions.previous_page_number }}" class="btn btn-primary">Previous</a>
+                        {% endif %}
+                        <span>Page {{ questions.number }} of {{ questions.paginator.num_pages }}</span>
+                        {% if questions.has_next %}
+                            <a href="?page={{ questions.next_page_number }}" class="btn btn-primary">Next</a>
+                            <a href="?page={{ questions.paginator.num_pages }}" class="btn btn-primary">Last</a>
+                        {% endif %}
+                    </div>
                 </div>
+                
                 
 
             </div>
@@ -267,39 +271,42 @@
 
 
 </html>
-
+<script src="{% static 'dashboard/assets/libs/sweetalert2/sweetalert2.min.js' %}"></script>
+<script src="{% static 'dashboard/assets/libs/apexcharts/apexcharts.min.js' %}"></script>
+<script src="{% static 'dashboard/assets/js/pages/modal.init.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready(function () {
-    // When the delete button is clicked, store the comment ID in the modal
-    $(document).on('click', '.btn-delete', function () {
-        var commentId = $(this).data('comment-id');  // Fetch the correct comment ID
-        $('#delete-record').data('comment-id', commentId);  // Store the comment ID in the modal's delete button
-    });
+// Store question ID when the delete button is clicked
+$(document).on('click', '.btn-delete', function () {
+    var questionId = $(this).data('question-id');  // Get the question ID
+    $('#delete-record').data('question-id', questionId);  // Store it in the modal's button
+});
 
-    // When the 'Yes, Delete' button is clicked, make an AJAX request to delete the comment
-    $('#delete-record').click(function () {
-        var commentId = $(this).data('comment-id');  // Get the comment ID stored in the modal button
+// Deletion logic
+$('#delete-record').click(function () {
+    var examId = "{{ exam_id }}";  // Fetch the exam ID from your context
+    var questionId = $(this).data('question-id');  // Get the question ID stored in the modal button
 
-        console.log("Deleting Comment ID: " + commentId);
+    console.log("Deleting Question ID: " + questionId + " for Exam ID: " + examId);
 
-        $.ajax({
-            url: '/comment/delete/' + commentId + '/',  // Pass the comment ID to the delete URL
-            type: 'POST',
-            data: {
-                csrfmiddlewaretoken: '{{ csrf_token }}',  // Pass the CSRF token for security
-            },
-            success: function (data) {
-                console.log("Deleted successfully");
-                window.location.reload();  // Reload the page after successful deletion
-            },
-            error: function(xhr, status, error) {
-                console.error("Error deleting comment:", error);
-            }
-        });
+    $.ajax({
+        url: '/exam/question/delete/' + examId + '/' + questionId + '/',  // Pass both IDs to the delete URL
+        type: 'POST',
+        data: {
+            csrfmiddlewaretoken: '{{ csrf_token }}',  // Pass the CSRF token for security
+        },
+        success: function (data) {
+            console.log("Deleted successfully");
+            window.location.reload();  // Reload the page after successful deletion
+        },
+        error: function(xhr, status, error) {
+            console.error("Error deleting question:", error);
+        }
     });
 });
-</script>
+
+
+    </script>
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
