@@ -55,9 +55,9 @@
                         <div class="mb-3 mb-xl-0">
                             <div class="d-flex align-items-center flex-wrap mb-2">
                                 <h1 class="text-white me-2">Welcome Back, {{user}}</h1>
-                                <a href="https://preskool.dreamstechnologies.com/ci/template/public/profile"
+                                <a href=""
                                     class="avatar avatar-sm img-rounded bg-gray-800 dark-hover">
-                                        </a>
+                                    </a>
                             </div>
                             <p class="text-white">Have a Good day at work</p>
                         </div>
@@ -87,9 +87,9 @@
                         </div>
                     </div>
                     <div class="d-flex align-items-center justify-content-between border-top mt-3 pt-3">
-                        <p class="mb-0">Active : <span class="text-dark fw-semibold">{{subscribed_users}}</span></p>
+                        <p class="mb-0">Subscribed : <span class="text-dark fw-semibold">{{subscribed_users}}</span></p>
                         <span class="text-light">|</span>
-                        <p>Inactive : <span class="text-dark fw-semibold">{{non_subscribed_users}}</span></p>
+                        <p>Un Subscribed : <span class="text-dark fw-semibold">{{non_subscribed_users}}</span></p>
                     </div>
                 </div>
             </div>
@@ -106,16 +106,16 @@
                         </div>
                         <div class="overflow-hidden flex-fill">
                             <div class="d-flex align-items-center justify-content-between">
-                                <h2 class="counter">{{staff}}</h2>
+                                <h2 class="counter">0</h2>
                                 <!-- <span class="badge bg-skyblue">1.2%</span> -->
                             </div>
                             <p>Total Teachers</p>
                         </div>
                     </div>
                     <div class="d-flex align-items-center justify-content-between border-top mt-3 pt-3">
-                        <p class="mb-0">Active : <span class="text-dark fw-semibold">{{active_staff}}</span></p>
+                        <p class="mb-0">Active : <span class="text-dark fw-semibold">0</span></p>
                         <span class="text-light">|</span>
-                        <p>Inactive : <span class="text-dark fw-semibold">{{in_active_staff}}</span></p>
+                        <p>Inactive : <span class="text-dark fw-semibold">0</span></p>
                     </div>
                 </div>
             </div>
@@ -132,16 +132,16 @@
                         </div>
                         <div class="overflow-hidden flex-fill">
                             <div class="d-flex align-items-center justify-content-between">
-                                <h2 class="counter">162</h2>
+                                <h2 class="counter">{{staff}}</h2>
                                 <!-- <span class="badge bg-warning">1.2%</span> -->
                             </div>
                             <p>Total Staff</p>
                         </div>
                     </div>
                     <div class="d-flex align-items-center justify-content-between border-top mt-3 pt-3">
-                        <p class="mb-0">Active : <span class="text-dark fw-semibold">161</span></p>
+                        <p class="mb-0">Active : <span class="text-dark fw-semibold">{{active_staff}}</span></p>
                         <span class="text-light">|</span>
-                        <p>Inactive : <span class="text-dark fw-semibold">02</span></p>
+                        <p>Inactive : <span class="text-dark fw-semibold">{{in_active_staff}}</span></p>
                     </div>
                 </div>
             </div>
@@ -506,32 +506,32 @@
                                 class="d-block bg-success-transparent ronded p-2 text-center mb-3 class-hover">
                                 <div class="avatar avatar-lg border p-1 border-success rounded-circle mb-2">
                                     <span
-                                        class="d-inline-flex align-items-center justify-content-center w-100 h-100 bg-success rounded-circle"><i
-                                            class="ti ti-calendar"></i></span>
+                                        class="d-inline-flex align-items-center justify-content-center w-100 h-100 bg-success rounded-circle"> <i class="bi bi-calendar"></i></span>
                                 </div>
                                 <p class="text-dark">Calendar</p>
                             </a>
-                            <a href="https://preskool.dreamstechnologies.com/ci/template/public/fees-group"
+                            <!-- <a href="https://preskool.dreamstechnologies.com/ci/template/public/fees-group"
                                 class="d-block bg-secondary-transparent ronded p-2 text-center mb-3 class-hover">
                                 <div class="avatar avatar-lg border p-1 border-secondary rounded-circle mb-2">
                                     <span
-                                        class="d-inline-flex align-items-center justify-content-center w-100 h-100 bg-secondary rounded-circle"><i
-                                            class="ti ti-license"></i></span>
+                                        class="d-inline-flex align-items-center justify-content-center w-100 h-100 bg-secondary rounded-circle">
+                                        <i class="bi bi-file-earmark-text"></i>
                                 </div>
                                 <p class="text-dark">Fees</p>
-                            </a>
+                            </a> -->
                         </div>
                         <div class="item">
                             <a href="https://preskool.dreamstechnologies.com/ci/template/public/exam-results"
                                 class="d-block bg-primary-transparent ronded p-2 text-center mb-3 class-hover">
                                 <div class="avatar avatar-lg border p-1 border-primary rounded-circle mb-2">
                                     <span
-                                        class="d-inline-flex align-items-center justify-content-center w-100 h-100 bg-primary rounded-circle"><i
-                                            class="ti ti-hexagonal-prism"></i></span>
+                                        class="d-inline-flex align-items-center justify-content-center w-100 h-100 bg-primary rounded-circle">
+                                        <i class="bi bi-file-earmark"></i>
+                                    </span>
                                 </div>
                                 <p class="text-dark">Exam Result</p>
                             </a>
-                            <a href="https://preskool.dreamstechnologies.com/ci/template/public/class-home-work"
+                            <!-- <a href="https://preskool.dreamstechnologies.com/ci/template/public/class-home-work"
                                 class="d-block bg-danger-transparent ronded p-2 text-center mb-3 class-hover">
                                 <div class="avatar avatar-lg border p-1 border-danger rounded-circle mb-2">
                                     <span
@@ -539,19 +539,20 @@
                                             class="ti ti-report-money"></i></span>
                                 </div>
                                 <p class="text-dark">Home Works</p>
-                            </a>
+                            </a> -->
                         </div>
                         <div class="item">
                             <a href="https://preskool.dreamstechnologies.com/ci/template/public/student-attendance"
                                 class="d-block bg-warning-transparent ronded p-2 text-center mb-3 class-hover">
                                 <div class="avatar avatar-lg border p-1 border-warning rounded-circle mb-2">
                                     <span
-                                        class="d-inline-flex align-items-center justify-content-center w-100 h-100 bg-warning rounded-circle"><i
-                                            class="ti ti-calendar-share"></i></span>
+                                        class="d-inline-flex align-items-center justify-content-center w-100 h-100 bg-warning rounded-circle">
+                                        <i class="bi bi-calendar"></i>
+                                    </span>
                                 </div>
                                 <p class="text-dark">Attendance</p>
                             </a>
-                            <a href="https://preskool.dreamstechnologies.com/ci/template/public/attendance-report"
+                            <!-- <a href="https://preskool.dreamstechnologies.com/ci/template/public/attendance-report"
                                 class="d-block bg-skyblue-transparent ronded p-2 text-center mb-3 class-hover">
                                 <div class="avatar avatar-lg border p-1 border-skyblue rounded-circle mb-2">
                                     <span
@@ -559,7 +560,7 @@
                                             class="ti ti-file-pencil"></i></span>
                                 </div>
                                 <p class="text-dark">Reports</p>
-                            </a>
+                            </a> -->
                         </div>
                     </div>
                 </div>
@@ -1658,59 +1659,25 @@
 </div>
 
 </div>
+<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/js/jquery-3.7.1.min.js"></script>
+<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/js/bootstrap.bundle.min.js"></script>
+<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/js/moment.js"></script> <!-- Keep only one version -->
+<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/js/bootstrap-datetimepicker.min.js"></script>
+<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/js/feather.min.js"></script>
+<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/js/jquery.slimscroll.min.js"></script>
+<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/apexchart/apexcharts.min.js"></script>
+<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/owlcarousel/owl.carousel.min.js"></script>
+<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/select2/js/select2.min.js"></script>
+<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/js/jquery.dataTables.min.js"></script>
+<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/js/theme-script.js"></script>
+<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/js/script.js"></script>
+<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/countup/jquery.counterup.min.js"></script>
+<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/countup/jquery.waypoints.min.js"></script>
+<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/countup/jquery.missofis-countdown.js"></script>
+<script src="https://preskool.dreamstechnologies.com/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js" data-cf-settings="5ebbf4cccda87f0111f3041a-|49" defer></script>
 
-
-<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/js/jquery-3.7.1.min.js"
-    type="5ebbf4cccda87f0111f3041a-text/javascript"></script>
-
-<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/js/bootstrap.bundle.min.js"
-    type="5ebbf4cccda87f0111f3041a-text/javascript"></script>
-
-<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/js/moment.js"
-    type="5ebbf4cccda87f0111f3041a-text/javascript"></script>
-<script
-    src="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/daterangepicker/daterangepicker.js"
-    type="5ebbf4cccda87f0111f3041a-text/javascript"></script>
-<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/js/bootstrap-datetimepicker.min.js"
-    type="5ebbf4cccda87f0111f3041a-text/javascript"></script>
-<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/moment/moment.js"
-    type="5ebbf4cccda87f0111f3041a-text/javascript"></script>
-
-<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/js/feather.min.js"
-    type="5ebbf4cccda87f0111f3041a-text/javascript"></script>
-
-<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/js/jquery.slimscroll.min.js"
-    type="5ebbf4cccda87f0111f3041a-text/javascript"></script>
-
-<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/apexchart/apexcharts.min.js"
-    type="5ebbf4cccda87f0111f3041a-text/javascript"></script>
-<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/apexchart/chart-data.js"
-    type="5ebbf4cccda87f0111f3041a-text/javascript"></script>
-
-<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/owlcarousel/owl.carousel.min.js"
-    type="5ebbf4cccda87f0111f3041a-text/javascript"></script>
-
-<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/select2/js/select2.min.js"
-    type="5ebbf4cccda87f0111f3041a-text/javascript"></script>
-
-<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/js/jquery.dataTables.min.js"
-    type="5ebbf4cccda87f0111f3041a-text/javascript"></script>
-<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/js/dataTables.bootstrap5.min.js"
-    type="5ebbf4cccda87f0111f3041a-text/javascript"></script>
-
-<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/js/theme-script.js"
-    type="5ebbf4cccda87f0111f3041a-text/javascript"></script>
-<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/js/script.js"
-    type="5ebbf4cccda87f0111f3041a-text/javascript"></script>
-<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/countup/jquery.counterup.min.js"
-    type="5ebbf4cccda87f0111f3041a-text/javascript"></script>
-<script src="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/countup/jquery.waypoints.min.js"
-    type="5ebbf4cccda87f0111f3041a-text/javascript"></script>
-<script
-    src="https://preskool.dreamstechnologies.com/ci/template/public/assets/plugins/countup/jquery.missofis-countdown.js"
-    type="5ebbf4cccda87f0111f3041a-text/javascript"></script>
-<script src="https://preskool.dreamstechnologies.com/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js"
-    data-cf-settings="5ebbf4cccda87f0111f3041a-|49" defer></script>
 </body>
 
 <!-- Mirrored from preskool.dreamstechnologies.com/ci/template/public/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 18 Sep 2024 04:06:32 GMT -->

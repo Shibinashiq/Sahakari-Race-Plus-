@@ -239,9 +239,12 @@ def course_detail_subject(request, course_id):
 
 @login_required(login_url='dashboard-login')
 def course_subject_add(request, course_id):
+    print("Request Method:", request.method)
+    print("Course ID:", course_id)
     try:
         
         course = Course.objects.get(id=course_id, is_deleted=False)
+        print("Course:", course)
     except Course.DoesNotExist:
         messages.error(request, "Course not found.")
         return redirect('dashboard-course')
@@ -251,6 +254,7 @@ def course_subject_add(request, course_id):
         if form.is_valid():
             subject = form.save(commit=False)
             subject.course = course  
+            print("hiiiiiiiiiiiiii")
             subject.save()
             messages.success(request, "Subject added successfully!")
             return redirect('dashboard-course-subjects-list', pk=course_id)
