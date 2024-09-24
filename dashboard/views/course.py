@@ -254,7 +254,6 @@ def course_subject_add(request, course_id):
         if form.is_valid():
             subject = form.save(commit=False)
             subject.course = course  
-            print("hiiiiiiiiiiiiii")
             subject.save()
             messages.success(request, "Subject added successfully!")
             return redirect('dashboard-course-subjects-list', pk=course_id)
