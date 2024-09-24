@@ -135,7 +135,7 @@
                                 </td>
                                 <td>{{ lesson.lesson_name }}</td>
                                 <td>{{ lesson.description|truncatewords:10 }}</td>
-                                <td>{{ lesson.created|date:"Y-m-d" }}</td>
+                                <td>{{ lesson.created|date:"d-m-Y"}}</td>
                                 <td>
                                     {% for video in lesson.videos.all %}
                                         <strong>{{ video.title|default:"N/A" }}</strong><br>

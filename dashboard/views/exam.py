@@ -308,11 +308,10 @@ def exam_question_add(request, exam_id):
 
     return render(request, 'ci/template/public/exam/add-exam-question.html', {'form': form ,'exam':exam_id})
 
-
 @login_required(login_url='dashboard-login')
-def exam_question_update(request,exam_id,question_id):
+def exam_question_update(request, exam_id, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    exam = Exam.objects.get(id=exam_id)
+    exam = get_object_or_404(Exam, id=exam_id)
     
     if request.method == 'POST':
         form = QuestionForm(request.POST, instance=question)
@@ -330,14 +329,21 @@ def exam_question_update(request,exam_id,question_id):
             question.options = options
             question.right_answers = answers
             question.save()
+
             if question.master_question:
-                master_question=Question.objects.get(id=question.master_question,is_deleted=False)
-                master_question.question_type = question_type
-                master_question.question_description = question_description
-                master_question.hint = hint
-                master_question.options = options
-                master_question.right_answers = answers
-                master_question.save()
+                try:
+                    master_question = Question.objects.get(id=question.master_question, is_deleted=False)
+                    master_question.question_type = question_type
+                    master_question.question_description = question_description
+                    master_question.hint = hint
+                    master_question.options = options
+                    master_question.right_answers = answers
+                    master_question.save()
+                except Question.DoesNotExist:
+                    messages.error(request, 'The master question does not exist or has been deleted.')
+                    return redirect('dashboard-exam-question-manager', exam_id=exam_id)
+
+            # Handle related questions
             related_questions = Question.objects.filter(master_question=question.id, is_deleted=False)
             for related_question in related_questions:
                 related_question.question_type = question_type
@@ -348,16 +354,17 @@ def exam_question_update(request,exam_id,question_id):
                 related_question.save()
 
             messages.success(request, 'Question updated successfully.')
-            return redirect('dashboard-exam-question-manager',exam_id=exam_id)  
+            return redirect('dashboard-exam-question-manager', exam_id=exam_id)  
     else:
         form = QuestionForm(instance=question)
-    
+
     return render(request, 'ci/template/public/exam/update-exam-question.html', {
         'form': form,
         'question': question,
         'options': question.options,
         'answers': question.right_answers
     })
+
 
 
 
@@ -379,7 +386,6 @@ def exam_question_delete(request,exam_id,question_id):
 
 @login_required(login_url='dashboard-login')
 def paste(request):
-    
     if request.method == 'POST':
         ids_json = request.POST.get('ids')
         exam_id = request.POST.get('exam_id')
@@ -388,7 +394,7 @@ def paste(request):
             exam = Exam.objects.get(id=exam_id, is_deleted=False)
         except Exam.DoesNotExist:
             return JsonResponse({'error': 'Exam does not exist.'}, status=404)
-        
+
         try:
             ids = json.loads(ids_json) if ids_json else []
         except json.JSONDecodeError:
@@ -400,47 +406,49 @@ def paste(request):
         success_count = 0
         error_messages = []
         already_exists = []
-        
 
         for i in ids:
             try:
                 master_question = Question.objects.get(id=i)
-               
-                
+
                 if Question.objects.filter(exam=exam, master_question=i, is_deleted=False).exists() or \
-                    Question.objects.filter(exam=exam, id=master_question.master_question, is_deleted=False).exists() or \
-                    Question.objects.filter(exam=exam, id=i, is_deleted=False).exists():
-                        already_exists.append(i)
-                        continue
-                   
-                question=Question.objects.create(
+                   Question.objects.filter(exam=exam, id=master_question.master_question, is_deleted=False).exists() or \
+                   Question.objects.filter(exam=exam, id=i, is_deleted=False).exists():
+                    already_exists.append(i)
+                    continue
+
+                question = Question.objects.create(
                     question_type=master_question.question_type,
                     question_description=master_question.question_description,
                     hint=master_question.hint,
                     options=master_question.options,
                     right_answers=master_question.right_answers,
                     exam=exam,
-                    
                 )
                 if master_question.master_question:
                     question.master_question = master_question.master_question
                 question.master_question = i
                 question.save()
                 success_count += 1  
+
             except ObjectDoesNotExist:
                 error_messages.append(f"Master question with ID {i} does not exist.")
             except Exception as e:
                 error_messages.append(f"Error creating question with ID {i}: {str(e)}")
 
-        if success_count == 0 and not already_exists:
-            return JsonResponse({'error': 'No questions were created.', 'details': error_messages}, status=400)
+        # Update the response based on the counts
+        response_data = {}
+        if success_count > 0:
+            response_data['message'] = f'Successfully added {success_count} question(s) to the exam.'
         
-        response_data = {
-            'message': f'Successfully added {success_count} question(s) to the exam.',
-            'errors': error_messages
-        }
         if already_exists:
             response_data['existing'] = f"The following questions already existed in the exam: {', '.join(map(str, already_exists))}"
+
+        if error_messages:
+            response_data['errors'] = error_messages
+
+        if not response_data:
+            return JsonResponse({'error': 'No questions were processed.'}, status=400)
 
         return JsonResponse(response_data, status=200)
 

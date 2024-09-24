@@ -137,7 +137,7 @@
                                 <td>
                                     <a href="mailto:{{ user.email }}">{{ user.email }}</a>
                                 </td>
-                                <td>{{ user.created }}</td>
+                                <td>{{ user.created |date:"d-m-Y"}}</td>
                                 <td>
                                     <div class="d-flex align-items-center">
                                         {% if user.is_active == True %}

@@ -310,8 +310,7 @@ class SuccessStory(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
 
-    def __str__(self):
-        return self.created_at or 'No title'
+   
 
 
 class StudentProgress(models.Model):

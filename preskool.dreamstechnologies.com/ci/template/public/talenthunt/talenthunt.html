@@ -119,7 +119,7 @@
                                     </a>
                                 </td>
                                 <td>{{ talenthunt.course.course_name|default:"N/A" }}</td>
-                                <td>{{ talenthunt.created|date:"Y-m-d H:i:s" }}</td>
+                                <td>{{ talenthunt.created|date:"d-m-Y" }}</td>
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <a href="{% url 'dashboard-talenthunt-update' pk=talenthunt.id %}" class="text-primary me-3" title="Edit Talent Hunt">

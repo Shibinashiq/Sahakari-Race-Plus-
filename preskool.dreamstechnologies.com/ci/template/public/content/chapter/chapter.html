@@ -142,7 +142,7 @@
                                     <a  class="link-primary" href="{% url 'dashboard-chapters-lesson-list' chapter_id=subject.id %}">{{ subject.chapter_name }}</a>
                                 </td>
                                 <td>{{ subject.description|truncatewords:10 }}</td>
-                                <td>{{ subject.created|date:"Y-m-d" }}</td>
+                                <td>{{ subject.created|date:"d-m-Y" }}</td>
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <!-- Edit Subject -->

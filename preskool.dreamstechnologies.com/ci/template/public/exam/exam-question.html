@@ -5,6 +5,8 @@
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
 
 
@@ -55,6 +57,13 @@
         <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">
                 <h4 class="mb-3">Exam List</h4>
+                <div class="d-flex align-items-center">
+                    <!-- Paste ID Field and Button (left side) -->
+                    <input type="text" id="pasteIdField" class="form-control me-2" placeholder="Paste or enter ID here" style="width: 200px;" />
+                    <button id="pasteIdButton" class="btn btn-primary">
+                        <i class="mdi mdi-paste"></i> Add
+                    </button>
+                </div>
                 <div class="d-flex align-items-center flex-wrap">
                     <!-- Date Range Picker -->
                     <div class="input-icon-start mb-3 me-2 position-relative">
@@ -165,7 +174,7 @@
                                     </ul>
                                 </td>
                                 <!-- Created Date -->
-                                <td>{{ question.created|date:"Y-m-d H:i:s" }}</td>
+                                <td>{{ question.created|date:"d-m-Y"}}</td>
                 
                                 <!-- Action (Edit/Delete) -->
                                 <td>
@@ -407,3 +416,92 @@ $('#delete-record').click(function () {
     });
     </script>
     
+<script>
+$(document).ready(function() {
+    var examId = "{{ exam_id }}";  // Assuming this is correctly rendered by your server-side template
+    console.log("Exam ID:", examId);
+    console.log("hello");
+
+    $('#pasteIdButton').click(function() {
+        var idsText = $('#pasteIdField').val().trim();
+
+        if (idsText) {
+            // Split the input text into an array of IDs
+            var ids = idsText.split(/,\s*/).filter(function(id) {
+                return id;
+            });
+
+            if (ids.length > 0) {
+                $.ajax({
+                    url: "{% url 'dashboard-exam-paste'  %}", 
+                    type: 'POST',
+                    data: {
+                        exam_id: examId,
+                        ids: JSON.stringify(ids),
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        console.log("Response:", response);
+
+                        if (response.message) {
+                            Toastify({
+                                text: response.message,
+                                duration: 3000,
+                                close: true,
+                                gravity: "top",
+                                position: 'right',
+                                stopOnFocus: true
+                            }).showToast();
+                        }
+
+                        if (response.existing) {
+                            Toastify({
+                                text: response.existing,
+                                duration: 3000,
+                                close: true,
+                                gravity: "top",
+                                position: 'right',
+                                backgroundColor: "orange",  
+                                stopOnFocus: true
+                            }).showToast();
+                        }
+
+                        if (response.errors && response.errors.length > 0) {
+                            response.errors.forEach(function(error) {
+                                Toastify({
+                                    text: error,
+                                    duration: 3000,
+                                    close: true,
+                                    gravity: "top",
+                                    position: 'right',
+                                    backgroundColor: "red", 
+                                    stopOnFocus: true
+                                }).showToast();
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error:", error);
+                        console.log("Response:", xhr.responseText);
+
+                        Toastify({
+                            text: "Failed to add IDs! " + xhr.responseText,
+                            duration: 3000,
+                            close: true,
+                            gravity: "top",
+                            position: 'right',
+                            backgroundColor: "red",
+                            stopOnFocus: true
+                        }).showToast();
+                    }
+                });
+            } else {
+                alert("Please enter at least one valid ID.");
+            }
+        } else {
+            alert("Please enter some IDs.");
+        }
+    });
+});
+
+</script>

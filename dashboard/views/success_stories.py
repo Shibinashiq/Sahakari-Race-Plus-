@@ -1,9 +1,54 @@
 from dashboard.views.imports import *
 
 
+
+
 @login_required(login_url='dashboard-login')
 def manager(request):
-    return render(request, "dashboard/webpages/success_stories/manager.html")
+    sort_option = request.GET.get('sort')
+    
+    start_date = request.GET.get('start_date', None)
+    end_date = request.GET.get('end_date', None)
+
+    if start_date and start_date.lower() != 'null':
+        start_date = datetime.strptime(start_date, "%Y-%m-%d").strftime("%Y-%m-%d")
+    else:
+        start_date = None
+
+    if end_date and end_date.lower() != 'null':
+        end_date = (datetime.strptime(end_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
+    else:
+        end_date = None
+    
+    user_filter =SuccessStory.objects.filter(is_deleted=False)
+
+    
+    if start_date and end_date:
+        user_filter = user_filter.filter(created__range=[start_date, end_date])
+ 
+    elif sort_option == 'name_ascending':
+        user_list = user_filter.order_by('created')
+    elif sort_option == 'name_descending':
+        user_list = user_filter.order_by('-created')
+    else:
+        user_list = user_filter.order_by('-id')
+
+    paginator = Paginator(user_list, 25)
+    page_number = request.GET.get('page')
+    users = paginator.get_page(page_number)
+
+    staff_count = user_filter.count()
+
+    context = {
+        "stories": users,
+        "current_sort": sort_option,
+        "start_date": start_date,
+        "end_date": end_date,
+        "staff_count": staff_count,
+    }
+
+    return render(request, "ci/template/public/success-stories/success-stories.html", context)
+
 
 
 @login_required(login_url='dashboard-login')
