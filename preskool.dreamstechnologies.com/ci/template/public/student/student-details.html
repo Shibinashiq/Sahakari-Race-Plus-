@@ -531,12 +531,13 @@ Login Details</a>
                                     <div class="modal-body">
                                         <div class="student-detail-info">
                                             <span class="student-img">
-                                                    {% if customer.image.url %}
-                                                        <img src="{{ customer.image.url }}" alt="Img">
-                                                    {% else %}
-                                                        <img src="https://preskool.dreamstechnologies.com/html/template/assets/img/students/student-01.jpg" alt="Img">
-                                                    {% endif %}
-                                                </span>
+                                                {% if customer.image and customer.image.url %}
+                                                    <img src="{{ customer.image.url }}" alt="Img">
+                                                {% else %}
+                                                <i class="bi bi-person-circle fs-3 text-dark"></i>
+                                                {% endif %}
+                                            </span>
+                                            
 
                                             <div class="name-info">
                                                 <h6>{{customer.name}}</h6>
