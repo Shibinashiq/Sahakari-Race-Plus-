@@ -130,7 +130,6 @@ from dashboard.forms.success_stories import SuccessStoriesForm
 from django.db.models import Count
 
 from django.template.loader import render_to_string
-from weasyprint import HTML
 
 
 from django.http import HttpResponse
