@@ -1,10 +1,13 @@
 from dashboard.views.imports import *
+
+
 @login_required(login_url='dashboard-login')
 def manager(request):
     sort_option = request.GET.get('sort')
     
     start_date = request.GET.get('start_date', None)
     end_date = request.GET.get('end_date', None)
+    search_query = request.GET.get('search', '')  
 
     if start_date and start_date.lower() != 'null':
         start_date = datetime.strptime(start_date, "%Y-%m-%d").strftime("%Y-%m-%d")
@@ -21,6 +24,14 @@ def manager(request):
     if start_date and end_date:
         user_filter = user_filter.filter(created__range=[start_date, end_date])
     
+    # New: Apply search filter
+    if search_query:
+        user_filter = user_filter.filter(
+            Q(name__icontains=search_query) |
+            Q(email__icontains=search_query) |
+            Q(id__icontains=search_query)  # Assuming 'id' is a string field, if it's an integer, remove this line
+        )
+    print(sort_option,'{{{{{{{{{{{{}}}}}}}}}}}}')
     if sort_option == 'ascending':
         user_list = user_filter.order_by('id')
     elif sort_option == 'descending':
@@ -41,7 +52,8 @@ def manager(request):
         "users": users,
         "current_sort": sort_option,
         "start_date": start_date,
-        "end_date": end_date
+        "end_date": end_date,
+        "search_query": search_query  # New: Add search query to context
     }
 
     return render(request, "ci/template/public/student/student_grid.html", context)

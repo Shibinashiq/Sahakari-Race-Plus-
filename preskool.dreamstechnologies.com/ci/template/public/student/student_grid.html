@@ -42,6 +42,7 @@
                     <a href="{% url 'dashboard-customer-add' %}"
                         class="btn btn-primary d-flex align-items-center"><i class="bi bi-plus-circle me-2"></i>Add Student</a>
                 </div>
+                
             </div>
         </div>
 
@@ -49,23 +50,26 @@
         <div
             class="bg-white p-3 border rounded-1 d-flex align-items-center justify-content-between flex-wrap mb-4 pb-0">
             <h4 class="mb-3">Students Grid</h4>
-            <div class="d-flex align-items-center flex-wrap">
+            <div class="d-flex align-items-center flex-wrap gap-2">
+                <!-- Search Input and Button -->
+                <div class="d-flex mb-3">
+                    <input type="text" id="searchInput" class="form-control me-2" placeholder="Search users...">
+                    <button type="submit" id="searchButton" class="btn btn-primary">Search</button>
+                </div>
+            
                 <!-- Date Range Picker -->
-                <div class="input-icon-start mb-3 me-2 position-relative">
-                    <span class="icon-addon">
+                <div class="position-relative mb-3 me-2">
+                    <span class="icon-addon position-absolute top-50 start-0 translate-middle-y ms-3">
                         <i class="bi bi-calendar"></i>
-
                     </span>
-                    <input type="text" class="form-control custom-date-picker" placeholder="Select Date Range">
+                    <input type="text" class="form-control ps-5 custom-date-picker" placeholder="Select Date Range">
                 </div>
             
                 <!-- Sort by Dropdown -->
                 <div class="dropdown mb-3">
-                    <a href="javascript:void(0);" class="btn btn-outline-light bg-white dropdown-toggle"
-                       data-bs-toggle="dropdown">
-                       <i class="bi bi-sort-alpha-up me-2"></i>Sort by
+                    <a href="javascript:void(0);" class="btn btn-outline-light bg-white dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="bi bi-sort-alpha-up me-2"></i>Sort by
                     </a>
-                
                     <ul class="dropdown-menu p-3">
                         <li>
                             <a href="javascript:void(0);" data-sort="name_ascending"
@@ -81,10 +85,8 @@
                         </li>
                     </ul>
                 </div>
-                
-                
-                
             </div>
+            
             
         </div>
 
@@ -470,7 +472,6 @@ $(document).ready(function () {
 
 <!-- Include Flatpickr JS -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Initialize flatpickr date picker
@@ -481,65 +482,84 @@ $(document).ready(function () {
                 if (selectedDates.length === 2) {
                     let startDate = selectedDates[0].toISOString().split('T')[0];
                     let endDate = selectedDates[1].toISOString().split('T')[0];
-    
-                    // Get the current sort parameter
-                    const sort = new URL(window.location.href).searchParams.get('sort');
-    
-                    // Update URL with date range and sort parameter
-                    updateURL(startDate, endDate, sort);
+                    updateURL(startDate, endDate, null); // Pass null for sort
                 }
             }
         });
-    
-        function updateURL(startDate, endDate, sort) {
+
+        // Search button event listener
+        const searchButton = document.getElementById('searchButton');
+        const searchInput = document.getElementById('searchInput');
+
+        searchButton.addEventListener('click', function() {
+            updateURL(); // Update without date or sort parameters
+        });
+
+        function updateURL(startDate = null, endDate = null, sort = null) {
             const url = new URL(window.location.href);
-    
-            // Set date range parameters
-            url.searchParams.set('start_date', startDate);
-            url.searchParams.set('end_date', endDate);
-    
-            // Set or preserve sorting parameter
+
+            // Set date range parameters if provided
+            if (startDate && endDate) {
+                url.searchParams.set('start_date', startDate);
+                url.searchParams.set('end_date', endDate);
+            }
+
+            // Set search parameter
+            const searchTerm = searchInput.value.trim();
+            if (searchTerm) {
+                url.searchParams.set('search', searchTerm);
+            } else {
+                url.searchParams.delete('search');
+            }
+
+            // Set sort parameter if provided
             if (sort) {
                 url.searchParams.set('sort', sort);
             }
-    
+
             // Redirect to updated URL
             window.location.href = url;
         }
-    
+
         function handleSortChange(event) {
             const sort = event.target.getAttribute('data-sort');
-            const url = new URL(window.location.href);
-    
-            // Get existing date range parameters
-            const startDate = url.searchParams.get('start_date');
-            const endDate = url.searchParams.get('end_date');
-    
-            // Update URL with sorting parameter
-            updateURL(startDate, endDate, sort);
+            updateURL(null, null, sort); // Only pass sort parameter
         }
-    
+
         // Add event listener to sorting links
         document.querySelectorAll('.dropdown-menu .dropdown-item').forEach(item => {
             item.addEventListener('click', handleSortChange);
         });
-    
+
         function clearFiltersOnRefresh() {
             const url = new URL(window.location.href);
-    
-            // Optionally: Remove date range and sorting parameters on refresh
+
+            // Optionally: Remove date range, sorting, and search parameters on refresh
             url.searchParams.delete('start_date');
             url.searchParams.delete('end_date');
             url.searchParams.delete('sort');
-    
+            url.searchParams.delete('search');
+
             // Redirect to URL without filters
             window.history.replaceState(null, '', url);
         }
-    
+
         // Trigger function to clear filters on page load
         window.addEventListener('load', function() {
             clearFiltersOnRefresh();
         });
+
+        // Debounce function to limit how often a function can fire
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
     });
-    </script>
-    
+</script>
