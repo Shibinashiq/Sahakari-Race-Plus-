@@ -27,7 +27,8 @@ from dashboard.views import (
    staff,
    comment,
    banner,
-   success_stories
+   success_stories,
+   folder
 )
 
 urlpatterns = [
@@ -112,6 +113,19 @@ urlpatterns = [
     path("chapter/add/", chapter.add, name="dashboard-chapter-add"),
     path("chapter/update/<int:pk>/", chapter.update, name="dashboard-chapter-update"),
     path("chapter/delete/<int:pk>/", chapter.delete, name="dashboard-chapter-delete"),
+    
+
+    # ==================================== Folder Management ============================================= #
+
+    path("folder/<int:folder_id>/", folder.manager, name="dashboard-folder"),
+    path("folder/add/", folder.add, name="dashboard-folder-add"),
+
+    path("folder/update/<int:pk>/", folder.update, name="dashboard-folder-update"),
+    path("folder/delete/<int:pk>/", folder.delete, name="dashboard-folder-delete"),
+    path("folder/lesson/add/<int:pk>/", folder.lesson_add, name="dashboard-folder-lesson-add"),
+    # path("folder/lesson/update/", folder.lesson_update, name="dashboard-folder-lesson-update"),
+    # path("folder/lesson/delete/", folder.lesson_delete, name="dashboard-folder-lesson-delete"),
+
     # ==================================== Chapter Management ============================================= #
 
     path("lesson/", lesson.manager, name="dashboard-lesson"),

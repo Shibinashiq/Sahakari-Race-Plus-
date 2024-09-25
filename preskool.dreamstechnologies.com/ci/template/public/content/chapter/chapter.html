@@ -14,38 +14,44 @@
                         <li class="breadcrumb-item">
                             <a href="{% url 'dashboard-home' %}">Dashboard</a>
                         </li>
-                       
                         <li class="breadcrumb-item active" aria-current="page">Course</li>
+                        <li class="breadcrumb-item active" aria-current="page">Subject</li>
                         <li class="breadcrumb-item active" aria-current="page">Chapter</li>
                     </ol>
                 </nav>
             </div>
             <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
+                <!-- Refresh Button -->
                 <div class="pe-1 mb-2">
-                    <a href="#" class="btn btn-outline-light bg-white btn-icon me-1" data-bs-toggle="tooltip"
-                    data-bs-placement="top" aria-label="Refresh" data-bs-original-title="Refresh"
-                    onclick="window.location.reload();">
-                    <i class="bi bi-arrow-repeat"></i>
-                </a>
-                
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon me-1" 
+                       data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Refresh" 
+                       data-bs-original-title="Refresh" onclick="window.location.reload();">
+                        <i class="bi bi-arrow-repeat"></i>
+                    </a>
                 </div>
+                
+                <!-- Print Button -->
                 <div class="pe-1 mb-2">
                     <button type="button" class="btn btn-outline-light bg-white btn-icon me-1" 
-                        data-bs-toggle="tooltip" data-bs-placement="top" 
-                        aria-label="Print" data-bs-original-title="Print"
-                        onclick="printPage()">
+                        data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Print" 
+                        data-bs-original-title="Print" onclick="printPage()">
                         <i class="bi bi-printer"></i>
                     </button>
                 </div>
                 
+                <!-- Add Module Button with extra margin-right -->
                
+        
+                <!-- Add Chapter Button -->
                 <div class="mb-2">
-                    <a href="{% url 'dashboard-subject-chapter-add' pk=subject_id %}"
-                        class="btn btn-primary d-flex align-items-center"><i class="bi bi-plus-circle me-2"></i>
-                        Add Chapter</a>
+                    <a href="{% url 'dashboard-subject-chapter-add' pk=subject_id %}" 
+                       class="btn btn-primary d-flex align-items-center">
+                        <i class="bi bi-plus-circle me-2"></i> Add Chapter
+                    </a>
                 </div>
             </div>
         </div>
+        
 
         <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">

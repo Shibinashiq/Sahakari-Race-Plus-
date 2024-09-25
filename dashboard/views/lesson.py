@@ -34,13 +34,14 @@ def manager(request):
     users = paginator.get_page(page_number)
 
     staff_count = user_filter.count()
-
+    folders = Folder.objects.filter(is_deleted=False,parent_folder=None,)
     context = {
         "lessons": users,
         "current_sort": sort_option,
         "start_date": start_date,
         "end_date": end_date,
         "staff_count": staff_count,
+        "folders": folders,
     }
 
 

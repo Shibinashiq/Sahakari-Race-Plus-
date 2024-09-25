@@ -486,7 +486,6 @@ def chapter_lesson_list(request, chapter_id):
     chapter = get_object_or_404(Chapter, id=chapter_id)
     lessons = Lesson.objects.filter(chapter=chapter, is_deleted=False)
 
-    # Handle search functionality
     search_query = request.GET.get('search', '')
     if search_query:
         lessons = lessons.filter(lesson_name__icontains=search_query)
@@ -513,7 +512,7 @@ def chapter_lesson_list(request, chapter_id):
     paginator = Paginator(lessons, 25) 
     page_number = request.GET.get('page')
     paginated_lessons = paginator.get_page(page_number)
-
+    folders = Folder.objects.filter(is_deleted=False,chapter=chapter_id,parent_folder=None)
     context = {
         "title": "Lessons",
         "chapter": chapter_id,
@@ -522,6 +521,7 @@ def chapter_lesson_list(request, chapter_id):
         "search_query": search_query,
         "start_date": start_date,
         "end_date": end_date,
+        "folders": folders,
     }
     return render(request, 'ci/template/public/content/lesson/lesson.html', context)
 

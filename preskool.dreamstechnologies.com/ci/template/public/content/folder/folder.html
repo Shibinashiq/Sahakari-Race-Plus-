@@ -1,59 +1,79 @@
 {% include 'base.html' %}
-<style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-.sidebar-contact .fa-cog {
-    display: none !important;
+<style>
+    .folder-section {
+    margin-bottom: 20px;
+}
+
+.folder-section .list-group-item {
+    background-color: #f8f9fa; /* Light background for folders */
+}
+
+.folder-section .list-group-item strong {
+    color: #343a40; /* Darker text color */
 }
 
 </style>
-
 
 <div class="page-wrapper">
     <div class="content">
 
         <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
             <div class="my-auto mb-2">
-                <h3 class="page-title mb-1">Batch</h3>
+                <h3 class="page-title mb-1">Folder</h3>
                 <nav>
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item">
                             <a href="{% url 'dashboard-home' %}">Dashboard</a>
                         </li>
-                       
-                        <li class="breadcrumb-item active" aria-current="page">Batch</li>
+                        <li class="breadcrumb-item active" aria-current="page">Folder</li>
                     </ol>
                 </nav>
             </div>
+        
             <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
-                <div class="pe-1 mb-2">
+                <div class="pe-2 mb-2">
                     <a href="#" class="btn btn-outline-light bg-white btn-icon me-1" data-bs-toggle="tooltip"
-                    data-bs-placement="top" aria-label="Refresh" data-bs-original-title="Refresh"
-                    onclick="window.location.reload();">
-                    <i class="bi bi-arrow-repeat"></i>
-                </a>
-                
+                       data-bs-placement="top" aria-label="Refresh" data-bs-original-title="Refresh"
+                       onclick="window.location.reload();">
+                        <i class="bi bi-arrow-repeat"></i>
+                    </a>
                 </div>
-                <div class="pe-1 mb-2">
+                <div class="pe-2 mb-2">
                     <button type="button" class="btn btn-outline-light bg-white btn-icon me-1" 
-                        data-bs-toggle="tooltip" data-bs-placement="top" 
-                        aria-label="Print" data-bs-original-title="Print"
-                        onclick="printPage()">
+                            data-bs-toggle="tooltip" data-bs-placement="top" 
+                            aria-label="Print" data-bs-original-title="Print"
+                            onclick="printPage()">
                         <i class="bi bi-printer"></i>
                     </button>
                 </div>
-                
+                <div class="mb-2 pe-2">
+                    <a href="{% url 'dashboard-folder-lesson-add' pk=folder_id %}" 
+                       class="btn btn-primary d-flex align-items-center">
+                        <i class="bi bi-plus-circle me-2"></i>
+                        Add Lesson
+                    </a>
+                </div>
                
                 <div class="mb-2">
-                    <a href="{% url 'dashboard-batch-add' %}"
-                        class="btn btn-primary d-flex align-items-center"><i class="bi bi-plus-circle me-2"></i>
-                        Add Batch</a>
+                    <a href="#" 
+                       class="btn btn-primary d-flex align-items-center" 
+                       data-bs-toggle="modal" 
+                       data-bs-target="#add-folder-modal"
+                       >
+                        <i class="bi bi-plus-circle me-2"></i>
+                        Add Module
+                    </a>
                 </div>
+                
             </div>
         </div>
+        
 
         <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">
-                <h4 class="mb-3">Batch List</h4>
+                <h4 class="mb-3">Folders and Lessons List</h4>
                 <div class="d-flex align-items-center flex-wrap">
                     <!-- Date Range Picker -->
                     <div class="input-icon-start mb-3 me-2 position-relative">
@@ -105,66 +125,150 @@
                 </div>
             </div>
             <div class="card-body p-0 py-3">
-
                 <div class="table-responsive">
                     <table class="table">
                         <thead class="thead-light">
                             <tr>
-                                <th class="no-sort">
-                                    <div class="form-check form-check-md">
-                                        <input class="form-check-input" type="checkbox" id="select-all">
-                                    </div>
-                                </th>
                                 <th>ID</th>
-                                <th>Course</th>
-                                <th>Price</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Created</th>
+                                <th>Video</th>
+                                <th>PDF</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for batch in batches %}
+                            <!-- Check if folders exist -->
+                            {% if folders %}
+                                {% for folder in folders %}
+                                    <tr class="table-info"> <!-- Style for folders -->
+                                        <td>{{ folder.id }}</td>
+                                        <td>
+                                            <i class="bi bi-folder-fill" style="color: #FFD700; font-size: 24px;"></i>
+                                        </td>
+                                        <td>
+                                            <a href=""><strong>{{ folder.title }}</strong></a> <!-- Link to folder lessons -->
+                                        </td>
+                                        <td>N/A</td>
+                                        <td>{{ folder.created|date:"d-m-Y" }}</td> <!-- Show created date -->
+                                        <td>N/A</td>
+                                        <td>N/A</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <a href="" class="text-primary me-3" title="Edit Folder">
+                                                    <i class="bi bi-pencil-square me-2"></i>
+                                                </a>
+                                                <a class="btn-delete" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal" data-batch-id="{{ folder.id }}" title="Delete Folder">
+                                                    <i class="bi bi-trash me-2"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
                             <tr>
-                                <td>
-                                    <div class="form-check form-check-md">
-                                        <input class="form-check-input" type="checkbox">
-                                    </div>
-                                </td>
-                                <td><a href="#" class="link-primary">{{ batch.id }}</a></td>
-                                <td>{{ batch.course.course_name }}</td>
-                                <td>{{ batch.batch_price }}</td>
-                                <td>{{ batch.start_date}}</td>
-                                <td>{{ batch.batch_expiry }}</td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <!-- Edit Batch -->
-                                        <a href="{% url 'dashboard-batch-update' pk=batch.id %}" class="text-primary me-3" title="Edit Batch">
-                                            <i class="bi bi-pencil-square me-2"></i> 
-                                        </a>
-                                        <!-- Delete Batch (Delete confirmation via modal) -->
-                                        <a class="btn-delete" href="" data-bs-toggle="modal" data-bs-target="#delete-modal" data-batch-id="{{ batch.id }}" title="Delete Batch">
-                                            <i class="bi bi-trash me-2"></i>
-                                        </a>
-                                    </div>
-                                </td>
+                                <td colspan="8" class="text-center">No folder found.</td>
                             </tr>
+                            {% endif %}
+            
+                            <!-- Check if lessons exist -->
+                            {% for lesson in lessons %}
+                                <tr>
+                                    <td>{{ lesson.id }}</td>
+                                    <td>
+                                        {% if lesson.image %}
+                                            <img src="{{ lesson.image.url }}" alt="{{ lesson.lesson_name }}" style="width: 50px;">
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ lesson.lesson_name }}</td>
+                                    <td>{{ lesson.description|truncatewords:10 }}</td>
+                                    <td>{{ lesson.created|date:"d-m-Y" }}</td>
+                                    <td>
+                                        {% for video in lesson.videos.all %}
+                                            <strong>{{ video.title|default:"N/A" }}</strong><br>
+                                            {% if video.url %}
+                                                <a href="{{ video.url }}" target="_blank">Watch Video</a>
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
+                                        {% empty %}
+                                            N/A
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        {% for pdf in lesson.pdf_notes.all %}
+                                            <strong>{{ pdf.title|default:"N/A" }}</strong><br>
+                                            {% if pdf.file %}
+                                                <a href="{{ pdf.file.url }}" target="_blank">Download PDF</a>
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
+                                        {% empty %}
+                                            N/A
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <a href="" class="text-primary me-3" title="Edit Course">
+                                                <i class="bi bi-pencil-square me-2"></i>
+                                            </a>
+                                            <a class="btn-delete" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal" data-batch-id="{{ lesson.id }}" title="Delete Course">
+                                                <i class="bi bi-trash me-2"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
                             {% empty %}
-                            <tr>
-                                <td colspan="7" class="text-center">No batches found.</td>
-                            </tr>
+                                <tr>
+                                    <td colspan="8" class="text-center">No lessons found.</td>
+                                </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-                    
                 </div>
-
             </div>
+            
+            
+            
+            
+            
         </div>
     </div>
 </div>
 
 
+<div class="modal fade" id="add-folder-modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <span class="folder-icon">
+                    <i class="bi bi-folder-plus"></i>
+                </span>
+                <h4>Add New Folder</h4>
+                <p>Enter a name for the new folder you want to create.</p>
+                
+                <!-- Folder input field -->
+                <div class="mb-3">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                    <input type="hidden" id="parent-folder-id" value="{{ folder.id }}">
+                    <h2>{{folder.id}}</h2>
+                    <input type="text" id="folder-name" class="form-control" placeholder="Enter folder name">
+
+                </div>
+
+                <!-- Actions -->
+                <div class="d-flex justify-content-center">
+                    <button class="btn btn-light me-3" data-bs-dismiss="modal">Cancel</button>
+                    <button id="add-folder-button" class="btn btn-primary">Create Folder</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="delete-modal">
     <div class="modal-dialog modal-dialog-centered">
@@ -187,10 +291,17 @@
 
 </div>
 
+    
+<script data-cfasync="false"
+    src="https://preskool.dreamstechnologies.com/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/jquery-3.7.1.min.js"
+    type="951e427b5babc1ab7c00a70e-text/javascript"></script>
 
 <script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/bootstrap.bundle.min.js"
     type="951e427b5babc1ab7c00a70e-text/javascript"></script>
 
+<script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/moment.js"
+    type="951e427b5babc1ab7c00a70e-text/javascript"></script>
 <script
     src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/plugins/daterangepicker/daterangepicker.js"
     type="951e427b5babc1ab7c00a70e-text/javascript"></script>
@@ -248,15 +359,16 @@ $(document).ready(function () {
         var batchId = $(this).data('batch-id'); // Use batch-id instead of user-id
         $('#delete-record').data('batch-id', batchId); // Store the batch ID in the modal button
     });
-
+    
 
     $('#delete-record').click(function () {
         var userId = $(this).data('batch-id');
-
+        var subjects_id = "{{ obj_chapter.id }}";
+        console.log("Subject ID: " + subjects_id);
         console.log("Deleting User ID: " + userId);
 
         $.ajax({
-            url: '/batch/delete/' + userId + '/',
+            url: '/chapter/delete/' +  userId + '/',
             type: 'POST',
             data: {
                 csrfmiddlewaretoken: '{{ csrf_token }}',
@@ -278,16 +390,55 @@ $(document).ready(function () {
 
 <!-- Include Flatpickr JS -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script>
-    $(document).ready(function() {
-        $('.sidebar-contact .fa-cog').each(function() {
-            $(this).closest('div').remove(); // Remove the parent div
-        });
-    });
-</script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialize flatpickr date picker
+    document.getElementById('add-folder-button').addEventListener('click', function() {
+        var folderName = document.getElementById('folder-name').value;
+        var parentId = document.getElementById('parent-folder-id').value || null;  // parent_id from hidden input
+
+        if (!folderName) {
+            alert("Please enter a folder name.");
+            return;
+        }
+
+        fetch("{% url 'dashboard-folder-add' %}", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+            body: JSON.stringify({
+                folder_name: folderName,
+                parent_id: parentId || null,
+                chapter_id: null  // Sending null instead of 'None'
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert("Error adding folder: " + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('There was an error adding the folder.');
+        });
+    });
+});
+
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
         const datepicker = flatpickr(".custom-date-picker", {
             mode: "range",
             dateFormat: "Y-m-d",
@@ -296,10 +447,8 @@ $(document).ready(function () {
                     let startDate = selectedDates[0].toISOString().split('T')[0];
                     let endDate = selectedDates[1].toISOString().split('T')[0];
     
-                    // Get the current sort parameter
                     const sort = new URL(window.location.href).searchParams.get('sort');
     
-                    // Update URL with date range and sort parameter
                     updateURL(startDate, endDate, sort);
                 }
             }
@@ -308,16 +457,13 @@ $(document).ready(function () {
         function updateURL(startDate, endDate, sort) {
             const url = new URL(window.location.href);
     
-            // Set date range parameters
             url.searchParams.set('start_date', startDate);
             url.searchParams.set('end_date', endDate);
     
-            // Set or preserve sorting parameter
             if (sort) {
                 url.searchParams.set('sort', sort);
             }
     
-            // Redirect to updated URL
             window.location.href = url;
         }
     
@@ -325,15 +471,12 @@ $(document).ready(function () {
             const sort = event.target.getAttribute('data-sort');
             const url = new URL(window.location.href);
     
-            // Get existing date range parameters
             const startDate = url.searchParams.get('start_date');
             const endDate = url.searchParams.get('end_date');
     
-            // Update URL with sorting parameter
             updateURL(startDate, endDate, sort);
         }
     
-        // Add event listener to sorting links
         document.querySelectorAll('.dropdown-menu .dropdown-item').forEach(item => {
             item.addEventListener('click', handleSortChange);
         });
@@ -341,16 +484,13 @@ $(document).ready(function () {
         function clearFiltersOnRefresh() {
             const url = new URL(window.location.href);
     
-            // Optionally: Remove date range and sorting parameters on refresh
             url.searchParams.delete('start_date');
             url.searchParams.delete('end_date');
             url.searchParams.delete('sort');
     
-            // Redirect to URL without filters
             window.history.replaceState(null, '', url);
         }
     
-        // Trigger function to clear filters on page load
         window.addEventListener('load', function() {
             clearFiltersOnRefresh();
         });

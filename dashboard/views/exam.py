@@ -4,13 +4,10 @@ from dashboard.views.imports import *
 
 @login_required(login_url='dashboard-login')
 def manager(request):
-    # Fetch sorting and filter options from GET parameters
     sort_option = request.GET.get('sort')
-    print(sort_option,"{{{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}")
     start_date = request.GET.get('start_date', None)
     end_date = request.GET.get('end_date', None)
 
-    # Parse start and end dates if provided
     if start_date and start_date.lower() != 'null':
         start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
     else:
@@ -21,14 +18,11 @@ def manager(request):
     else:
         end_date = None
 
-    # Filter exams that are not deleted
     exam_filter = Exam.objects.filter(is_deleted=False)
     
-    # Apply date range filter if dates are provided
     if start_date and end_date:
         exam_filter = exam_filter.filter(created__range=[start_date, end_date])
 
-    # Apply sorting based on the sort_option parameter
     if sort_option == 'name_ascending':
         exams = exam_filter.order_by('title')  # Sort by title A-Z
     elif sort_option == 'name_descending':

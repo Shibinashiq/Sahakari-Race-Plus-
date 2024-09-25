@@ -144,9 +144,21 @@ class Chapter(models.Model):
 
     def __str__(self):
         return self.chapter_name  or 'No title'
+    
+
+class Folder(models.Model):
+    title = models.CharField(max_length=255)
+    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, related_name='folders')
+    parent_folder = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='sub_folders')
+    name = models.CharField(max_length=200)
+    created = models.DateTimeField(default=timezone.now)
+    is_deleted = models.BooleanField(default=False)
+
+
 
 class Lesson(models.Model):
-    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, related_name='lessons')
+    folder = models.ForeignKey(Folder, on_delete=models.CASCADE, null=True, blank=True)
+    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE,  null=True, blank=True ,related_name='lessons')
     lesson_name = models.CharField(max_length=200)
     image = models.ImageField(upload_to='lesson_images/', null=True, blank=True)
     description = models.TextField()
@@ -237,6 +249,9 @@ class Level(models.Model):
 
     def __str__(self):
         return self.title or 'No title'
+    
+
+
 
 class Exam(models.Model):
     title = models.CharField(max_length=255, blank=True, null=True)
@@ -326,3 +341,9 @@ class StudentProgress(models.Model):
 
     def __str__(self):
         return f"{self.student.name}'s progress for {self.exam.title}"
+    
+
+
+
+
+

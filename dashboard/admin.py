@@ -19,5 +19,6 @@ admin.site.register(TalentHuntSubject)
 admin.site.register(Level) 
 admin.site.register(Schedule) 
 admin.site.register(SuccessStory) 
+admin.site.register(Folder) 
 
 
