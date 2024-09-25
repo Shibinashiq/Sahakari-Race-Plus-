@@ -123,7 +123,7 @@ urlpatterns = [
     path("folder/update/<int:pk>/", folder.update, name="dashboard-folder-update"),
     path("folder/delete/<int:pk>/", folder.delete, name="dashboard-folder-delete"),
     path("folder/lesson/add/<int:pk>/", folder.lesson_add, name="dashboard-folder-lesson-add"),
-    # path("folder/lesson/update/", folder.lesson_update, name="dashboard-folder-lesson-update"),
+    path("folder/lesson/update/<int:pk>/<int:folder_id>/", folder.lesson_update, name="dashboard-folder-lesson-update"),
     # path("folder/lesson/delete/", folder.lesson_delete, name="dashboard-folder-lesson-delete"),
 
     # ==================================== Chapter Management ============================================= #

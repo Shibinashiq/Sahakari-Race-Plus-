@@ -25,7 +25,7 @@ def manager(request, folder_id):
     
     
 
-    lessons = Lesson.objects.filter(folder__in=folders, is_deleted=False)
+    lessons = Lesson.objects.filter(folder=folder_id, is_deleted=False)
 
     if start_date and end_date:
         lessons = lessons.filter(created__range=[start_date, end_date])
@@ -158,64 +158,78 @@ def lesson_add(request,pk):
 
 
 
+@login_required(login_url='dashboard-login')
+def lesson_update(request, pk, folder_id):
+    lesson = get_object_or_404(Lesson, id=pk, is_deleted=False)
+    folder = get_object_or_404(Folder, id=folder_id, is_deleted=False)
 
+    # Fetch existing Video and PDFNote related to the lesson
+    video = Video.objects.filter(lesson=lesson).first()
+    pdf = PDFNote.objects.filter(lesson=lesson).first()
 
-# @login_required(login_url='dashboard-login')
-# def chapter_lesson_update(request, chapter_id, lesson_id):
-#     chapter = get_object_or_404(Chapter, id=chapter_id, is_deleted=False)
-#     lesson = get_object_or_404(Lesson, id=lesson_id, chapter=chapter, is_deleted=False)
-#     if request.method == 'POST':
-#         form = LessonForm(request.POST, request.FILES, instance=lesson)
-#         if form.is_valid():
-#             lesson = form.save(commit=False)
-#             lesson.chapter = chapter  
-#             lesson.save()
+    if request.method == 'POST':
+        form = LessonForm(request.POST, request.FILES, instance=lesson)
+        if form.is_valid():
+            lesson = form.save(commit=False)
+            lesson.folder = folder
+            lesson.save()
 
-#             video_title = form.cleaned_data.get('video_title')
-#             video_url = form.cleaned_data.get('video_url')
-#             video_is_downloadable = form.cleaned_data.get('video_is_downloadable')
-#             video_is_free = form.cleaned_data.get('video_is_free')
+            video_title = form.cleaned_data.get('video_title')
+            video_url = form.cleaned_data.get('video_url')
+            video_is_downloadable = form.cleaned_data.get('video_is_downloadable')
+            video_is_free = form.cleaned_data.get('video_is_free')
 
-#             if video_url:
-#                 Video.objects.update_or_create(
-#                     lesson=lesson,
-#                     defaults={
-#                         'title': video_title,
-#                         'url': video_url,
-#                         'is_downloadable': video_is_downloadable,
-#                         'is_free': video_is_free,
-#                     }
-#                 )
+            # Update or create video
+            if video_url:
+                Video.objects.update_or_create(
+                    lesson=lesson,
+                    defaults={
+                        'title': video_title,
+                        'url': video_url,
+                        'is_downloadable': video_is_downloadable,
+                        'is_free': video_is_free,
+                    }
+                )
 
-#             pdf_title = form.cleaned_data.get('pdf_title')
-#             pdf_file = form.cleaned_data.get('pdf_file')
-#             pdf_is_downloadable = form.cleaned_data.get('pdf_is_downloadable')
-#             pdf_is_free = form.cleaned_data.get('pdf_is_free')
+            pdf_title = form.cleaned_data.get('pdf_title')
+            pdf_file = form.cleaned_data.get('pdf_file')
+            pdf_is_downloadable = form.cleaned_data.get('pdf_is_downloadable')
+            pdf_is_free = form.cleaned_data.get('pdf_is_free')
 
-#             if pdf_file is not None:
-#                 PDFNote.objects.update_or_create(
-#                     lesson=lesson,
-#                     defaults={
-#                         'title': pdf_title if pdf_title else None,
-#                         'file': pdf_file,
-#                         'is_downloadable': pdf_is_downloadable,
-#                         'is_free': pdf_is_free,
-#                     }
-#                 )
+            # Update or create PDF
+            if pdf_file is not None:
+                PDFNote.objects.update_or_create(
+                    lesson=lesson,
+                    defaults={
+                        'title': pdf_title if pdf_title else None,
+                        'file': pdf_file,
+                        'is_downloadable': pdf_is_downloadable,
+                        'is_free': pdf_is_free,
+                    }
+                )
 
-#             messages.success(request, "Lesson updated successfully!")
-#             return redirect('dashboard-chapters-lesson-list', chapter_id=chapter.id)
-#     else:
-#         form = LessonForm(instance=lesson)
+            messages.success(request, "Lesson updated successfully!")
+            return redirect('dashboard-folder', folder_id=folder_id)
+    else:
+        # Prepopulate form with existing video and PDF data
+        initial_data = {
+            'video_title': video.title if video else '',
+            'video_url': video.url if video else '',
+            'video_is_downloadable': video.is_downloadable if video else False,
+            'video_is_free': video.is_free if video else False,
+            'pdf_title': pdf.title if pdf else '',
+            'pdf_file': pdf.file if pdf else None,
+            'pdf_is_downloadable': pdf.is_downloadable if pdf else False,
+            'pdf_is_free': pdf.is_free if pdf else False,
+        }
 
-#     context = {
-#         "title": "Update Lesson",
-#         "form": form,
-#         "chapter": chapter,
-#     }
-#     return render(request, "ci/template/public/content/lesson/update-lesson.html", context)
+        form = LessonForm(instance=lesson, initial=initial_data)
 
-
+    context = {
+        "title": "Update Lesson",
+        "form": form,
+    }
+    return render(request, "ci/template/public/content/folder/update-lesson.html", context)
 
 
 

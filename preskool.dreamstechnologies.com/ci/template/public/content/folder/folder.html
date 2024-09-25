@@ -213,9 +213,10 @@
                                     </td>
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            <a href="" class="text-primary me-3" title="Edit Course">
+                                            <a href="{% url 'dashboard-folder-lesson-update' pk=lesson.id folder_id=folder_id %}" class="text-primary me-3" title="Edit Course">
                                                 <i class="bi bi-pencil-square me-2"></i>
                                             </a>
+                                            
                                             <a class="btn-delete" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal" data-batch-id="{{ lesson.id }}" title="Delete Course">
                                                 <i class="bi bi-trash me-2"></i>
                                             </a>
@@ -254,8 +255,8 @@
                 <!-- Folder input field -->
                 <div class="mb-3">
                     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                    <input type="hidden" id="parent-folder-id" value="{{ folder.id }}">
-                    <h2>{{folder.id}}</h2>
+                    <input type="hidden" id="parent-folder-id" value="{{ folder_id }}">
+                    <h2>{{folder_id}}</h2>
                     <input type="text" id="folder-name" class="form-control" placeholder="Enter folder name">
 
                 </div>
@@ -392,16 +393,25 @@ $(document).ready(function () {
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('add-folder-button').addEventListener('click', function() {
+    document.getElementById('add-folder-button').addEventListener('click', function(event) {
+        event.preventDefault();
+        var button = this; // Store reference to button
+        button.disabled = true; // Disable the button
+    
         var folderName = document.getElementById('folder-name').value;
-        var parentId = document.getElementById('parent-folder-id').value || null;  // parent_id from hidden input
+        var parentId = document.getElementById('parent-folder-id').value; // Ensure to get the value here
 
-        if (!folderName) {
-            alert("Please enter a folder name.");
-            return;
+        // Debugging statements
+        console.log('Folder Name:', folderName);
+        console.log('Parent ID:', parentId); // Log the parent ID for debugging
+
+        // Check if parentId is empty
+        if (parentId.trim() === '') {
+            alert("Parent ID is required.");
+            button.disabled = false; // Re-enable button if no parent ID
+            return; // Exit if no parent ID
         }
-
+    
         fetch("{% url 'dashboard-folder-add' %}", {
             method: "POST",
             headers: {
@@ -410,30 +420,33 @@ $(document).ready(function () {
             },
             body: JSON.stringify({
                 folder_name: folderName,
-                parent_id: parentId || null,
-                chapter_id: null  // Sending null instead of 'None'
+                parent_id: parentId // This will be a string; convert it to an integer in Python if needed
             })
-        })
-        .then(response => {
+        }).then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             return response.json();
         })
         .then(data => {
+            button.disabled = false; // Re-enable the button on success or failure
             if (data.success) {
+                // Close the modal and refresh the page
+                var modalElement = document.getElementById('add-folder-modal'); // Ensure to use the correct modal ID
+                var modal = bootstrap.Modal.getInstance(modalElement);
+                if (modal) {
+                    modal.hide();
+                }
                 location.reload();
             } else {
                 alert("Error adding folder: " + data.error);
             }
-        })
-        .catch(error => {
+        }).catch((error) => {
+            button.disabled = false; // Re-enable the button on error
             console.error('Error:', error);
-            alert('There was an error adding the folder.');
+            alert("There was an error adding the folder.");
         });
     });
-});
-
 </script>
 
 

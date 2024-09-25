@@ -5,16 +5,16 @@
 
         <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
             <div class="my-auto mb-2">
-                <h3 class="mb-1">Add Folder</h3>
+                <h3 class="mb-1">Update Lesson</h3>
                 <nav>
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item">
                             <a href="{% url 'dashboard-home' %}">Dashboard</a>
                         </li>
                         <li class="breadcrumb-item">
-                            <a href="">Folder</a>
+                            <a href="">Lesson</a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">Add Folder</li>
+                        <li class="breadcrumb-item active" aria-current="page">Update Lesson</li>
                     </ol>
                 </nav>
             </div>
@@ -32,7 +32,7 @@
                 <span class="bg-white avatar avatar-sm me-2 text-gray-7 flex-shrink-0">
                     <i class="bi bi-info-circle"></i>
                 </span>
-                <h4 class="text-dark">Folder Information</h4>
+                <h4 class="text-dark">Lesson Information</h4>
             </div>
         </div>
     
@@ -40,14 +40,39 @@
         {% load crispy_forms_tags %}
         <div class="card-body pb-1">
             <!-- Custom Image Upload Field with Preview -->
-            
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <div class="d-flex align-items-center flex-wrap row-gap-3 mb-3">
+                        <div id="image-preview-container" class="d-flex align-items-center justify-content-center avatar avatar-xxl border border-dashed me-2 flex-shrink-0 text-dark frames">
+                            {% if form.image.value %}
+                                <img id="image-preview" src="{{ form.image.value.url }}" alt="Profile Image" style="width: 100px; height: 100px; object-fit: cover;">
+                            {% else %}
+                                <i class="bi bi-image fs-16"></i>
+                            {% endif %}
+                        </div>
+                        <div class="profile-upload">
+                            <div class="profile-uploader d-flex align-items-center">
+                                <div class="drag-upload-btn mb-3">
+                                    Upload
+                                    {{ form.image }}
+                                </div>
+                            </div>
+                            <p class="fs-12">Upload image size 4MB, Format JPG, PNG, SVG</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         
             <!-- Form Fields Rendering -->
             <div class="row">
                 <!-- Chapter Fields -->
                 <div class="col-md-6">
                     <div class="form-group">
-                        {{ form.title|as_crispy_field }}
+                        {{ form.lesson_name|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
                     </div>
                 </div>
                 
@@ -56,8 +81,57 @@
             
             
             <!-- Video Fields -->
-            	
-            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ form.video_title|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ form.video_url|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ form.video_is_downloadable|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ form.video_is_free|as_crispy_field }}
+                    </div>
+                </div>
+            </div>
+        <br>
+            <!-- PDF Note Fields -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ form.pdf_title|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ form.pdf_file|as_crispy_field }}
+                    </div>
+                </div>
+                
+                
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    {{ form.pdf_is_downloadable|as_crispy_field }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ form.description|as_crispy_field }}
+                    </div>
+                </div>
+            </div>		
+            </div>
         </div>
         
     </div>
