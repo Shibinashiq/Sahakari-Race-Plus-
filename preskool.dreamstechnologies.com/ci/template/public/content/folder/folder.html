@@ -149,7 +149,7 @@
                                             <i class="bi bi-folder-fill" style="color: #FFD700; font-size: 24px;"></i>
                                         </td>
                                         <td>
-                                            <a href=""><strong>{{ folder.title }}</strong></a> <!-- Link to folder lessons -->
+                                            <a href="{% url 'dashboard-folder' folder_id=folder.id %}"><strong>{{ folder.title }}</strong></a> <!-- Link to folder lessons -->
                                         </td>
                                         <td>N/A</td>
                                         <td>{{ folder.created|date:"d-m-Y" }}</td> <!-- Show created date -->
