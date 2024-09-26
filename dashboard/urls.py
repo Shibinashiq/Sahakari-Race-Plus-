@@ -157,6 +157,7 @@ urlpatterns = [
     path("exam/update/<int:pk>/", exam.update, name="dashboard-exam-update"),
     path("exam/delete/<int:pk>/", exam.delete, name="dashboard-exam-delete"),
     path("exam/paste/", exam.paste, name="dashboard-exam-paste"),
+    path("exam/question/import/<int:exam_id>/", exam.upload_question_file, name="dashboard-exam-question-import"),
   
 
     path("exam/question/<int:exam_id>/", exam.exam_question_manager, name="dashboard-exam-question-manager"),

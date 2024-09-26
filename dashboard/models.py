@@ -267,6 +267,7 @@ class Question(models.Model):
     QUESTION_TYPES = (
         (1, 'Text'),
         (2, 'Image'),
+        (3, 'Multiple Choice'),
     )
   
     question_type = models.PositiveIntegerField(choices=QUESTION_TYPES, default=1)

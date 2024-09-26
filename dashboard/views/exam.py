@@ -24,9 +24,9 @@ def manager(request):
         exam_filter = exam_filter.filter(created__range=[start_date, end_date])
 
     if sort_option == 'name_ascending':
-        exams = exam_filter.order_by('title')  # Sort by title A-Z
+        exams = exam_filter.order_by('title')  
     elif sort_option == 'name_descending':
-        exams = exam_filter.order_by('-title')  # Sort by title Z-A
+        exams = exam_filter.order_by('-title')  
     else:
         exams = exam_filter.order_by('-created') 
     
@@ -278,17 +278,18 @@ def exam_question_add(request, exam_id):
         form = QuestionForm(request.POST)  
         if form.is_valid():
             question_type = form.cleaned_data.get('question_type')
-            question_description = form.cleaned_data.get('question_description')
-            hint = form.cleaned_data.get('hint')
+            question_description = request.POST.get('question_description')
+            hint = request.POST.get('hint')
             options = request.POST.getlist('options[]')
-            answers = request.POST.getlist('answers[]')
+            right_answers = request.POST.getlist('answers[]')  
+
 
             question = Question(
                 question_type=question_type,
                 question_description=question_description,
                 hint=hint,
                 options=options,
-                right_answers=answers,
+                right_answers=right_answers,
                 exam_id=exam.id
             )
             question.save()
@@ -315,6 +316,8 @@ def exam_question_update(request, exam_id, question_id):
             hint = form.cleaned_data.get('hint')
             options = request.POST.getlist('options[]')
             answers = request.POST.getlist('answers[]')
+            print(options,"{{{{{{{{{{{{}}}}}}}}}}}}")
+            print("this is update")
 
             question.question_type = question_type
             question.question_description = question_description
@@ -430,7 +433,6 @@ def paste(request):
             except Exception as e:
                 error_messages.append(f"Error creating question with ID {i}: {str(e)}")
 
-        # Update the response based on the counts
         response_data = {}
         if success_count > 0:
             response_data['message'] = f'Successfully added {success_count} question(s) to the exam.'
@@ -447,3 +449,80 @@ def paste(request):
         return JsonResponse(response_data, status=200)
 
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+
+
+
+
+def upload_question_file(request, exam_id):
+    if request.method == "POST":
+        uploaded_file = request.FILES.get('file', None)
+        print(f"Uploaded file: {uploaded_file}")
+
+        if uploaded_file is None:
+            print("Error: No file was uploaded.")
+            return render(request, 'upload_questions.html', {"error": "No file uploaded."})
+
+        file_extension = uploaded_file.name.split('.')[-1].lower()
+        print(f"File extension: {file_extension}")
+
+        if file_extension == 'docx':
+            print("Processing DOCX file.")
+            handle_docx_file(uploaded_file, exam_id)
+        else:
+            print("Error: Unsupported file format!")
+            return render(request, 'upload_questions.html', {"error": "Unsupported file format!"})
+
+        print("File processed successfully.")
+        return redirect('dashboard-exam-question-manager', exam_id=exam_id)
+
+    print("Warning: Request method was not POST.")
+    return redirect('dashboard-exam-question-manager', exam_id=exam_id)
+
+
+def handle_docx_file(file, exam_id):
+    document = Document(file)
+    
+    for table_index, table in enumerate(document.tables):
+        print(f"Processing table {table_index + 1}.")
+
+        num_rows = len(table.rows)
+        num_cols = len(table.columns)
+        print(f"Table has {num_rows} rows and {num_cols} columns.")
+
+        question_desc = table.cell(0, 1).text.strip()  
+        print(f"Question: {question_desc}")
+
+        options = []
+        correct_answer = None  
+
+        for j in range(3, 7):  
+            option_text = table.cell(j, 1).text.strip()  
+            option_status = table.cell(j, 2).text.strip().lower()
+
+            if option_text:
+                options.append(option_text)  
+
+            if option_status == 'correct':  
+                correct_answer = option_text  
+
+        options = [opt.strip() for opt in options if opt.strip()]  
+
+        try:
+            marks = float(table.cell(num_rows - 1, 1).text.strip())  
+        except ValueError as e:
+            print(f"Error processing marks: {e}")
+            marks = 0  
+
+        Question.objects.create(
+            question_description=question_desc,
+            options=options,  
+            right_answers=[correct_answer],  
+            mark=marks,
+            question_type=3,
+            exam_id=exam_id
+        )
+
+        print(f"Saved question: {question_desc} with options: {options} and correct answer: {correct_answer}")
+
+    print("All tables processed.")

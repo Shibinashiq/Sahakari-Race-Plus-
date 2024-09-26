@@ -9,13 +9,46 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
 
+<style>
+    /* Set a reasonable maximum width for question description */
+.question-description {
+    max-width: 300px;  /* Set a max-width to avoid too long text in one line */
+    white-space: normal;  /* Allow text to wrap */
+    word-wrap: break-word;  /* Break long words onto the next line */
+    overflow: hidden;  /* Hide overflowing text */
+    text-overflow: ellipsis;  /* Add "..." for text overflow */
+}
+
+/* Optional: Set a max-height for the description to avoid overly tall rows */
+.question-description {
+    max-height: 100px;  /* Set a max-height to avoid the cell becoming too tall */
+    overflow: auto;  /* Enable scrolling if text exceeds the max height */
+}
+    .options-field {
+        max-width: 200px;  /* Set a max width for the options */
+        max-height: 100px;  /* Set a max height for options */
+        overflow-y: auto;  /* Add vertical scrolling if options exceed the height */
+        word-wrap: break-word;  /* Break long words if necessary */
+    }
+
+    /* Styling for list items inside options field */
+    .options-field ul {
+        padding-left: 20px;  /* Add some padding for better readability */
+        margin: 0;
+    }
+
+    .options-field ul li {
+        list-style-type: disc;  /* Use disc bullets for list */
+        margin-bottom: 5px;  /* Add spacing between options */
+    }
+</style>
 
 <div class="page-wrapper">
     <div class="content">
 
         <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
             <div class="my-auto mb-2">
-                <h3 class="page-title mb-1">Exam</h3>
+                <h3 class="page-title mb-1">Question</h3>
                 <nav>
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item">
@@ -45,7 +78,17 @@
                     </button>
                 </div>
                 
-               
+                <div class="pe-1 mb-2">
+            <form method="POST" enctype="multipart/form-data" action="{% url 'dashboard-exam-question-import' exam_id=exam_id%}">
+                {% csrf_token %}
+                <label for="docx-upload" class="btn btn-outline-light bg-white btn-icon me-1" 
+                       data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Import Questions" 
+                       data-bs-original-title="Import Questions">
+                    <i class="bi bi-file-earmark-arrow-up"></i> <!-- Import Icon -->
+                </label>
+                <input type="file" id="docx-upload" name="file" style="display:none;" accept=".docx" onchange="this.form.submit()">
+            </form>
+        </div>
                 <div class="mb-2">
                     <a href="{% url 'dashboard-exam-question-add' exam_id=exam_id %}"
                         class="btn btn-primary d-flex align-items-center"><i class="bi bi-plus-circle me-2"></i>
@@ -56,7 +99,7 @@
 
         <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">
-                <h4 class="mb-3">Exam List</h4>
+                <h4 class="mb-3">Question List</h4>
                 <div class="d-flex align-items-center">
                     <!-- Paste ID Field and Button (left side) -->
                     <input type="text" id="pasteIdField" class="form-control me-2" placeholder="Paste or enter ID here" style="width: 200px;" />
@@ -127,8 +170,8 @@
                                 </th>
                                 <th>ID</th>
                                 <th>Question Description</th>
-                                <th>Hint</th>
-                                  <th>Options</th>
+                                <!-- <th>Hint</th> -->
+                                <th>Options</th>
                                 <th>Correct Answers</th>
                                 <th>Created</th>
                                 <th>Action</th>
@@ -148,12 +191,12 @@
                                 <td><a href="#" class="link-primary">{{ question.id }}</a></td>
                 
                                 <!-- Question Description -->
-                                <td>{{ question.question_description|safe }}</td>
+                                <td class="question-description">{{ question.question_description|safe }}</td>
 
                 
                                 <!-- Hint -->
-                                <td>{{ question.hint|default:"N/A" }}</td>
-                                <td>
+                                <!-- <td>{{ question.hint|default:"N/A" }}</td> -->
+                                <td class="question-description">
                                     <ul>
                                         {% for option in question.options %}
                                             <li>{{ option }}</li>
@@ -165,7 +208,7 @@
                 
                                 <!-- Correct Answers -->
                                 <td>
-                                    <ul>
+                                    <ul class="question-description">
                                         {% for answer in question.right_answers %}
                                             <li>{{ answer }}</li>
                                         {% empty %}
@@ -504,4 +547,26 @@ $(document).ready(function() {
     });
 });
 
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const descriptions = document.querySelectorAll('.question-description');
+
+        descriptions.forEach(function(description) {
+            let text = description.textContent.trim();  // Get the text content
+            let words = text.split(/\s+/);  // Split text into words by spaces
+            let newText = '';
+
+            words.forEach(function(word, index) {
+                newText += word + ' ';
+                if ((index + 1) % 5 === 0) {  // After every 5 words
+                    newText += '<br>';  // Insert a <br> tag
+                }
+            });
+
+            description.innerHTML = newText.trim();  // Update the description with new text
+        });
+    });
 </script>
