@@ -89,12 +89,58 @@ def add(request):
 
 
 
-def update(request,pk):
-    pass
+@csrf_exempt  
+def update(request):
+    if request.method == "POST":
+        try:
+            # Parse JSON data from request body
+            data = json.loads(request.body)
+            folder_id = data.get('folder_id')
+            new_folder_name = data.get('new_folder_name')
+            print("hiiiiiiiiiiiiiii")
+            print(folder_id)
+            print(new_folder_name)
+
+            if not folder_id or not new_folder_name:
+                return JsonResponse({'success': False, 'error': 'Folder ID and new name are required.'})
+
+            folder = get_object_or_404(Folder, pk=folder_id)
+
+            folder.title = new_folder_name
+            folder.save()
+
+            return JsonResponse({'success': True})
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method.'})
 
 
-def delete(request,pk):
-    pass
+@csrf_exempt
+def delete(request):
+    if request.method == "POST":
+        try:
+            import json
+            data = json.loads(request.body)
+            folder_id = data.get('folder_id')
+
+            if not folder_id:
+                return JsonResponse({'success': False, 'error': 'Folder ID is required.'}, status=400)
+
+            try:
+                folder = Folder.objects.get(id=folder_id)
+                folder.is_deleted = True
+                folder.save()
+                return JsonResponse({'success': True})
+
+            except Folder.DoesNotExist:
+                return JsonResponse({'success': False, 'error': 'Folder not found.'}, status=404)
+
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
 
 
 
@@ -235,9 +281,11 @@ def lesson_update(request, pk, folder_id):
 
 
 
-# @login_required(login_url='dashboard-login')
-# def chapter_lesson_delete(request,chapter_id,lesson_id):
-#     lesson = get_object_or_404(Lesson, id=lesson_id)
-#     lesson.is_deleted = True
-#     lesson.save()
-#     return redirect('dashboard-chapters-lesson-list', chapter_id=chapter_id)
+@login_required(login_url='dashboard-login')
+def lesson_delete(request, folder_id, lesson_id):
+    lesson = get_object_or_404(Lesson, id=lesson_id)
+
+    lesson.is_deleted = True
+    lesson.save()
+
+    return redirect('dashboard-folder', folder_id=folder_id)

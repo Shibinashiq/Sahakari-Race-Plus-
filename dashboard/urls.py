@@ -120,11 +120,11 @@ urlpatterns = [
     path("folder/<int:folder_id>/", folder.manager, name="dashboard-folder"),
     path("folder/add/", folder.add, name="dashboard-folder-add"),
 
-    path("folder/update/<int:pk>/", folder.update, name="dashboard-folder-update"),
-    path("folder/delete/<int:pk>/", folder.delete, name="dashboard-folder-delete"),
+    path("folder/update/", folder.update, name="dashboard-folder-update"),
+    path("folder/delete/", folder.delete, name="dashboard-folder-delete"),
     path("folder/lesson/add/<int:pk>/", folder.lesson_add, name="dashboard-folder-lesson-add"),
     path("folder/lesson/update/<int:pk>/<int:folder_id>/", folder.lesson_update, name="dashboard-folder-lesson-update"),
-    # path("folder/lesson/delete/", folder.lesson_delete, name="dashboard-folder-lesson-delete"),
+    path("folder/lesson/delete/<int:folder_id>/<int:lesson_id>/", folder.lesson_delete, name="dashboard-folder-lesson-delete"),
 
     # ==================================== Chapter Management ============================================= #
 
