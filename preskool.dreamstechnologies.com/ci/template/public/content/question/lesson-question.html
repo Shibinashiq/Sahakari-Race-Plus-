@@ -6,6 +6,36 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
 
+<style>
+    .question-description {
+        max-width: 300px;  
+        white-space: normal; 
+        word-wrap: break-word;  
+        overflow: hidden;  
+        text-overflow: ellipsis;  
+    }
+    
+    .question-description {
+        max-height: 100px;  
+        overflow: auto;  
+    }
+        .options-field {
+            max-width: 200px;  
+            max-height: 100px;  
+            overflow-y: auto; 
+            word-wrap: break-word;  
+        }
+    
+        .options-field ul {
+            padding-left: 20px;  
+            margin: 0;
+        }
+    
+        .options-field ul li {
+            list-style-type: disc; 
+            margin-bottom: 5px; 
+        }
+    </style>
 
 
 <div class="page-wrapper">
@@ -141,13 +171,13 @@
                                 <td><a href="#">{{ question.id }}</a></td>
                 
                                 <!-- Question Description -->
-                                <td>{{ question.question_description|safe }}</td>
+                                <td class="question-description">{{ question.question_description|safe }}</td>
                 
                                 <!-- Hint -->
                                 <td>{{ question.hint|default:"N/A" }}</td>
                 
                                 <!-- Options -->
-                                <td>
+                                <td class="question-description">
                                     <ul>
                                         {% for option in question.options %}
                                             <li>{{ option }}</li>
@@ -158,7 +188,7 @@
                                 </td>
                 
                                 <!-- Correct Answers -->
-                                <td>
+                                <td class="question-description">
                                     <ul>
                                         {% for answer in question.right_answers %}
                                             <li>{{ answer }}</li>
@@ -409,3 +439,25 @@ $('#delete-record').click(function () {
     });
     </script>
     
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const descriptions = document.querySelectorAll('.question-description');
+    
+            descriptions.forEach(function(description) {
+                let text = description.textContent.trim();  
+                let words = text.split(/\s+/);  
+                let newText = '';
+    
+                words.forEach(function(word, index) {
+                    newText += word + ' ';
+                    if ((index + 1) % 5 === 0) {  
+                        newText += '<br>';  
+                    }
+                });
+    
+                description.innerHTML = newText.trim();  
+            });
+        });
+    </script>
