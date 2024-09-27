@@ -239,8 +239,6 @@ def course_detail_subject(request, course_id):
 
 @login_required(login_url='dashboard-login')
 def course_subject_add(request, course_id):
-    print("Request Method:", request.method)
-    print("Course ID:", course_id)
     try:
         
         course = Course.objects.get(id=course_id, is_deleted=False)
@@ -263,6 +261,7 @@ def course_subject_add(request, course_id):
     context = {
         "form": form,
         "course": course,
+        "course_id":course_id
     }
     return render(request, "ci/template/public/content/subject/add-subject.html",context)
 

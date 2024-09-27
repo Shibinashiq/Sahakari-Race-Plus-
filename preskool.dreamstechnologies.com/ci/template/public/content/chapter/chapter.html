@@ -14,8 +14,13 @@
                         <li class="breadcrumb-item">
                             <a href="{% url 'dashboard-home' %}">Dashboard</a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">Course</li>
-                        <li class="breadcrumb-item active" aria-current="page">Subject</li>
+                       
+                        <li class="breadcrumb-item active" aria-current="page"> 
+                            <a href="{% url 'dashboard-course' %}">Course</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page"> 
+                            <a href="{% url 'dashboard-course-subjects-list' pk=course.id%}">Subject</a>
+                        </li>
                         <li class="breadcrumb-item active" aria-current="page">Chapter</li>
                     </ol>
                 </nav>

@@ -11,8 +11,15 @@
                         <li class="breadcrumb-item">
                             <a href="{% url 'dashboard-home' %}">Dashboard</a>
                         </li>
-                        <li class="breadcrumb-item">
-                            <a href="">Chapter</a>
+                       
+                        <li class="breadcrumb-item active" aria-current="page"> 
+                            <a href="{% url 'dashboard-course' %}">Course</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page"> 
+                            <a href="">Subject</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page"> 
+                            <a href="{% url 'dashboard-course' %}">Chapter</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">Add Chapter</li>
                     </ol>
@@ -32,7 +39,7 @@
                 <span class="bg-white avatar avatar-sm me-2 text-gray-7 flex-shrink-0">
                     <i class="bi bi-info-circle"></i>
                 </span>
-                <h4 class="text-dark">Chapter Information</h4>
+                <h4 class="text-dark">Chapter Information {{course.id}}</h4>
             </div>
         </div>
     
