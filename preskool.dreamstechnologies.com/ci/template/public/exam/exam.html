@@ -148,11 +148,25 @@
                                 <!-- Duration -->
                                 <td>
                                     {% if exam.duration %}
-                                        {{ exam.duration|default:"N/A" }}
+                                        {% with duration=exam.duration %}
+                                            {% with total_seconds=duration.hour|floatformat:0 %}
+                                                {% if total_seconds %}
+                                                    {{ duration.hour }} hour{{ duration.hour|pluralize }}
+                                                {% endif %}
+                                            {% endwith %}
+                                            {% if duration.minute %}
+                                                {{ duration.minute }} minute{{ duration.minute|pluralize }}
+                                            {% else %}
+                                                0 minutes
+                                            {% endif %}
+                                        {% endwith %}
                                     {% else %}
                                         N/A
                                     {% endif %}
                                 </td>
+                                
+                                
+                                
                                 
                                 <!-- Created Date -->
                                 <td>{{ exam.created|date:"d-m-Y" }}</td>

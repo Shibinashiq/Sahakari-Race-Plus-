@@ -1,34 +1,37 @@
 from dashboard.views.imports import *
 
 
-
 @login_required(login_url='dashboard-login')
 def manager(request):
     sort_option = request.GET.get('sort')
-    start_date = request.GET.get('start_date', None)
-    end_date = request.GET.get('end_date', None)
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
 
-    if start_date and start_date.lower() != 'null':
-        start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-    else:
+    try:
+        if start_date and start_date.lower() != 'null':
+            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+        else:
+            start_date = None
+
+        if end_date and end_date.lower() != 'null':
+            end_date = datetime.strptime(end_date, "%Y-%m-%d").date() + timedelta(days=1)  
+        else:
+            end_date = None
+    except ValueError:
         start_date = None
-
-    if end_date and end_date.lower() != 'null':
-        end_date = datetime.strptime(end_date, "%Y-%m-%d").date() + timedelta(days=1)
-    else:
         end_date = None
 
-    exam_filter = Exam.objects.filter(is_deleted=False)
+    filtered_exams = Exam.objects.filter(is_deleted=False)
     
     if start_date and end_date:
-        exam_filter = exam_filter.filter(created__range=[start_date, end_date])
+        filtered_exams = filtered_exams.filter(created__range=[start_date, end_date])
 
     if sort_option == 'name_ascending':
-        exams = exam_filter.order_by('title')  
+        exams = filtered_exams.order_by('title')  
     elif sort_option == 'name_descending':
-        exams = exam_filter.order_by('-title')  
+        exams = filtered_exams.order_by('-title')  
     else:
-        exams = exam_filter.order_by('-created') 
+        exams = filtered_exams.order_by('-created') 
     
     paginator = Paginator(exams, 25)
     page_number = request.GET.get('page')
@@ -457,26 +460,19 @@ def paste(request):
 def upload_question_file(request, exam_id):
     if request.method == "POST":
         uploaded_file = request.FILES.get('file', None)
-        print(f"Uploaded file: {uploaded_file}")
 
         if uploaded_file is None:
-            print("Error: No file was uploaded.")
             return render(request, 'upload_questions.html', {"error": "No file uploaded."})
 
         file_extension = uploaded_file.name.split('.')[-1].lower()
-        print(f"File extension: {file_extension}")
 
         if file_extension == 'docx':
-            print("Processing DOCX file.")
             handle_docx_file(uploaded_file, exam_id)
         else:
-            print("Error: Unsupported file format!")
             return render(request, 'upload_questions.html', {"error": "Unsupported file format!"})
 
-        print("File processed successfully.")
         return redirect('dashboard-exam-question-manager', exam_id=exam_id)
 
-    print("Warning: Request method was not POST.")
     return redirect('dashboard-exam-question-manager', exam_id=exam_id)
 
 
@@ -484,14 +480,11 @@ def handle_docx_file(file, exam_id):
     document = Document(file)
     
     for table_index, table in enumerate(document.tables):
-        print(f"Processing table {table_index + 1}.")
 
         num_rows = len(table.rows)
         num_cols = len(table.columns)
-        print(f"Table has {num_rows} rows and {num_cols} columns.")
 
         question_desc = table.cell(0, 1).text.strip()  
-        print(f"Question: {question_desc}")
 
         options = []
         correct_answer = None  
@@ -511,7 +504,6 @@ def handle_docx_file(file, exam_id):
         try:
             marks = float(table.cell(num_rows - 1, 1).text.strip())  
         except ValueError as e:
-            print(f"Error processing marks: {e}")
             marks = 0  
 
         Question.objects.create(
@@ -523,6 +515,4 @@ def handle_docx_file(file, exam_id):
             exam_id=exam_id
         )
 
-        print(f"Saved question: {question_desc} with options: {options} and correct answer: {correct_answer}")
 
-    print("All tables processed.")
