@@ -16,7 +16,7 @@
                         </li>
                        
                         <li class="breadcrumb-item active" aria-current="page"> 
-                            <a href="{% url 'dashboard-course' %}">Course</a>
+                            <a href="{% url 'dashboard-course'  %}">Course</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">Subject</li>
                     </ol>
@@ -141,7 +141,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <a href="{% url 'subject-chapters-list' subject_id=subject.id %}">{{ subject.subject_name }}</a>
+                                    <a class="link-primary" href="{% url 'subject-chapters-list' subject_id=subject.id %}">{{ subject.subject_name }}</a>
                                 </td>
                                 
                                 <td>{{ subject.description|truncatewords:10 }}</td>
