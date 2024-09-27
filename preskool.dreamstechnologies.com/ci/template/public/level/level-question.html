@@ -152,13 +152,13 @@
                                 <td><a href="#" class="link-primary">{{ question.id }}</a></td>
                 
                                 <!-- Question Description -->
-                                <td>{{ question.question_description|safe }}</td>
+                                <td class="question-description">{{ question.question_description|safe }}</td>
                 
                                 <!-- Hint -->
-                                <td>{{ question.hint|default:"N/A" }}</td>
+                                <td class="question-description">{{ question.hint|default:"N/A" }}</td>
                 
                                 <!-- Options -->
-                                <td>
+                                <td class="question-description">
                                     <ul>
                                         {% for option in question.options %}
                                             <li>{{ option }}</li>
@@ -345,12 +345,10 @@ $('#delete-record').click(function () {
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
-<!-- Include Flatpickr JS -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialize flatpickr date picker
         const datepicker = flatpickr(".custom-date-picker", {
             mode: "range",
             dateFormat: "Y-m-d",
@@ -359,10 +357,8 @@ $('#delete-record').click(function () {
                     let startDate = selectedDates[0].toISOString().split('T')[0];
                     let endDate = selectedDates[1].toISOString().split('T')[0];
     
-                    // Get the current sort parameter
                     const sort = new URL(window.location.href).searchParams.get('sort');
     
-                    // Update URL with date range and sort parameter
                     updateURL(startDate, endDate, sort);
                 }
             }
@@ -371,16 +367,13 @@ $('#delete-record').click(function () {
         function updateURL(startDate, endDate, sort) {
             const url = new URL(window.location.href);
     
-            // Set date range parameters
             url.searchParams.set('start_date', startDate);
             url.searchParams.set('end_date', endDate);
     
-            // Set or preserve sorting parameter
             if (sort) {
                 url.searchParams.set('sort', sort);
             }
     
-            // Redirect to updated URL
             window.location.href = url;
         }
     
@@ -388,15 +381,12 @@ $('#delete-record').click(function () {
             const sort = event.target.getAttribute('data-sort');
             const url = new URL(window.location.href);
     
-            // Get existing date range parameters
             const startDate = url.searchParams.get('start_date');
             const endDate = url.searchParams.get('end_date');
     
-            // Update URL with sorting parameter
             updateURL(startDate, endDate, sort);
         }
     
-        // Add event listener to sorting links
         document.querySelectorAll('.dropdown-menu .dropdown-item').forEach(item => {
             item.addEventListener('click', handleSortChange);
         });
@@ -404,19 +394,43 @@ $('#delete-record').click(function () {
         function clearFiltersOnRefresh() {
             const url = new URL(window.location.href);
     
-            // Optionally: Remove date range and sorting parameters on refresh
             url.searchParams.delete('start_date');
             url.searchParams.delete('end_date');
             url.searchParams.delete('sort');
     
-            // Redirect to URL without filters
             window.history.replaceState(null, '', url);
         }
     
-        // Trigger function to clear filters on page load
         window.addEventListener('load', function() {
             clearFiltersOnRefresh();
         });
     });
     </script>
     
+
+
+
+
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const descriptions = document.querySelectorAll('.question-description');
+    
+            descriptions.forEach(function(description) {
+                let text = description.textContent.trim();  
+                let words = text.split(/\s+/);  
+                let newText = '';
+    
+                words.forEach(function(word, index) {
+                    newText += word + ' ';
+                    if ((index + 1) % 5 === 0) {  
+                        newText += '<br>';  
+                    }
+                });
+    
+                description.innerHTML = newText.trim();  
+            });
+        });
+    </script>
