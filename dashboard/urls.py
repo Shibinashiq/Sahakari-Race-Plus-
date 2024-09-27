@@ -98,6 +98,10 @@ urlpatterns = [
 
     path("chapter/question/update/<int:question_id>/<int:chapter_id>/", course.chapter_question_update, name="dashboard-chapter-question-update"),
     path("chapter/question/delete/<int:question_id>/<int:chapter_id>/", course.chapter_question_delete, name="dashboard-chapter-question-delete"),
+    path("chapter/question/import/<int:chapter_id>/", course.upload_question_file, name="dashboard-chapter-question-import"),
+
+
+
     # ==================================== Subject Management ============================================= #
 
     path("subject/", subject.manager, name="dashboard-subject"),
@@ -157,7 +161,7 @@ urlpatterns = [
     path("exam/update/<int:pk>/", exam.update, name="dashboard-exam-update"),
     path("exam/delete/<int:pk>/", exam.delete, name="dashboard-exam-delete"),
     path("exam/paste/", exam.paste, name="dashboard-exam-paste"),
-    path("exam/question/import/<int:exam_id>/", exam.upload_question_file, name="dashboard-exam-question-import"),
+    path("exam/question/import/<int:level_id>/", exam.upload_question_file, name="dashboard-exam-question-import"),
   
 
     path("exam/question/<int:exam_id>/", exam.exam_question_manager, name="dashboard-exam-question-manager"),
@@ -202,12 +206,14 @@ urlpatterns = [
     path("level/update/<int:pk>/<int:level_id>/", level.update, name="dashboard-level-update"),
     path("level/delete/<int:pk>/", level.delete, name="dashboard-level-delete"),
 
+
     path("level/paste/", level.paste, name="dashboard-level-paste"),
     path("level/question/<int:pk>/", level.level_question_manager, name="dashboard-level-question-manager"),
     path("level/question/list/<int:pk>/", level.level_question_list, name="dashboard-level-question-list"),
     path("level/question/add/<int:pk>/", level.level_question_add, name="dashboard-level-question-add"),
     path("level/question/update/<int:pk>/", level.level_question_update, name="dashboard-level-question-update"),
     path("level/question/delete/<int:pk>/", level.level_question_delete, name="dashboard-level-question-delete"),
+    path("level/question/import/<int:exam_id>/", level.upload_question_file, name="dashboard-level-question-import"),
 
 
    # ==================================== Schedule Management ============================================= #

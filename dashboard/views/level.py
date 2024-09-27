@@ -470,3 +470,74 @@ def paste(request):
         return JsonResponse(response_data, status=200)
 
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+
+
+
+
+
+
+
+
+
+def upload_question_file(request, level_id):
+    if request.method == "POST":
+        uploaded_file = request.FILES.get('file', None)
+        print(f"Uploaded file: {uploaded_file}")
+
+        if uploaded_file is None:
+            return render(request, 'upload_questions.html', {"error": "No file uploaded."})
+
+        file_extension = uploaded_file.name.split('.')[-1].lower()
+
+        if file_extension == 'docx':
+            handle_docx_file(uploaded_file, level_id)
+        else:
+            return render(request, 'upload_questions.html', {"error": "Unsupported file format!"})
+
+        return redirect('dashboard-level-question-manager', pk=level_id)
+
+    return redirect('dashboard-level-question-manager', pk=level_id)
+
+
+def handle_docx_file(file, level_id):
+    document = Document(file)
+    
+    for table_index, table in enumerate(document.tables):
+
+        num_rows = len(table.rows)
+        num_cols = len(table.columns)
+
+        question_desc = table.cell(0, 1).text.strip()  
+
+        options = []
+        correct_answer = None  
+
+        for j in range(3, 7):  
+            option_text = table.cell(j, 1).text.strip()  
+            option_status = table.cell(j, 2).text.strip().lower()
+
+            if option_text:
+                options.append(option_text)  
+
+            if option_status == 'correct':  
+                correct_answer = option_text  
+
+        options = [opt.strip() for opt in options if opt.strip()]  
+
+        try:
+            marks = float(table.cell(num_rows - 1, 1).text.strip())  
+        except ValueError as e:
+            marks = 0  
+
+        Question.objects.create(
+            question_description=question_desc,
+            options=options,  
+            right_answers=[correct_answer],  
+            mark=marks,
+            question_type=3,
+            level_id=level_id
+        )
+
+        print(f"Saved question: {question_desc} with options: {options} and correct answer: {correct_answer}")
+
