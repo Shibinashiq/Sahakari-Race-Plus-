@@ -20,7 +20,7 @@ def login(request):
             messages.error(request, 'Invalid username or password.')
             return redirect('/login/')
     else:
-        return render(request, "html/template/login.html")
+        return render(request, "ci/template/public/login/login.html")
 
 
 # def home(request):
