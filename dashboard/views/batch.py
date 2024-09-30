@@ -110,30 +110,43 @@ def list(request):
 
 
 
-
 @login_required(login_url='dashboard-login')
 def add(request):
     if request.method == "POST":
         form = BatchForm(request.POST, request.FILES)
+        
         if form.is_valid():
-            customer = form.save(commit=False)
-            customer.save()
+            batch = form.save(commit=False)
+            start_date = batch.start_date
+            course = batch.course 
+
+            current_date = timezone.now().date()
+            available_days = (batch.batch_expiry - start_date).days
+            
+            course_duration = int(course.duration)
+
+            batch.save()
+
+            if course_duration > available_days: 
+                batch_id = batch.id  
+                print(f"Batch ID: {batch_id}")
+                messages.warning(request, "Please specify merging days for the late batch.")
+                return redirect(f"{reverse('dashboard-batch')}?showMergeDaysModal=true&batch={batch_id}")
 
             messages.success(request, "Batch added successfully!")
             return redirect('dashboard-batch')
         else:
-            context = {
-                "title": "Add Batch | Dashboard",
-                "form": form,
-            }
-            return render(request, "ci/template/public/batch/add-batch.html", context)
+            messages.error(request, "Please correct the errors")
+
     else:
-        form = BatchForm()  
-        context = {
-            "title": "Add Batch",
-            "form": form,
-        }
-        return render(request, "ci/template/public/batch/add-batch.html", context)
+        form = BatchForm()
+    
+    context = {
+        "title": "Add Batch",
+        "form": form,
+    }
+    return render(request, "ci/template/public/batch/add-batch.html", context)
+
 
 
 
@@ -356,3 +369,70 @@ def delete_customer(request, customer_id,batch_id):
         return redirect('dashboard-batch-subscripton-manager',pk=batch_id)
     
 
+
+
+
+
+
+
+
+import math
+
+
+@login_required(login_url='dashboard-login')
+def schedule(request, pk):
+    batch = get_object_or_404(Batch, id=pk)
+    course = batch.course
+    chapters = Chapter.objects.filter(subject__course=course, is_deleted=False)
+    folders = Folder.objects.filter(chapter__in=chapters, is_deleted=False)
+    lessons_from_folders = Lesson.objects.filter(folder__in=folders, is_deleted=False)
+    lessons_from_chapters = Lesson.objects.filter(chapter__in=chapters, is_deleted=False)
+    lessons = lessons_from_folders | lessons_from_chapters
+    lesson_ids = lessons.values_list('id', flat=True)
+
+    schedules = Schedule.objects.filter(
+        lesson_id__in=lesson_ids,
+        is_deleted=False,
+        date__gte=batch.start_date,
+        date__lte=batch.batch_expiry
+    ).select_related('lesson', 'exam')
+
+    today = timezone.now().date()
+    days_passed = (today - batch.start_date).days
+
+    missed_lessons = max(days_passed, 0)  # Ensure missed_lessons is non-negative
+
+    merge_days = request.GET.get('merge_days')
+
+    if merge_days and int(merge_days) > 0:
+        merge_days = int(merge_days)
+
+        if merge_days > 0:
+            lessons_per_day = math.ceil(missed_lessons / merge_days)  
+
+            # Create merging schedule
+            merging_schedule = [lessons_per_day] * merge_days
+            
+            # Determine remaining lessons for normal scheduling
+            normal_schedule_days = course.duration - (missed_lessons + merge_days)  
+
+            # Create a more detailed normal schedule
+            normal_schedule = []
+            if normal_schedule_days > 0:
+                # Assuming 1 lesson per day for the remaining days
+                normal_schedule = [1] * normal_schedule_days
+
+            # Combine merging and normal schedules
+            final_schedule = merging_schedule + normal_schedule
+        else:
+            # Handle case where merge_days is zero or less
+            pass
+    else:
+        # Default case where no merging days are specified
+        pass
+    context = {
+        'batch': batch,
+        'schedules': schedules,
+    }
+
+    return render(request, 'ci/template/public/batch/schedule.html', context)

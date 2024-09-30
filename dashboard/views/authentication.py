@@ -18,7 +18,7 @@ def login(request):
             return redirect('/')
         else:
             messages.error(request, 'Invalid username or password.')
-            return redirect('/login/')
+            return redirect('login/')
     else:
         return render(request, "ci/template/public/login/login.html")
 

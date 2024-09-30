@@ -116,6 +116,8 @@ class Course(models.Model):
     course_name = models.CharField(max_length=200)
     description = models.TextField()
     image = models.ImageField(upload_to='course_images/', null=True, blank=True)
+    duration = models.CharField(max_length=100,default=0)
+    number_of_lessons = models.PositiveIntegerField(default=0)
     created = models.DateTimeField(default=timezone.now)
     is_deleted = models.BooleanField(default=False)
 
@@ -162,6 +164,7 @@ class Lesson(models.Model):
     lesson_name = models.CharField(max_length=200)
     image = models.ImageField(upload_to='lesson_images/', null=True, blank=True)
     description = models.TextField()
+    visible_days = models.CharField(max_length=255, blank=True, null=True)
     created = models.DateTimeField(default=timezone.now)
     is_deleted = models.BooleanField(default=False)
 
@@ -323,7 +326,7 @@ class Schedule(models.Model):
 
 class SuccessStory(models.Model):
     image = models.ImageField(upload_to='banners/')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     is_deleted = models.BooleanField(default=False)
 
    
@@ -343,8 +346,10 @@ class StudentProgress(models.Model):
     def __str__(self):
         return f"{self.student.name}'s progress for {self.exam.title}"
     
-
-
-
-
-
+class BathLesson(models.Model):
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    visible_days = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    is_deleted = models.BooleanField(default=False)
+    

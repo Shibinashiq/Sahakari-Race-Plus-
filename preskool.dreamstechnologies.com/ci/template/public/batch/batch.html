@@ -6,7 +6,7 @@
 }
 
 </style>
-<link rel="stylesheet" href="preskool.dreamstechnologies.com/ci/template/public/assets/bootstrap.min.css">
+<!-- <link rel="stylesheet" href="preskool.dreamstechnologies.com/ci/template/public/assets/bootstrap.min.css"> -->
 
 
 <div class="page-wrapper">
@@ -14,17 +14,23 @@
 
         <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
             <div class="my-auto mb-2">
-                <h3 class="page-title mb-1">Batch</h3>
-                <nav>
-                    <ol class="breadcrumb mb-0">
+                <h3 class="page-title mb-1">Batch Details</h3>
+                <!-- <nav aria-label="breadcrumb"> -->
+                    <!-- <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item">
                             <a href="{% url 'dashboard-home' %}">Dashboard</a>
                         </li>
-                       
-                        <li class="breadcrumb-item active" aria-current="page">Batch</li>
-                    </ol>
-                </nav>
+                        <li class="breadcrumb-item">
+                            <a href="">Courses</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="">Batches</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Batch Details</li>
+                    </ol> -->
+                <!-- </nav> -->
             </div>
+            
             <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
                 <div class="pe-1 mb-2">
                     <a href="#" class="btn btn-outline-light bg-white btn-icon me-1" data-bs-toggle="tooltip"
@@ -133,7 +139,11 @@
                                     </div>
                                 </td>
                                 <td><a href="#" class="link-primary">{{ batch.id }}</a></td>
-                                <td>{{ batch.course.course_name }}</td>
+                                <td>
+                                    <a href="{% url 'dashboard-batch-schedule-manager' batch.id %}" class="link-primary">
+                                        {{ batch.course.course_name }}
+                                    </a>
+                                    </td>
                                 <td>{{ batch.batch_price }}</td>
                                 <td>{{ batch.start_date}}</td>
                                 <td>{{ batch.batch_expiry }}</td>
@@ -177,6 +187,7 @@
                 </span>
                 <h4>Confirm Deletion</h4>
                 <p>You want to delete the selected item. This action cannot be undone.</p>
+                <input type="hidden" id="batch-id" value="{{ batch.id }}">
                 <div class="d-flex justify-content-center">
                     <button class="btn btn-light me-3" data-bs-dismiss="modal">Cancel</button>
                     <button id="delete-record" class="btn btn-danger">Yes, Delete</button>
@@ -186,41 +197,75 @@
     </div>
 </div>
 
+<!-- Merging modal -->
+<!-- Example Modal Structure -->
+<div class="modal" id="merge-days-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Merge Days</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="batch-id" value="">
+                <div class="form-group">
+                    <label for="merge-days">Number of Merging Days:</label>
+                    <input type="number" class="form-control" id="merge-days" placeholder="Enter merging days">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="submit-merge-days">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 
-<script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/bootstrap.bundle.min.js"
+</div>
+<script src="http://127.0.0.1:8000/ci/template/webroot/js/plugins/apexchart/apexcharts.min.js"
     type="951e427b5babc1ab7c00a70e-text/javascript"></script>
 
-<script
+
+<script src="http://127.0.0.1:8000/preskool.dreamstechnologies.com/ci/template/webroot/js/plugins/apexchart/chart-data.js"
+    type="951e427b5babc1ab7c00a70e-text/javascript"></script>
+
+<script src="http://127.0.0.1:8000/preskool.dreamstechnologies.com/ci/template/webroot/js/feather.min.js"
+    type="951e427b5babc1ab7c00a70e-text/javascript"></script>
+
+<script src="http://127.0.0.1:8000/preskool.dreamstechnologies.com/ci/template/webroot/js/jquery.slimscroll.min.js"
+    type="951e427b5babc1ab7c00a70e-text/javascript"></script>
+
+<script src="http://127.0.0.1:8000/preskool.dreamstechnologies.com/ci/template/webroot/js/select2.min.js"
+    type="951e427b5babc1ab7c00a70e-text/javascript"></script>
+
+<script src="http://127.0.0.1:8000/preskool.dreamstechnologies.com/ci/template/webroot/js/rocket-loader.min.js"
+    data-cf-settings="951e427b5babc1ab7c00a70e-|49" defer></script>
+
+    <script
+    src="http://127.0.0.1:8000/preskool.dreamstechnologies.com/ci/template/webroot/js/jquery.waypoints.min.js"
+    type="951e427b5babc1ab7c00a70e-text/javascript"></script>
+
+<!-- <script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/bootstrap.bundle.min.js"
+    type="951e427b5babc1ab7c00a70e-text/javascript"></script> -->
+
+<!-- <script
     src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/plugins/daterangepicker/daterangepicker.js"
     type="951e427b5babc1ab7c00a70e-text/javascript"></script>
 <script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/bootstrap-datetimepicker.min.js"
-    type="951e427b5babc1ab7c00a70e-text/javascript"></script>
+    type="951e427b5babc1ab7c00a70e-text/javascript"></script> -->
 
-<script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/feather.min.js"
-    type="951e427b5babc1ab7c00a70e-text/javascript"></script>
-
-<script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/jquery.slimscroll.min.js"
-    type="951e427b5babc1ab7c00a70e-text/javascript"></script>
-
-<script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/plugins/apexchart/apexcharts.min.js"
-    type="951e427b5babc1ab7c00a70e-text/javascript"></script>
-<script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/plugins/apexchart/chart-data.js"
-    type="951e427b5babc1ab7c00a70e-text/javascript"></script>
 
 <script
     src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/plugins/owlcarousel/owl.carousel.min.js"
     type="951e427b5babc1ab7c00a70e-text/javascript"></script>
 
-<script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/plugins/select2/js/select2.min.js"
-    type="951e427b5babc1ab7c00a70e-text/javascript"></script>
+
 
 <script
     src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/plugins/countup/jquery.counterup.min.js"
-    type="951e427b5babc1ab7c00a70e-text/javascript"></script>
-<script
-    src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/plugins/countup/jquery.waypoints.min.js"
     type="951e427b5babc1ab7c00a70e-text/javascript"></script>
 
 <script src="https://preskool.dreamstechnologies.com/cakephp/template/webroot/js/theme-script.js"
@@ -231,8 +276,6 @@
 
 
 
-<script src="https://preskool.dreamstechnologies.com/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js"
-    data-cf-settings="951e427b5babc1ab7c00a70e-|49" defer></script>
 
     
 
@@ -357,4 +400,66 @@ $(document).ready(function () {
         });
     });
     </script>
+    
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            {% if request.GET.showMergeDaysModal %}
+                $('#merge-days-modal').modal('show');
+                $('#batch-id').val("{{ request.GET.batch }}");  // Ensure this value is set correctly
+            {% endif %}
+        });
+    
+        $('#submit-merge-days').on('click', function() {
+            const mergeDays = $('#merge-days').val(); 
+            const batchId = $('#batch-id').val();     
+    
+            console.log("Merging Days: ", mergeDays);
+            console.log("Batch ID: ", batchId);
+    
+            if (mergeDays && batchId) {
+                $.ajax({
+                    type: "POST",
+                    url: `{% url 'dashboard-batch-schedule-manager' pk=0 %}`.replace('0', batchId),
+                    data: {
+                        'merge_days': mergeDays,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        // Log the response for debugging purposes
+                        console.log("Response from server:", response);
+                        
+                        // Close the modal
+                        $('#merge-days-modal').modal('hide'); 
+                        
+                        // Perform any additional actions after closing the modal
+                        // Example: Refreshing the schedule or displaying a success message
+                        alert("Merging days submitted successfully!");
+    
+                        // Optionally, you could refresh part of the page, or redirect
+                        // location.reload(); // Uncomment to reload the page
+                        // Or update a part of the DOM based on the response
+                        // $('#some-element').html(response.updated_content); // Example
+                    },
+                    error: function(error) {
+                        console.error("Error: ", error);
+                        alert("An error occurred while sending the request.");
+                    }
+                });
+            } else {
+                if (!mergeDays) {
+                    alert("Please enter the number of merging days.");
+                }
+                if (!batchId) {
+                    alert("Batch ID is not set. Please try again.");
+                }
+            }
+        });
+    </script>
+    
     
