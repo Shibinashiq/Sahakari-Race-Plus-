@@ -276,7 +276,7 @@ let themesettings = `
                 `
 
 document.addEventListener("DOMContentLoaded", function () {
-    $(".main-wrapper").append(themesettings)
+    $(".main-wrapper").append()
 });
 
 document.addEventListener("DOMContentLoaded", function (event) {
