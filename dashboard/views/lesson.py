@@ -108,6 +108,9 @@ def list(request):
         }
 
         return JsonResponse(response)
+
+
+
 @login_required(login_url='dashboard-login')
 def add(request):
     if request.method == "POST":
@@ -233,3 +236,7 @@ def delete(request, pk):
      
     return JsonResponse({"message": "Invalid request"}, status=400)
      
+
+
+
+

@@ -96,6 +96,7 @@ class CustomUser(AbstractBaseUser):
 class Batch(models.Model):
     start_date = models.DateField()
     batch_expiry = models.DateField()
+    late_batch = models.BooleanField(default=False)
     batch_price = models.DecimalField(max_digits=10, decimal_places=2)
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
     is_deleted = models.BooleanField(default=False)
@@ -346,7 +347,7 @@ class StudentProgress(models.Model):
     def __str__(self):
         return f"{self.student.name}'s progress for {self.exam.title}"
     
-class BathLesson(models.Model):
+class BatchLesson(models.Model):
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     visible_in_days = models.CharField(max_length=255, blank=True, null=True,default=0)

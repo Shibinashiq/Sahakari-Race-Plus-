@@ -52,7 +52,7 @@ urlpatterns = [
 
 
     path("batch/schedule/manager/<int:pk>/", batch.schedule, name="dashboard-batch-schedule-manager"),
-    # path('merge-lessons/', batch.merge_lessons, name='dashboard-lesson-merge-manager'),
+    path('merge-lessons/', batch.merge, name='dashboard-lesson-merge-manager'),
 
     path("batch/subscription/<int:pk>/", batch.subscription_view, name="dashboard-batch-subscripton-manager"),
     path("batch/subscription/list/<int:pk>/", batch.subscription, name="dashboard-batch-subscripton-list"),
