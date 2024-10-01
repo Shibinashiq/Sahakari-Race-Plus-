@@ -9,6 +9,10 @@ class LessonForm(forms.ModelForm):
         widget=forms.Select(attrs={'class': 'form-control', 'required': True}),
         empty_label="Select a chapter",
     )
+    visible_in_days = forms.IntegerField(
+        required=False,
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'min': 0})
+    )
 
     lesson_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
     image = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class': 'form-control'}))
@@ -24,9 +28,11 @@ class LessonForm(forms.ModelForm):
     pdf_is_downloadable = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
     pdf_is_free = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
 
+
+
     class Meta:
         model = Lesson
-        fields = ['lesson_name', 'image', 'description', 'chapter', 'video_title', 'video_url', 'video_is_downloadable', 'video_is_free', 'pdf_title', 'pdf_file', 'pdf_is_downloadable', 'pdf_is_free']
+        fields = ['lesson_name', 'image', 'description', 'chapter', 'visible_in_days','video_title', 'video_url', 'video_is_downloadable', 'video_is_free', 'pdf_title', 'pdf_file', 'pdf_is_downloadable', 'pdf_is_free']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

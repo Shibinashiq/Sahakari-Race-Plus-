@@ -115,6 +115,8 @@ def add(request):
             if form.is_valid():
                 lesson = form.save(commit=False)
                 chapter = form.cleaned_data.get('chapter')
+                visible_in_days = form.cleaned_data.get('visible_in_days')
+                lesson.visible_in_days = visible_in_days
                 lesson.chapter = chapter
                 lesson.save()
 
@@ -127,6 +129,7 @@ def add(request):
                 pdf_file = form.cleaned_data.get('pdf_file')
                 pdf_is_downloadable = form.cleaned_data.get('pdf_is_downloadable')
                 pdf_is_free = form.cleaned_data.get('pdf_is_free')
+                
 
 
                 if video_url:
@@ -177,6 +180,8 @@ def update(request, pk):
         if form.is_valid():
             lesson = form.save(commit=False)
             chapter = form.cleaned_data.get('chapter')
+            visible_in_days = form.cleaned_data.get('visible_in_days')
+            lesson.visible_in_days = visible_in_days
             lesson.chapter = chapter
             
             lesson.save()
@@ -208,14 +213,14 @@ def update(request, pk):
                 "title": "Update Lesson",
                 "form": form,
             }
-            return render(request, "ci/template/public/content/lesson/update-lesson.html", context)
+            return render(request, "ci/template/public/lesson/update-lesson.html", context)
     else:
         form = LessonForm(instance=lesson)
         context = {
             "title": "Update Lesson",
             "form": form,
         }
-        return render(request, "ci/template/public/content/lesson/update-lesson.html", context)
+        return render(request, "ci/template/public/lesson/update-lesson.html", context)
     
 
 @login_required(login_url='dashboard-login')    

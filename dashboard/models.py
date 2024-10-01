@@ -164,7 +164,7 @@ class Lesson(models.Model):
     lesson_name = models.CharField(max_length=200)
     image = models.ImageField(upload_to='lesson_images/', null=True, blank=True)
     description = models.TextField()
-    visible_days = models.CharField(max_length=255, blank=True, null=True)
+    visible_in_days = models.CharField(max_length=255, blank=True, null=True,default=0)
     created = models.DateTimeField(default=timezone.now)
     is_deleted = models.BooleanField(default=False)
 
@@ -349,7 +349,7 @@ class StudentProgress(models.Model):
 class BathLesson(models.Model):
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
-    visible_days = models.CharField(max_length=255, blank=True, null=True)
+    visible_in_days = models.CharField(max_length=255, blank=True, null=True,default=0)
     created_at = models.DateTimeField(default=timezone.now)
     is_deleted = models.BooleanField(default=False)
     

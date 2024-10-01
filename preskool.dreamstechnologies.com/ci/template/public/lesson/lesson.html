@@ -93,12 +93,13 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Image</th>
-                                <th>Chapter Name</th>
-                                <th>Chapter Name</th>
+                                <th>Lesson Name</th>
+                                <th>Lesson Name</th>
                                 <th>Description</th>
                                 <th>Created</th>
                                 <th>Video</th>
                                 <th>PDF</th>
+                                <th>Visible In Days</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -141,6 +142,7 @@
                                         N/A
                                     {% endfor %}
                                 </td>
+                                <td>{{ lesson.visible_in_days }}</td>
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <a href="{% url 'dashboard-lesson-update' pk=lesson.id %}" class="text-primary me-3" title="Edit Course">

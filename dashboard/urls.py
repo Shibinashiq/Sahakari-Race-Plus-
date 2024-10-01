@@ -134,7 +134,7 @@ urlpatterns = [
     path("folder/lesson/update/<int:pk>/<int:folder_id>/", folder.lesson_update, name="dashboard-folder-lesson-update"),
     path("folder/lesson/delete/<int:folder_id>/<int:lesson_id>/", folder.lesson_delete, name="dashboard-folder-lesson-delete"),
 
-    # ==================================== Chapter Management ============================================= #
+    # ==================================== Lesson Management ============================================= #
 
     path("lesson/", lesson.manager, name="dashboard-lesson"),
     path("lesson/list", lesson.list, name="dashboard-lesson-list"),

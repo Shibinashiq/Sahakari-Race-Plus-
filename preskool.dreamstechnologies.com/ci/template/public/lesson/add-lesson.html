@@ -112,13 +112,20 @@
                 {{ form.pdf_is_downloadable|as_crispy_field }}
             </div>
         </div>
+        <br>
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
                     {{ form.description|as_crispy_field }}
                 </div>
             </div>
-        </div>		
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form.visible_in_days|as_crispy_field }}
+                </div>
+            </div>
+        </div>
+        
         </div>
     </div>
     
