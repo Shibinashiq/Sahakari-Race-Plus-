@@ -409,13 +409,20 @@ $(document).ready(function () {
                         'csrfmiddlewaretoken': '{{ csrf_token }}'
                     },
                     success: function(response) {
-                        $('#merge-days-modal').modal('hide');
+                        if (response.success) {
+                            // Close the modal on success
+                            $('#merge-days-modal').modal('hide');
+                            
+                            // Remove query parameters from the URL
+                            history.replaceState(null, null, window.location.pathname);
 
-                        alert(response);  
-                        
+                            // Optional: Reload the page or handle the success message
+                            window.location.reload();
+                        } else {
+                            alert("An error occurred: " + response.message);
+                        }
+
                         console.log("Response from server:", response);
-
-                        history.replaceState(null, document.title, window.location.pathname);
                     },
                     error: function(error) {
                         console.error("Error: ", error);
@@ -435,7 +442,3 @@ $(document).ready(function () {
         }
     });
 </script>
-
-
-    
-    

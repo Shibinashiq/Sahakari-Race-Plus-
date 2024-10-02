@@ -374,9 +374,9 @@ def delete_customer(request, customer_id,batch_id):
 
 def merge(request):
     merge_days = request.GET.get('merge_days')
-    print(merge_days, "merge days")
     batch_id = request.GET.get('batch_id')
-
+    print(merge_days,"merge_days")
+    print(batch_id,"batch_id")
     if not merge_days or int(merge_days) <= 0:
         return HttpResponse("Invalid merge days provided.")
 
@@ -437,7 +437,7 @@ def merge(request):
         )
         visible_day_count += 1  
 
-    return HttpResponse("Lessons successfully merged and scheduled.")
+    return JsonResponse({'success': True, 'message': 'Lessons successfully merged and scheduled.'})
 
 
 
