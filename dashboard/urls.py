@@ -10,25 +10,26 @@ The URL patterns provide a structured and organized way to access the different 
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from dashboard.views import (
-    authentication,
-    course,
-    home,
-    subject,
-    customer,
-    batch,
-    chapter,
-    lesson,
-    exam,
-    question,
-   talenthunt,
-   level,
-   talenthuntsubject,
-   schedule,
-   staff,
-   comment,
-   banner,
-   success_stories,
-   folder
+  authentication,
+  course,
+  home,
+  subject,
+  customer,
+  batch,
+  chapter,
+  lesson,
+  exam,
+  question,
+  talenthunt,
+  level,
+  talenthuntsubject,
+  schedule,
+  staff,
+  comment,
+  banner,
+  success_stories,
+  folder,
+  batchlesson
 )
 
 urlpatterns = [
@@ -256,6 +257,10 @@ urlpatterns = [
     path("success-stories/update/<int:pk>/", success_stories.update, name="dashboard-success-stories-update"),
     path("success-stories/delete/<int:pk>/", success_stories.delete, name="dashboard-success-stories-delete"),
 
+  # ==================================== Staff Management ============================================= #
+  
+    path("batch-lesson/delete/<int:pk>/", batchlesson.batchlesson_delete, name="dashboard-batch-lesson-delete"),
+    path("batch-lesson/update/<int:pk>/", batchlesson.batchlesson_update, name="dashboard-batch-lesson-update"),
 
 
 

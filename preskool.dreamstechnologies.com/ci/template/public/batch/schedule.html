@@ -115,9 +115,9 @@
                                     <th>ID</th>
                                     <th>Image</th>
                                     <th>Lesson Name</th>
-                                    <th>Lesson Name</th>
+                                    <th>Chapter Name</th>
                                     <th>Description</th>
-                                    <th>Created</th>
+                                    <!-- <th>Created</th> -->
                                     <th>Video</th>
                                     <th>PDF</th>
                                     <th>Visible In Days</th>
@@ -125,22 +125,22 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for lesson in batch_lessons %}
+                                {% for batch_lesson in batch_lessons %}
                                 <tr>
-                                    <td>{{ lesson.id }}</td>
+                                    <td>{{ batch_lesson.id }}</td>
                                     <td>
-                                        {% if lesson.image %}
-                                            <img src="{{ lesson.image.url }}" alt="{{ lesson.lesson_name }}" style="width: 50px;">
-                                        {% else %}
-                                            N/A
+                                        {% if batch_lesson.lesson.image %}
+                                            <img src="{{ batch_lesson.lesson.image.url }}" alt="{{ batch_lesson.lesson.lesson_name }}" style="width: 50px;">
+                                            {% else %}
+                                            <i class="bi bi-card-image fs-3 text-dark"></i>
                                         {% endif %}
                                     </td>
-                                    <td>{{ lesson.lesson_name }}</td>
-                                    <td>{{ lesson.chapter.chapter_name }}</td>
-                                    <td>{{ lesson.description|truncatewords:10 }}</td>
-                                    <td>{{ lesson.created|date:"d-m-Y"}}</td>
+                                    <td>{{ batch_lesson.lesson.lesson_name }}</td>
+                                    <td>{{ batch_lesson.lesson.chapter.chapter_name }}</td>
+                                    <td>{{ batch_lesson.lesson.description|truncatewords:10 }}</td>
+                                    <!-- <td>{{ batch_lesson.lesson.created|date:"d-m-Y"}}</td> -->
                                     <td>
-                                        {% for video in lesson.videos.all %}
+                                        {% for video in batch_lesson.lesson.videos.all %}
                                             <strong>{{ video.title|default:"N/A" }}</strong><br>
                                             {% if video.url %}
                                                 <a href="{{ video.url }}" target="_blank">Watch Video</a>
@@ -152,7 +152,7 @@
                                         {% endfor %}
                                     </td>
                                     <td>
-                                        {% for pdf in lesson.pdf_notes.all %}
+                                        {% for pdf in batch_lesson.lesson.pdf_notes.all %}
                                             <strong>{{ pdf.title|default:"N/A" }}</strong><br>
                                             {% if pdf.file %}
                                                 <a href="{{ pdf.file.url }}" target="_blank">Download PDF</a>
@@ -163,13 +163,14 @@
                                             N/A
                                         {% endfor %}
                                     </td>
-                                    <td>{{ lesson.visible_in_days }}</td>
+                                    <td>{{ batch_lesson.visible_in_days }}</td>  
+           
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            <a href="" class="text-primary me-3" title="Edit Course">
+                                            <a href="{% url 'dashboard-batch-lesson-update' pk=batch_lesson.id %}" class="text-primary me-3" title="Edit Lesson">
                                                 <i class="bi bi-pencil-square me-2"></i>
                                             </a>
-                                            <a class="btn-delete" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal" data-user-id="{{ lesson.id }}" title="Delete Course">
+                                            <a class="btn-delete" href="{% url 'dashboard-batch-lesson-delete' pk=batch_lesson.id%}" data-bs-toggle="modal" data-bs-target="#delete-modal" data-user-id="{{ batch_lesson.id }}" title="Delete Lesson">
                                                 <i class="bi bi-trash me-2"></i>
                                             </a>
                                         </div>
@@ -177,11 +178,12 @@
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="8" class="text-center">No lessons found.</td>
+                                    <td colspan="10" class="text-center">No lessons found.</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
+                        
                     </div>
                 </div>
 

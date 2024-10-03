@@ -7,19 +7,19 @@ from ckeditor.fields import RichTextField
 
 
 class MyUserManager(BaseUserManager):
-    def _create_user(self, email, name, phone_number, district,  **extra_fields):
+    def _create_user(self, email, name, district,  **extra_fields):
         if not email:
             raise ValueError(_("The Email field must be set"))
         email = self.normalize_email(email)
-        user = self.model(email=email, name=name, phone_number=phone_number, district=district, **extra_fields)
+        user = self.model(email=email, name=name,  district=district, **extra_fields)
       
         user.save(using=self._db)
         return user
 
-    def create_user(self, email, name, phone_number, district, **extra_fields):
-        return self._create_user(email, name, phone_number, district, **extra_fields)
+    def create_user(self, email, name, district, **extra_fields):
+        return self._create_user(email, name,  district, **extra_fields)
 
-    def create_superuser(self, email, name, phone_number, district, **extra_fields):
+    def create_superuser(self, email, name, district, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
 
@@ -28,7 +28,7 @@ class MyUserManager(BaseUserManager):
         if extra_fields.get("is_superuser") is not True:
             raise ValueError(_("Superuser must have is_superuser=True."))
 
-        return self._create_user(email, name, phone_number, district, **extra_fields)
+        return self._create_user(email, name, district, **extra_fields)
 
 
 class CustomUser(AbstractBaseUser):
@@ -165,7 +165,7 @@ class Lesson(models.Model):
     lesson_name = models.CharField(max_length=200)
     image = models.ImageField(upload_to='lesson_images/', null=True, blank=True)
     description = models.TextField()
-    visible_in_days = models.CharField(max_length=255, blank=True, null=True,default=0)
+    visible_in_days = models.IntegerField(default=0) 
     created = models.DateTimeField(default=timezone.now)
     is_deleted = models.BooleanField(default=False)
 
@@ -350,7 +350,7 @@ class StudentProgress(models.Model):
 class BatchLesson(models.Model):
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
-    visible_in_days = models.CharField(max_length=255, blank=True, null=True,default=0)
+    visible_in_days = models.IntegerField(default=0) 
     created_at = models.DateTimeField(default=timezone.now)
     is_deleted = models.BooleanField(default=False)
     

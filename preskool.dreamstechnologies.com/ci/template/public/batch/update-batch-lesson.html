@@ -5,7 +5,7 @@
 
         <div class="d-md-flex d-block align-items-center justify-content-between mb-3">
             <div class="my-auto mb-2">
-                <h3 class="mb-1">Update Batch</h3>
+                <h3 class="mb-1">Update Staff</h3>
                 <!-- <nav>
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item">
@@ -53,23 +53,16 @@
             <div class="row">
                 <!-- Course Field -->
                 <div class="col-xxl-4 col-xl-4 col-md-6 mb-3">
-                    {{ form.course|as_crispy_field }}
+                    {{ form.lesson|as_crispy_field }}
                 </div>
             
                 <!-- Batch Price Field -->
                 <div class="col-xxl-4 col-xl-4 col-md-6 mb-3">
-                    {{ form.batch_price|as_crispy_field }}
+                    {{ form.visible_in_days|as_crispy_field }}
                 </div>
             
                 <!-- Start Date Field -->
-                <div class="col-xxl-4 col-xl-4 col-md-6 mb-3">
-                    {{ form.start_date|as_crispy_field }}
-                </div>
-            
-                <!-- Batch Expiry Date Field -->
-                <div class="col-xxl-4 col-xl-4 col-md-6 mb-3">
-                    {{ form.batch_expiry|as_crispy_field }}
-                </div>
+               
             </div>
             
             

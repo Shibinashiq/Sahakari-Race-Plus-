@@ -121,7 +121,10 @@ def add(request):
             course = batch.course 
 
             current_date = timezone.now().date()
-            available_days = (batch.batch_expiry - start_date).days
+            available_days = (batch.batch_expiry - start_date).days + 1
+
+            print(f"Available days: {available_days}")
+            print(f"Course duration: {course.duration}")
             
             course_duration = int(course.duration)
             number_of_lessons = int(course.number_of_lessons)
@@ -135,6 +138,32 @@ def add(request):
                 batch_id = batch.id  
                 messages.warning(request, "Please specify merging days for the late batch.")
                 return redirect(f"{reverse('dashboard-batch')}?showMergeDaysModal=true&batch={batch_id}")
+            else:
+                total_lessons = number_of_lessons
+                course_duration_days = course_duration  
+                lessons_per_day = total_lessons / course_duration_days
+
+                lessons = Lesson.objects.filter(is_deleted=False, chapter__subject__course=course).order_by('created')
+
+                visible_day_count = 1
+                lesson_index = 0
+
+                for day in range(course_duration_days):
+                    for _ in range(int(lessons_per_day)):
+                        if lesson_index >= len(lessons):
+                            break
+
+                        lesson = lessons[lesson_index]
+
+                        BatchLesson.objects.create(
+                            batch=batch,
+                            lesson=lesson,
+                            visible_in_days=str(visible_day_count),
+                        )
+
+                        lesson_index += 1
+
+                    visible_day_count += 1
 
             messages.success(request, "Batch added successfully!")
             return redirect('dashboard-batch')
@@ -441,8 +470,6 @@ def merge(request):
 
 
 
-
-
 @login_required(login_url='dashboard-login')
 def schedule(request, pk):
     batch = get_object_or_404(Batch, id=pk)
@@ -452,66 +479,22 @@ def schedule(request, pk):
     folders = Folder.objects.filter(chapter__in=chapters, is_deleted=False)
     lessons_from_folders = Lesson.objects.filter(folder__in=folders, is_deleted=False)
     lessons_from_chapters = Lesson.objects.filter(chapter__in=chapters, is_deleted=False)
+
     lessons = lessons_from_folders | lessons_from_chapters
 
-    today = timezone.now().date()
-    days_passed = (today - batch.start_date).days
-    missed_lessons = max(days_passed, 0)
-
-    merge_days = request.GET.get('merge_days')
-
-    if merge_days and int(merge_days) > 0:
-        total_lessons = course.number_of_visibility
-        course_duration_days = course.duration
-        lessons_per_day = total_lessons / course_duration_days
-
-        batch_start_date = batch.start_date
-        course_start_date = course.created
-        late_days = (batch_start_date - course_start_date).days
-
-        missed_lessons = int(late_days * lessons_per_day)
-
-        total_merge_lessons = missed_lessons + int(merge_days * lessons_per_day)
-        lessons_per_day_during_merge = total_merge_lessons // int(merge_days)
-
-        lessons_to_distribute = Lesson.objects.filter(is_deleted=False,chapter__subject__course=course).order_by('created_at')
-
-        existing_lessons = BatchLesson.objects.filter(is_deleted=False,batch=batch).order_by('visible_in_days')
-        existing_lesson_ids = existing_lessons.values_list('lesson_id', flat=True)
-        lessons_to_distribute = lessons_to_distribute.exclude(id__in=existing_lesson_ids)
-
-        visible_day_count = 1
-        lesson_index = 0
-
-        for day in range(int(merge_days)):
-            for _ in range(lessons_per_day_during_merge):
-                if lesson_index >= len(lessons_to_distribute):
-                    break
-
-                lesson = lessons_to_distribute[lesson_index]
-
-                BatchLesson.objects.create(
-                    batch=batch,
-                    lesson=lesson,
-                    is_deleted=False,   
-                    visible_in_days=str(visible_day_count),
-                )
-
-                lesson_index += 1
-
-            visible_day_count += 1
-
-        batch_lessons = BatchLesson.objects.filter(is_deleted=False,batch=batch).order_by('-visible_in_days')
-
-    else:
-        batch_lessons = lessons.order_by('-visible_in_days')
+    batch_lessons = BatchLesson.objects.filter(is_deleted=False, batch=batch).order_by('visible_in_days')
+   
 
     context = {
         'batch': batch,
-        'batch_lessons': batch_lessons,  
+        'batch_lessons': batch_lessons, 
     }
 
     return render(request, 'ci/template/public/batch/schedule.html', context)
+
+
+
+
 
 
 
