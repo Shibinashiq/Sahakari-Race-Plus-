@@ -1,1 +1,1 @@
-def home(request):
+# def home(request):

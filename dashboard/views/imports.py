@@ -126,7 +126,7 @@ from dashboard.forms.staff import StaffForm,PasswordSettingForm
 from django.contrib.auth import authenticate, login as auth_login
 
 
-from dashboard.forms.success_stories import SuccessStoriesForm
+# from dashboard.forms.success_stories import SuccessStoriesForm
 from django.db.models import Count
 
 from django.template.loader import render_to_string
@@ -150,3 +150,11 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
+import requests
+from random import randint
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
+from rest_framework_simplejwt.tokens import RefreshToken

@@ -27,7 +27,7 @@ from dashboard.views import (
   staff,
   comment,
   banner,
-  success_stories,
+  # success_stories,
   folder,
   batchlesson
 )
@@ -251,11 +251,11 @@ urlpatterns = [
     path("banner/delete/<int:pk>/", banner.delete, name="dashboard-banner-delete"),
 
    # ==================================== Staff Management ============================================= #
-    path("success-stories/", success_stories.manager, name="dashboard-success-stories-manager"),
-    path("success-stories/list/", success_stories.list, name="dashboard-success-stories-list"),
-    path("success-stories/add/", success_stories.add, name="dashboard-success-stories-add"),
-    path("success-stories/update/<int:pk>/", success_stories.update, name="dashboard-success-stories-update"),
-    path("success-stories/delete/<int:pk>/", success_stories.delete, name="dashboard-success-stories-delete"),
+    # path("success-stories/", success_stories.manager, name="dashboard-success-stories-manager"),
+    # path("success-stories/list/", success_stories.list, name="dashboard-success-stories-list"),
+    # path("success-stories/add/", success_stories.add, name="dashboard-success-stories-add"),
+    # path("success-stories/update/<int:pk>/", success_stories.update, name="dashboard-success-stories-update"),
+    # path("success-stories/delete/<int:pk>/", success_stories.delete, name="dashboard-success-stories-delete"),
 
   # ==================================== Staff Management ============================================= #
   

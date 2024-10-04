@@ -325,10 +325,10 @@ class Schedule(models.Model):
 #         ordering = [ '-created_at']
 
 
-class SuccessStory(models.Model):
-    image = models.ImageField(upload_to='banners/')
-    created_at = models.DateTimeField(default=timezone.now)
-    is_deleted = models.BooleanField(default=False)
+# class SuccessStory(models.Model):
+#     image = models.ImageField(upload_to='banners/')
+#     created_at = models.DateTimeField(default=timezone.now)
+#     is_deleted = models.BooleanField(default=False)
 
    
 
@@ -354,3 +354,36 @@ class BatchLesson(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     is_deleted = models.BooleanField(default=False)
     
+
+
+
+class TempUser(models.Model):
+    username = models.CharField(max_length=150)
+    old_id = models.IntegerField(default=0)
+    name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=50)
+    email = models.EmailField(null=True, blank=True, max_length=50)
+    verified = models.BooleanField(default=False)
+    created = models.DateTimeField(default=timezone.now)
+    is_deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        if self.name:
+            return self.name
+        else:
+            return self.username
+
+
+class Otp(models.Model):
+    code = models.IntegerField(default=0)
+    old_id = models.IntegerField(default=0)
+    request_id = models.CharField(max_length=20)
+    requested_by = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, null=True, blank=True
+    )
+    temp_user = models.ForeignKey(
+        TempUser, on_delete=models.CASCADE, null=True, blank=True
+    )
+    verified = models.BooleanField(default=False)
+    created = models.DateTimeField(default=timezone.now)
+    is_deleted = models.BooleanField(default=False)
